@@ -22,5 +22,6 @@ cd ../back
 # # Compile back end
 mvn clean package
 
+# # 3. Build Docker
 docker compose build
 docker compose up

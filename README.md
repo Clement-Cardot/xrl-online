@@ -50,10 +50,12 @@
     - Extensions ?
 
 ## Build
-### Back
- TODO
-### Front
-- Start the front using debug server :
-```
-ng serve
-```
+
+Use the Build_Script.sh file in a shell env (git bash)
+
+This script will :
+
+1. Remove any artifact from last build
+2. Build the Angular app
+3. Build the Spring Boot app
+4. Deploy Front/Back/BDD with a docker compose
