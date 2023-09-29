@@ -1,0 +1,230 @@
+# first 8 char of the SHA commit : CI_COMMIT_SHORT_SHA
+# name of the targetted branch of the MR : CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+
+stages:
+  - build
+  - test
+  - sonar
+  - deploy-angular
+  - deploy-java
+  - selenium
+
+variables:
+  MAVEN_OPTS: "-Dhttp.proxyHost=192.168.4.8 -Dhttp.proxyPort=3128 -Dhttps.proxyHost=192.168.4.8 -Dhttps.proxyPort=3128 -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+
+before_script:
+  - export https_proxy=http://192.168.4.8:3128/
+  - export http_proxy=http://192.168.4.8:3128/
+
+# angular-build:
+#   stage: build
+#   image: node:16.19.1-alpine3.17
+#   script:
+#     - cd front
+#     - npm install --legacy-peer-deps
+#     - npm install -g @angular/cli
+#     - ng build
+#   cache:
+#     paths:
+#       - front/node_modules
+
+# java-build:
+#   stage: build
+#   image: maven:3.8.1-jdk-11
+#   script:
+#     - cd back
+#     - curl https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-parent/2.7.9/spring-boot-starter-parent-2.7.9.pom
+#     - mvn --log-file $CI_PROJECT_DIR/mvn.log $MAVEN_CLI_OPTS $MAVEN_OPTS clean package -DskipTests=true
+#   artifacts:
+#     name: "Maven artifacts from $CI_PROJECT_NAME on $CI_COMMIT_REF_SLUG"
+#     paths:
+#       - $CI_PROJECT_DIR/mvn.log
+#       # TEMP
+#       # - back/target/taf.war
+#     expire_in: 1 day
+#     when: always
+#   cache:
+#     paths:
+#       - $CI_PROJECT_DIR/.m2/repository
+
+# junit-test:
+#   stage: test
+#   image: maven:3.8.1-jdk-11
+#   script:
+#     - cd back
+#     - curl https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-parent/2.7.9/spring-boot-starter-parent-2.7.9.pom
+#     - mvn --log-file $CI_PROJECT_DIR/mvn.log $MAVEN_CLI_OPTS compile test
+#     - awk -F"," '{ instructions += $4 + $5; covered += $5 } END { print covered, "/", instructions, "instructions covered"; print 100*covered/instructions, "% covered" }' target/site/jacoco/jacoco.csv
+#   artifacts:
+#     reports:
+#       junit: back/target/surefire-reports/TEST*.xml
+#     paths:
+#       # TEMP
+#       # - back/target/site/jacoco
+#       - $CI_PROJECT_DIR/mvn.log
+#     expire_in: 1 day
+#     when: always
+#   cache:
+#     paths:
+#       - $CI_PROJECT_DIR/.m2/repository
+
+# # Tests d'intégrations
+# # robotframework-test:
+# #   stage: test
+# #   ...
+
+# quality-dev:
+#   stage: sonar
+#   image: maven:3.8.1-jdk-11
+#   script:
+#     - cd back
+#     # TEMP
+#     - curl https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-parent/2.7.9/spring-boot-starter-parent-2.7.9.pom
+#     - mvn --log-file $CI_PROJECT_DIR/mvn.log $MAVEN_CLI_OPTS compile test
+#     # TEMP
+#     - cp ./target/site/jacoco/jacoco.xml ./jacoco.xml
+#     - mvn --log-file $CI_PROJECT_DIR/mvn_clean_install.log $MAVEN_CLI_OPTS clean install -DskipTests=true
+#     - mvn --log-file $CI_PROJECT_DIR/mvn_dependency_check.log $MAVEN_CLI_OPTS dependency-check:check
+#     - mvn --log-file $CI_PROJECT_DIR/mvn_sonar.log $MAVEN_CLI_OPTS validate sonar:sonar -Dsonar.projectName=Team3_DevBranch -Dsonar.projectKey=Team3_DevBranch_Project -Dsonar.host.url=http://172.24.1.1:9000/sonar -Dsonar.login=f7545cc5cdd47846233306d2ee6e1430e1233fd3
+#   artifacts:
+#     paths:
+#       - $CI_PROJECT_DIR/mvn_clean_install.log
+#       - $CI_PROJECT_DIR/mvn_dependency_check.log
+#       - $CI_PROJECT_DIR/mvn_sonar.log
+#     expire_in: 1 day
+#     when: always
+#   cache:
+#     paths:
+#       - $CI_PROJECT_DIR/.m2/repository
+#   only:
+#     - dev
+#     - gitlab-ci
+  
+# quality-prod:
+#   stage: sonar
+#   image: maven:3.8.1-jdk-11
+#   script:
+#     - cd back
+#     # TEMP
+#     - curl https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-parent/2.7.9/spring-boot-starter-parent-2.7.9.pom
+#     - mvn --log-file $CI_PROJECT_DIR/mvn.log $MAVEN_CLI_OPTS compile test
+#     # TEMP
+#     - cp ./target/site/jacoco/jacoco.xml ./jacoco.xml
+#     - mvn --log-file $CI_PROJECT_DIR/mvn_clean_install.log $MAVEN_CLI_OPTS clean install -DskipTests=true
+#     - mvn --log-file $CI_PROJECT_DIR/mvn_dependency_check.log $MAVEN_CLI_OPTS dependency-check:check
+#     - mvn --log-file $CI_PROJECT_DIR/mvn_sonar.log $MAVEN_CLI_OPTS validate sonar:sonar -Dsonar.projectName=Team3_MasterBranch -Dsonar.projectKey=Team3_MasterBranch_Project -Dsonar.host.url=http://172.24.1.1:9000/sonar -Dsonar.login=66a042836678156de40eac28c940b009324df42c
+#   artifacts:
+#     paths:
+#       - $CI_PROJECT_DIR/mvn_clean_install.log
+#       - $CI_PROJECT_DIR/mvn_dependency_check.log
+#       - $CI_PROJECT_DIR/mvn_sonar.log
+#     expire_in: 1 day
+#     when: always
+#   cache:
+#     paths:
+#       - $CI_PROJECT_DIR/.m2/repository
+#   only:
+#     - master
+
+
+# # Déploiement sur le serveur de dev
+# angular-deploy-dev:
+#   stage: deploy-angular
+#   image: node:16.19.1-alpine3.17
+#   script:
+#     - cd front
+#     - npm install --legacy-peer-deps
+#     - npm install -g @angular/cli
+#     - ng build --configuration=development --base-href "."
+#   dependencies: []
+#   artifacts:
+#     paths:
+#       - front/dist
+#     expire_in: 1 hrs
+#   cache:
+#     paths:
+#       - front/node_modules
+#   only:
+#     - dev
+#     - gitlab-ci
+
+# java-deploy-dev:
+#   stage: deploy-java
+#   image: maven:3.8.1-jdk-11
+#   script:
+#     - cp -r front/dist/front/* back/src/main/resources/static/
+#     - cd back
+#     - mvn --log-file $CI_PROJECT_DIR/mvn.log $MAVEN_CLI_OPTS clean package -P dev -DskipTests=true
+#   dependencies:
+#     - angular-deploy-dev
+#   cache:
+#     paths:
+#       - $CI_PROJECT_DIR/.m2/repository
+#   artifacts:
+#     paths:
+#       - back/target/taf.war
+#       - $CI_PROJECT_DIR/mvn.log
+#     expire_in: 5 days
+#     when: always
+#   only:
+#     - dev
+#     - gitlab-ci
+
+# # selenium-test:
+# #   stage: selenium
+# #   image: srv-proxy.openstack.etudis.eseo.fr:1973/markhobson/maven-chrome:jdk-11
+# #   script:
+# #     - cd selenium
+# #     - mvn $MAVEN_CLI_OPTS clean verify
+# #   artifacts:
+# #     reports:
+# #       junit: selenium/target/surefire-reports/TEST*.xml
+# #   cache:
+# #     paths:
+# #       - $CI_PROJECT_DIR/.m2/repository
+# #   only:
+# #     - dev
+# #     - gitlab-ci
+# #     - Integrate-Create-Team-Component
+
+# # Déploiement sur le serveur de prod
+# angular-deploy-prod:
+#   stage: deploy-angular
+#   image: node:16.19.1-alpine3.17
+#   script:
+#     - cd front
+#     - npm install --legacy-peer-deps
+#     - npm install -g @angular/cli
+#     - ng build --configuration=production --base-href "."
+#   dependencies: []
+#   artifacts:
+#     paths:
+#       - front/dist
+#     expire_in: 1 hrs
+#   cache:
+#     paths:
+#       - front/node_modules
+#   only:
+#     - master
+
+# java-deploy-prod:
+#   stage: deploy-java
+#   image: maven:3.8.1-jdk-11
+#   script:
+#     - cp -r front/dist/front/* back/src/main/resources/static/
+#     - cd back
+#     - mvn --log-file $CI_PROJECT_DIR/mvn.log $MAVEN_CLI_OPTS clean package -P prod -DskipTests=true
+#   dependencies:
+#     - angular-deploy-prod
+#   cache:
+#     paths:
+#       - $CI_PROJECT_DIR/.m2/repository
+#   artifacts:
+#     paths:
+#       - back/target/taf.war
+#       - $CI_PROJECT_DIR/mvn.log
+#     expire_in: 5 days
+#     when: always
+#   only:
+#     - master
