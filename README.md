@@ -2,18 +2,18 @@
 [![coverage report](https://172.24.0.69/e4e/ld/projet-gl/2022-2023/caerdydd/badges/dev/coverage.svg)](https://172.24.0.69/e4e/ld/projet-gl/2022-2023/caerdydd/commits/dev)
 # Getting Started
 
-## Prepare Development Environment
+## Development Environment
 
-1. Install JDK 11 : [(jdk 11.0.18+10)](https://www.azul.com/downloads/?version=java-11-lts&os=windows&package=jdk#zulu)
+1. Install JDK 17 : [Download](https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.exe)
 
-2. Install Maven : [Maven](https://maven.apache.org/download.cgi)
+2. Install Maven : [Maven](https://dlcdn.apache.org/maven/maven-3/3.9.4/binaries/apache-maven-3.9.4-bin.zip)
     - Download Binary (zip for Win tar.gz for Mac)
     - Extract the file in your dev env
     - Add the bin path to your $PATH
 
 <br>
 
-3. Install Node.js : [(LTS : v18.15.0)](https://nodejs.org/download/release/latest-v18.x/)
+3. Install Node.js : [Download](https://nodejs.org/dist/v18.18.0/node-v18.18.0-x64.msi)
 
     - Install the Angular CLI :
 
@@ -32,62 +32,28 @@
         npm install -g @angular/cli
         ```
 
-4. Install Docker : [Docker](https://www.docker.com)
+4. Install Docker : [Download](https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe?utm_source=docker&utm_medium=webreferral&utm_campaign=dd-smartbutton&utm_location=module)
 
-5. Configure VS Code
+**IMPORTANT : Cocher "Démarrer au lancement de Windows"**
+
+5. MongoDB Compass (GUI) : [Download](https://downloads.mongodb.com/compass/mongodb-compass-1.40.2-win32-x64.exe?_ga=2.52666856.1787788633.1695885194-1182748192.1695725186)
+
+
+6. Configure VS Code
     - Add extensions :
         - Sonar Lint
         - Docker
         - GitLens
         - Maven
 
-### **Test Environment**
-To verify if everything is correctly setup you just have to run **build.sh**
+7. Configure IntelliJ
+    - Extensions ?
 
-To run the script, you can use :
-- Git bash on Windows
-- Standard terminal on Linux/Mac
-
-If the script end without error, you should be ready to dev !
-
-## Build for debugging
+## Build
 ### Back
-- Run directly the Back-end with the "RUN" button on VS Code
+ TODO
 ### Front
-- Start the front using :
+- Start the front using debug server :
 ```
 ng serve
 ```
-
-## Build for Production
-When you want to build for prod, just run the 'build.sh' script and it will start a docker container with tomcat and your front and back.
-
-The container is located on localhost:8080
-
-# Tools Used
-### Back-end :
-- AZUL Zulu 11.62.17 (jdk 11.0.18+10)
-- SpringBoot 2.7.9
-- Maven 3.9.0
-
-### Font :
-- Node.js v18.15.0
-- Angular
-
-# Reference Documentation
-For further reference, please consider the following sections:
-
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/3.0.4/maven-plugin/reference/html/)
-* [Spring Web](https://docs.spring.io/spring-boot/docs/3.0.4/reference/htmlsingle/#web)
-* [Angular Documentation](https://angular.io/start)
-* [Docker CLI References](https://docs.docker.com/engine/reference/run/)
-* [Dockerfile References](https://docs.docker.com/engine/reference/builder/)
-* [.gitlab-ci.yml (CI) References](https://docs.gitlab.com/ee/ci/yaml/)
-
-# Guides
-The following guides illustrate how to use some features concretely:
-
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
