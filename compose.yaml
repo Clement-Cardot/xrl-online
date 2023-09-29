@@ -1,0 +1,13 @@
+services:
+  mongodb:
+    build:
+      context: bdd
+      dockerfile: Dockerfile
+    ports:
+      - "27017:27017"
+  tomcat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
