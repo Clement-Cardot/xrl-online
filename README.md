@@ -1,5 +1,5 @@
-[![pipeline status](https://172.24.0.69/e4e/ld/projet-gl/2022-2023/caerdydd/badges/dev/pipeline.svg)](https://172.24.0.69/e4e/ld/projet-gl/2022-2023/caerdydd/commits/dev)
-[![coverage report](https://172.24.0.69/e4e/ld/projet-gl/2022-2023/caerdydd/badges/dev/coverage.svg)](https://172.24.0.69/e4e/ld/projet-gl/2022-2023/caerdydd/commits/dev)
+[![pipeline status](https://gitlab-etu.openstack.etudis.eseo.fr/s9-pfe-xrl-online/xrl-online/badges/main/pipeline.svg)](https://gitlab-etu.openstack.etudis.eseo.fr/s9-pfe-xrl-online/xrl-online/-/commits/main)
+[![coverage report](https://gitlab-etu.openstack.etudis.eseo.fr/s9-pfe-xrl-online/xrl-online/badges/main/coverage.svg)](https://gitlab-etu.openstack.etudis.eseo.fr/s9-pfe-xrl-online/xrl-online/-/commits/main)
 # Getting Started
 
 ## Development Environment
