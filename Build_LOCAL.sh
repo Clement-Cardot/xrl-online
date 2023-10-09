@@ -23,5 +23,7 @@ cd ../back
 mvn clean package
 
 # # 3. Build Docker
+docker compose kill
+docker compose rm -f
 docker compose build
 docker compose up

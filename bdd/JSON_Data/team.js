@@ -1,0 +1,22 @@
+db.team.insertMany([
+    {
+        "_id":1,
+        "name":"Team1",
+        "members":[1,2]
+    },
+    {
+        "_id":2,
+        "name":"Team2",
+        "members":[3,4,5]
+    },
+    {
+        "_id":3,
+        "name":"Team3",
+        "members":[6,7,8,9,10]
+    },
+    {
+        "_id":4,
+        "name":"Team4",
+        "members":[1,2,3,4,5,6,7,8,9,10]
+    }
+]);
