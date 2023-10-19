@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>{{ "TEAM.CREATE" | translate }}</h1>
+<mat-dialog-content>
+  <div id="first-form-container">
+    <mat-form-field>
+      <mat-label>Team Name</mat-label>
+      <input matInput placeholder="Team Name" [formControl]="formControlName" />
+      <mat-error *ngIf="formControlName.invalid">{{
+        getNameErrorMessage()
+      }}</mat-error>
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <button mat-button [mat-dialog-close]>Cancel</button>
+  <button
+    mat-button
+    (click)="saveTeam()"
+    [disabled]="formControlName.valid === false"
+  >
+    Save
+  </button>
+</mat-dialog-actions>

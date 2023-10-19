@@ -1,19 +1,34 @@
 <div id="loginComponent">
-    <form id="loginForm" [formGroup]="loginForm" (ngSubmit)="login()">
-        
-        <mat-form-field>
-            <mat-label>Enter your login</mat-label>
-            <input matInput  type="text" placeholder="Ex. clement.cardot" [formControl]="usernameFormControl"  [errorStateMatcher]="matcher" (change)="onChange()"/>
-            <mat-icon matSuffix>person</mat-icon>
-            <mat-error *ngIf="usernameFormControl.hasError('required')">
-                Un nom d'utilisateur est <strong>requis</strong>
-            </mat-error>
+
+    <!-- Close Dialog Button -->
+    <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+        <mat-icon class="close-icon" color="warn">close</mat-icon>
+    </button>
     
-            <!-- <mat-error *ngIf="usernameFormControl.hasError('incorrect')">
-                Login ou mot de passe incorrect(s)
-            </mat-error> -->
+    <!-- Login Form -->
+    <form id="loginForm" [formGroup]="loginForm" (ngSubmit)="login()" [hidden]="requestInProgress === true">
+        
+        <!-- Login Form Field -->
+        <mat-form-field>
+
+            <mat-label>{{ 'LOGIN.ENTER_LOGIN' | translate }}</mat-label>
+            <input matInput  type="text" placeholder="Ex. clement.cardot" [formControl]="usernameFormControl" [errorStateMatcher]="matcher" (change)="onChange()"/>
+            <mat-icon matSuffix>person</mat-icon>
+
+            <!-- Error to display if field is empty -->
+            <mat-error *ngIf="usernameFormControl.hasError('required')">
+                {{ 'LOGIN.LOGIN_REQUIRED' | translate }}
+            </mat-error>
+
+            <!-- Error to display if the login is incorrect (not registered) -->
+            <mat-error *ngIf="usernameFormControl.hasError('incorrect')">
+                {{ 'LOGIN.LOGIN_INCORRECT' | translate }}
+            </mat-error>
+
         </mat-form-field>
         
+        <!-- Keep this commented part for now as we may want to implement password authentication -->
+        <!-- Password Form Field -->
         <!-- <mat-form-field>
             <mat-label>Enter your password</mat-label>
             <input matInput [type]="showPassword ? 'password' : 'text'" [formControl]="passwordFormControl"  [errorStateMatcher]="matcher" (change)="onChange()">
@@ -22,6 +37,10 @@
             </button>
         </mat-form-field> -->
 
-        <button mat-raised-button color="accent" id="loginBtn">LOGIN</button>
+        <!-- Form submit button -->
+        <button mat-raised-button color="accent" id="loginBtn" [disabled]="loginForm.valid === false">{{'LOGIN.LOGIN' | translate}}</button>
     </form>
+
+    <!-- Spinner to display during API request -->
+    <mat-spinner *ngIf="requestInProgress === true"></mat-spinner>
 </div>

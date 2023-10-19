@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>{{title | translate}}</h1>
+<mat-dialog-content>
+  <div id="first-form-container">
+      <mat-form-field>
+        <mat-label>{{'USERS.FIRSTNAME' | translate}}</mat-label>
+        <input matInput [formControl]="firstnameFormControl">
+        <mat-error>{{getFirstNameErrorMessage()}}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>{{'USERS.LASTNAME' | translate}}</mat-label>
+        <input matInput [formControl]="lastnameFormControl">
+        <mat-error>{{getLastNameErrorMessage()}}</mat-error>
+      </mat-form-field>
+  </div>
+  <mat-form-field id="login-form-field">
+    <mat-label>{{'USERS.LOGIN' | translate}}</mat-label>
+    <input matInput [formControl]="loginFormControl">
+    <mat-error>{{getLoginErrorMessage()}}</mat-error>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <button mat-button [mat-dialog-close]="false">{{'CANCEL' | translate}}</button>
+  <button mat-button (click)="saveUser()">{{save | translate}}</button>
+</mat-dialog-actions>

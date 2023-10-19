@@ -22,6 +22,11 @@ cd ../back
 # # Compile back end
 mvn clean package
 
+# # 3. Build Database
+echo "Step 3 --> Build Database"
+cd ../bdd
+./compile_db_script.sh
+
 # # 3. Build Docker
 docker compose kill
 docker compose rm -f

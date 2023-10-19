@@ -1,29 +1,29 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginPageComponent } from './pages/login-page/login-page.component';
-import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.component';
 import { ProjectsPageComponent } from './pages/projects-page/projects-page.component';
-import { TeamsPageComponent } from './pages/teams-page/teams-page.component';
-import { UsersPageComponent } from './pages/users-page/users-page.component';
+import { HomePageComponent } from './pages/home-page/home-page.component';
+import { ReadinessLevelPageComponent } from './pages/readiness-level-page/readiness-level-page.component';
+import { AdminReadinessLevelPageComponent } from './pages/admin-readiness-level-page/admin-readiness-level-page.component';
+import { AdminTeamPageComponent } from './pages/admin-team-page/admin-team-page.component';
+import { AdminBusinessLinePageComponent } from './pages/admin-business-line-page/admin-business-line-page.component';
 
 const websiteName = ' - xRL Online';
 
 const routes: Routes = [
 
-  // Login Page
-  {path: '', title: 'Login' + websiteName, component: LoginPageComponent},
-
-  // Main Page (Dashboard)
-  {path: 'dashboard', title: 'Dashboard' + websiteName, component: DashboardPageComponent},
+  // Home Page
+  {path: '', title: 'Home' + websiteName, component: HomePageComponent},
 
   // Projects Page
-  {path: 'projects', title: 'Projects' + websiteName, component: ProjectsPageComponent},
+  {path: 'Projects', title: 'Projects' + websiteName, component: ProjectsPageComponent},
 
-  // Teams Page
-  {path: 'teams', title: 'Teams' + websiteName, component: TeamsPageComponent},
+  // Readiness Levels Page
+  {path: 'ReadinessLevels', title: 'Readiness Levels' + websiteName, component: ReadinessLevelPageComponent},
 
-  // Users Page
-  {path: 'users', title: 'Users' + websiteName, component: UsersPageComponent},
+  // Admin Pages :
+  {path: 'Admin/ReadinessLevels', title: 'Admin RL' + websiteName, component: AdminReadinessLevelPageComponent},
+  {path: 'Admin/Teams', title: 'Admin Teams' + websiteName, component: AdminTeamPageComponent},
+  {path: 'Admin/BusinessLines', title: 'Admin BL' + websiteName, component: AdminBusinessLinePageComponent},
 ];
 
 @NgModule({

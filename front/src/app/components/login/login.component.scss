@@ -1,3 +1,9 @@
+.close-button{
+    float: right;
+    top:-24px;
+    right:-24px;
+}
+
 #loginComponent {
     padding: 2rem;
     background-color: #F2F3F4;
@@ -9,3 +15,11 @@
     flex-direction: column;
     width: 25rem;
 }
+
+#loginBtn {
+    margin-top: 1rem;
+}
+
+[hidden] {
+    display: none !important;
+  }

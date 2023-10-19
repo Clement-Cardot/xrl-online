@@ -1,0 +1,68 @@
+{
+  "YES": "Yes",
+  "NO": "No",
+  "CANCEL": "Cancel",
+  "SAVE": "Save",
+  "CREATE": "Create",
+  "CLOSE": "Close",
+  "MENU": {
+    "HOME": "Home",
+    "PROJECTS": "Projects",
+    "READINESS_LEVELS": "Readiness Levels",
+    "MANAGEMENT": "Management",
+    "TEAMS": "Teams",
+    "BUSINESS_LINES": "Business Lines",
+    "CLOSE": "Close"
+  },
+
+  "LOGIN": {
+    "LOGIN": "LOGIN",
+    "LOGOUT": "LOGOUT",
+    "LOGOUT_SUCCESS": "Good bye {{username}} !",
+    "ENTER_LOGIN": "Enter a login",
+    "LOGIN_REQUIRED": "A login is required",
+    "LOGIN_INCORRECT": "Login is incorrect",
+    "SUCCESS": "Welcome back {{username}} !",
+    "SUCCESS_CLOSE": "Close"
+  },
+
+  "USERS": {
+      "DELETE_USER": "Are you sure to delete user :",
+      "FIRSTNAME_REQUIRED": "A firstname is required",
+      "LASTNAME_REQUIRED": "A lastname is required",
+      "LOGIN_REQUIRED": "An login is required",
+      "LOGIN_ALREADY_EXISTS": "Login already exists",
+      "SEARCH_USER": "Search a user",
+      "CREATE_USER": "Create a user",
+      "EDIT_USER": "Edit a user",
+      "USER_CREATED": "User created",
+      "USER_UPDATED": "User updated",
+      "USER_DELETED": "User deleted",
+      "FIRSTNAME": "Firstname",
+      "LASTNAME": "Lastname",
+      "LOGIN": "Login"
+  },
+
+  "TEAM": {
+    "NAME_REQUIRED": "Team's name is required",
+    "NAME_MIN_LENGTH": "Team's name must be at least 3 characters long",
+    "NAME_MAX_LENGTH": "Team's name must be at most 20 characters long",
+    "DELETE_CONFIRM": "Are you sure you want to delete this team?",
+    "DELETE_SUCCESS": "The team has been deleted successfully",
+    "DELETE_ERROR": "An error occurred while deleting the team",
+    "CREATE_SUCCESS": "The team has been created successfully",
+    "CREATE_ERROR": "An error occurred while creating the team",
+    "UPDATE_SUCCESS": "The team has been updated successfully",
+    "UPDATE_ERROR": "An error occurred while updating the team",
+    "CANCEL": "Cancel",
+    "CREATE": "Create a new Team",
+    "UPDATE": "Update this Team",
+    "DELETE": "Delete"
+  },
+
+  "FOOTER": {
+    "ALL_RIGHTS_RESERVED": "All rights reserved",
+    "KTH_LICENCE": "The KTH work is licensed under a Creative Commons",
+    "KTH_LICENCE2": "Attribution-NonCommercial-ShareAlike 4.0 International License."
+  }
+}

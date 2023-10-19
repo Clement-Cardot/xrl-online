@@ -2,6 +2,14 @@
 [![coverage report](https://gitlab-etu.openstack.etudis.eseo.fr/s9-pfe-xrl-online/xrl-online/badges/main/coverage.svg)](https://gitlab-etu.openstack.etudis.eseo.fr/s9-pfe-xrl-online/xrl-online/-/commits/main)
 # Getting Started
 
+## Documentation
+
+The documentation is accessible in the folder ./docs<br>
+To visualize it in the browser :
+
+1. Install mkdocs :  ```pip install mkdocs```
+2. Run the server :  ```mkdocs serve``` OR ```python -m mkdocs serve```
+
 ## Development Environment
 
 1. Install JDK 17 : [Download](https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.exe)
@@ -39,16 +47,6 @@
 5. MongoDB Compass (GUI) : [Download](https://downloads.mongodb.com/compass/mongodb-compass-1.40.2-win32-x64.exe?_ga=2.52666856.1787788633.1695885194-1182748192.1695725186)
 
 
-6. Configure VS Code
-    - Add extensions :
-        - Sonar Lint
-        - Docker
-        - GitLens
-        - Maven
-
-7. Configure IntelliJ
-    - Extensions ?
-
 ## Build
 
 Use the Build_Script.sh file in a shell env (git bash)
@@ -58,4 +56,5 @@ This script will :
 1. Remove any artifact from last build
 2. Build the Angular app
 3. Build the Spring Boot app
-4. Deploy Front/Back/BDD with a docker compose
+4. Build the DB script
+5. Deploy Front/Back/BDD with a docker compose

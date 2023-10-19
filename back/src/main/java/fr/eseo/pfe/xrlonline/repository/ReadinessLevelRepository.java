@@ -1,6 +1,6 @@
 package fr.eseo.pfe.xrlonline.repository;
 
-import fr.eseo.pfe.xrlonline.model.ReadinessLevel;
+import fr.eseo.pfe.xrlonline.model.entity.ReadinessLevel;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,32 +1,31 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginPageComponent } from './login-page/login-page.component';
-import { TeamsPageComponent } from './teams-page/teams-page.component';
-import { UsersPageComponent } from './users-page/users-page.component';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { ProjectsPageComponent } from './projects-page/projects-page.component';
-import { DashboardPageComponent } from './dashboard-page/dashboard-page.component';
 import { ComponentsModule } from '../components/components.module';
-
-
+import { HomePageComponent } from './home-page/home-page.component';
+import { ReadinessLevelPageComponent } from './readiness-level-page/readiness-level-page.component';
+import { AdminReadinessLevelPageComponent } from './admin-readiness-level-page/admin-readiness-level-page.component';
+import { AdminTeamPageComponent } from './admin-team-page/admin-team-page.component';
+import { AdminBusinessLinePageComponent } from './admin-business-line-page/admin-business-line-page.component';
 
 @NgModule({
   declarations: [
-    LoginPageComponent,
-    TeamsPageComponent,
-    UsersPageComponent,
     ProjectsPageComponent,
-    DashboardPageComponent
+    HomePageComponent,
+    ReadinessLevelPageComponent,
+    AdminReadinessLevelPageComponent,
+    AdminTeamPageComponent,
+    AdminBusinessLinePageComponent,
   ],
-  imports: [
-    CommonModule,
-    ComponentsModule
-  ],
+  imports: [CommonModule, ComponentsModule, MatGridListModule],
   exports: [
-    LoginPageComponent,
-    TeamsPageComponent,
-    UsersPageComponent,
     ProjectsPageComponent,
-    DashboardPageComponent
-  ]
+    HomePageComponent,
+    ReadinessLevelPageComponent,
+    AdminReadinessLevelPageComponent,
+    AdminTeamPageComponent,
+    AdminBusinessLinePageComponent,
+  ],
 })
-export class PagesModule { }
+export class PagesModule {}

@@ -233,8 +233,8 @@ db.createCollection("projects", {
 const users = db.users.insertMany([
     {
         "login":"admin",
-        "firstName":"",
-        "lastName":""
+        "firstName":"admin",
+        "lastName":"admin"
     },
     {
         "login":"cardotcl",

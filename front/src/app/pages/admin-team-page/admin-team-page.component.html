@@ -1,0 +1,9 @@
+<div class="body-container">
+  <div class="user-container">
+    <app-users-management></app-users-management>
+  </div>
+  <div class="team-container">
+    <app-add-team-card></app-add-team-card>
+    <app-team-card *ngFor="let team of teams" [team]="team"></app-team-card>
+  </div>
+</div>
