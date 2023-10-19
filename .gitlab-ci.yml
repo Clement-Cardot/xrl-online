@@ -5,9 +5,7 @@ stages:
   - build
   - test
   - sonar
-  - deploy-angular
-  - deploy-java
-  - selenium
+  - deploy
 
 variables:
   MAVEN_OPTS: "-Dhttp.proxyHost=192.168.4.8 -Dhttp.proxyPort=3128 -Dhttps.proxyHost=192.168.4.8 -Dhttps.proxyPort=3128 -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
@@ -65,76 +63,29 @@ junit-test:
     paths:
       - $CI_PROJECT_DIR/.m2/repository
 
-# quality-dev:
-#   stage: sonar
-#   image: maven:3.8.1-jdk-11 TODO: Change to a jdk17 docker image
-#   script:
-#     - cd back
-#     # TEMP
-#     - curl https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-parent/2.7.9/spring-boot-starter-parent-2.7.9.pom
-#     - mvn --log-file $CI_PROJECT_DIR/mvn.log $MAVEN_CLI_OPTS compile test
-#     # TEMP
-#     - cp ./target/site/jacoco/jacoco.xml ./jacoco.xml
-#     - mvn --log-file $CI_PROJECT_DIR/mvn_clean_install.log $MAVEN_CLI_OPTS clean install -DskipTests=true
-#     - mvn --log-file $CI_PROJECT_DIR/mvn_dependency_check.log $MAVEN_CLI_OPTS dependency-check:check
-#     - mvn --log-file $CI_PROJECT_DIR/mvn_sonar.log $MAVEN_CLI_OPTS validate sonar:sonar -Dsonar.projectName=Team3_DevBranch -Dsonar.projectKey=Team3_DevBranch_Project -Dsonar.host.url=http://172.24.1.1:9000/sonar -Dsonar.login=f7545cc5cdd47846233306d2ee6e1430e1233fd3
-#   artifacts:
-#     paths:
-#       - $CI_PROJECT_DIR/mvn_clean_install.log
-#       - $CI_PROJECT_DIR/mvn_dependency_check.log
-#       - $CI_PROJECT_DIR/mvn_sonar.log
-#     expire_in: 1 day
-#     when: always
-#   cache:
-#     paths:
-#       - $CI_PROJECT_DIR/.m2/repository
-#   only:
-#     - dev
-#     - gitlab-ci
+quality-dev:
+  stage: sonar
+  image: maven:3.8.1-openjdk-17
+  script:
+    - cd back
+    - mvn --log-file $CI_PROJECT_DIR/mvn_clean_compile_test.log $MAVEN_CLI_OPTS clean compile test
+    - mvn --log-file $CI_PROJECT_DIR/mvn_sonar.log $MAVEN_CLI_OPTS validate sonar:sonar -Dsonar.projectKey=xrl_online_project -Dsonar.host.url=http://172.24.1.1:9000/sonar/ -Dsonar.login=7da805893c73d497f7809137de83b2236e45cf27
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/mvn_clean_compile_test.log
+      - $CI_PROJECT_DIR/mvn_sonar.log
+    expire_in: 1 day
+    when: always
+  cache:
+    paths:
+      - $CI_PROJECT_DIR/.m2/repository
+  only:
+    - dev
+    - add-sonar-to-CI
 
-
-# # Déploiement sur le serveur de dev
-# angular-deploy-dev:
-#   stage: deploy-angular
-#   image: node:16.19.1-alpine3.17
-#   script:
-#     - cd front
-#     - npm install --legacy-peer-deps
-#     - npm install -g @angular/cli
-#     - ng build --configuration=development --base-href "."
-#   dependencies: []
-#   artifacts:
-#     paths:
-#       - front/dist
-#     expire_in: 1 hrs
-#   cache:
-#     paths:
-#       - front/node_modules
-#   only:
-#     - dev
-#     - gitlab-ci
-
-# java-deploy-dev:
-#   stage: deploy-java
-#   image: maven:3.8.1-jdk-11
-#   script:
-#     - cp -r front/dist/front/* back/src/main/resources/static/
-#     - cd back
-#     - mvn --log-file $CI_PROJECT_DIR/mvn.log $MAVEN_CLI_OPTS clean package -P dev -DskipTests=true
-#   dependencies:
-#     - angular-deploy-dev
-#   cache:
-#     paths:
-#       - $CI_PROJECT_DIR/.m2/repository
-#   artifacts:
-#     paths:
-#       - back/target/taf.war
-#       - $CI_PROJECT_DIR/mvn.log
-#     expire_in: 5 days
-#     when: always
-#   only:
-#     - dev
-#     - gitlab-ci
+# TODO: deploy to dev
+# deploy:
+#   stage: deploy
 
 # # Tests E2E
 # # cypress-test:

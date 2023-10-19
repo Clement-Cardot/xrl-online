@@ -1,6 +1,10 @@
 package fr.eseo.pfe.xrlonline.controller;
 
-import fr.eseo.pfe.xrlonline.model.BusinessLine;
+import fr.eseo.pfe.xrlonline.model.entity.BusinessLine;
+import fr.eseo.pfe.xrlonline.model.entity.Project;
+import fr.eseo.pfe.xrlonline.model.entity.ReadinessLevel;
+import fr.eseo.pfe.xrlonline.repository.ProjectRepository;
+import fr.eseo.pfe.xrlonline.repository.ReadinessLevelRepository;
 import fr.eseo.pfe.xrlonline.service.BusinessLineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,0 +1,46 @@
+mat-card {
+  width: 100%;
+  height: 100%;
+  background: rgba(49, 185.5, 244, 0.2);
+  border-radius: 20px;
+  overflow: auto;
+  border: 1px black solid;
+  padding: 20px;
+}
+
+mat-card-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8em;
+}
+
+mat-card-header > .mat-card-title {
+  font-weight: bold;
+}
+
+mat-card-content {
+  max-height: 14.3em;
+  overflow: auto;
+}
+
+mat-icon {
+  cursor: pointer;
+  margin: 0 0.4em;
+}
+
+.icons-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+table {
+  background-color: transparent;
+}
+
+.firstNameCell{
+  width: 9rem;
+}

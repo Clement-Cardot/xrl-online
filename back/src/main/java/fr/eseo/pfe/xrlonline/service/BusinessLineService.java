@@ -1,6 +1,6 @@
 package fr.eseo.pfe.xrlonline.service;
 
-import fr.eseo.pfe.xrlonline.model.BusinessLine;
+import fr.eseo.pfe.xrlonline.model.entity.BusinessLine;
 import fr.eseo.pfe.xrlonline.repository.BusinessLineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

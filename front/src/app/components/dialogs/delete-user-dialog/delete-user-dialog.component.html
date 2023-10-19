@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>{{'USERS.DELETE_USER' | translate}}</h1>
+<mat-dialog-content>
+  <p>{{data.firstName}} {{data.lastName}}</p>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <button mat-button [mat-dialog-close]="false">{{'NO' | translate}}</button>
+  <button mat-button [mat-dialog-close]="true">{{'YES' | translate}}</button>
+</mat-dialog-actions>

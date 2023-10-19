@@ -1,0 +1,88 @@
+<div>
+    <!-- Standard navbar Menu -->
+    <mat-toolbar>
+      <mat-toolbar-row>
+        <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm>
+          <mat-icon>menu</mat-icon>
+        </button>
+
+        <!-- Navigation Buttons of the Navbar -->
+        <div id="barMenu">
+
+            <a href="#" mat-button id="mainButton">xRL Online</a>
+
+            <!-- The following menu items will be hidden on both SM and XS screen sizes -->
+            <div fxShow="true" fxHide.lt-md="true">
+                <button mat-button class="menuButton" (click)="switchPage('/')">{{ 'MENU.HOME' | translate }}</button>
+
+                <button mat-button class="menuButton" (click)="switchPage('/Projects')">{{ 'MENU.PROJECTS' | translate }}</button>
+    
+                <button mat-button class="menuButton" (click)="switchPage('/ReadinessLevels')">{{ 'MENU.READINESS_LEVELS' | translate }}</button>
+              
+                <button mat-button  class="menuButton" [matMenuTriggerFor]="menu" *ngIf="currentUser?.login==='admin'">
+                    <mat-icon>keyboard_arrow_down</mat-icon>
+                    {{ 'MENU.MANAGEMENT' | translate }}
+                </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="switchPage('/Admin/ReadinessLevels')">{{ 'MENU.READINESS_LEVELS' | translate }}</button>
+                    <button mat-menu-item (click)="switchPage('/Admin/Teams')">{{ 'MENU.TEAMS' | translate }}</button>
+                    <button mat-menu-item (click)="switchPage('/Admin/BusinessLines')">{{ 'MENU.BUSINESS_LINES' | translate }}</button>
+                </mat-menu>
+            </div>
+            
+        </div>
+
+        <!-- Language and Login/Logout NavBar element -->
+        <div class="rightNavBarElement">
+          
+            <app-language-menu></app-language-menu>
+
+            <div *ngIf="currentUser===undefined">
+              <button mat-flat-button color="primary" (click)="openLoginDialog('1000ms', '1000ms')">{{ 'LOGIN.LOGIN' | translate }}</button>
+            </div>
+
+            <div *ngIf="currentUser!==undefined">
+              <button mat-flat-button color="primary" (click)="logout()">{{ 'LOGIN.LOGOUT' | translate }}</button>
+            </div>
+
+        </div>
+
+      </mat-toolbar-row>
+    </mat-toolbar>
+  
+    <!-- Sidenav for tablet / smartphone -->
+    <mat-sidenav-container fxFlexFill>
+      <mat-sidenav #sidenav>
+
+        <mat-nav-list>
+            <button mat-list-item class="menuButton" (click)="switchPage('/')">{{ 'MENU.HOME' | translate }}</button>
+
+            <button mat-list-item class="menuButton" (click)="switchPage('/Projects')">{{ 'MENU.PROJECTS' | translate }}</button>
+
+            <button mat-list-item class="menuButton" (click)="switchPage('/ReadinessLevels')">{{ 'MENU.READINESS_LEVELS' | translate }}</button>
+          
+            <button mat-list-item  class="menuButton" [matMenuTriggerFor]="menu" onclick="reverseArrow()">
+                <mat-icon>keyboard_arrow_down</mat-icon>
+                {{ 'MENU.MANAGEMENT' | translate }}
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="switchPage('/Admin/ReadinessLevels')">{{ 'MENU.READINESS_LEVELS' | translate }}</button>
+                <button mat-menu-item (click)="switchPage('/Admin/Teams')">{{ 'MENU.TEAMS' | translate }}</button>
+                <button mat-menu-item (click)="switchPage('/Admin/BusinessLevels')">{{ 'MENU.BUSINESS_LINES' | translate }}</button>
+            </mat-menu>
+          <button (click)="sidenav.toggle()" mat-list-item>
+            <mat-icon>close</mat-icon> {{ 'MENU.CLOSE' | translate }}
+          </button>
+        </mat-nav-list>
+
+      </mat-sidenav>
+
+      <!-- Router Outlet -->
+      <mat-sidenav-content fxFlexFill>
+        <router-outlet></router-outlet>
+        <app-footer></app-footer>
+      </mat-sidenav-content>
+
+    </mat-sidenav-container>
+    
+  </div>

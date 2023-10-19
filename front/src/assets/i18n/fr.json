@@ -1,0 +1,69 @@
+{
+  "YES": "Oui",
+  "NO": "Non",
+  "CANCEL": "Annuler",
+  "SAVE": "Enregistrer",
+  "CREATE": "Créer",
+  "CLOSE": "Fermer",
+
+  "MENU": {
+    "HOME": "Accueil",
+    "PROJECTS": "Projets",
+    "READINESS_LEVELS": "Niveaux de Maturité",
+    "MANAGEMENT": "Gestion",
+    "TEAMS": "Equipes",
+    "BUSINESS_LINES": "Secteurs d'activité",
+    "CLOSE": "Fermer"
+  },
+
+  "LOGIN": {
+    "LOGIN": "CONNEXION",
+    "LOGOUT": "DÉCONNEXION",
+    "LOGOUT_SUCCESS": "Au revoir {{username}} !",
+    "ENTER_LOGIN": "Entrer votre identifiant",
+    "LOGIN_REQUIRED": "Un identifiant est requis",
+    "LOGIN_INCORRECT": "Identifiant incorrect",
+    "SUCCESS": "Bienvenue {{username}} !",
+    "SUCCESS_CLOSE": "Fermer"
+  },
+
+  "USERS": {
+      "DELETE_USER": "Voulez-vous vraiment supprimer l'utilisateur :",
+      "FIRSTNAME_REQUIRED": "Un prénom est requis",
+      "LASTNAME_REQUIRED": "Un nom est requis",
+      "LOGIN_REQUIRED": "Un identifiant est requis",
+      "LOGIN_ALREADY_EXISTS": "Cet identifiant existe déjà",
+      "SEARCH_USER": "Rechercher un utilisateur",
+      "CREATE_USER": "Créer un utilisateur",
+      "EDIT_USER": "Éditer un utilisateur",
+      "USER_CREATED": "Utilisateur créé",
+      "USER_UPDATED": "Utilisateur mis à jour",
+      "USER_DELETED": "Utilisateur supprimé",
+      "FIRSTNAME": "Prénom",
+      "LASTNAME": "Nom",
+      "LOGIN": "Identifiant"
+  },
+
+  "TEAM": {
+    "NAME_REQUIRED": "Le nom de l'équipe est requis",
+    "NAME_MIN_LENGTH": "Le nom de l'équipe doit contenir au moins 3 caractères",
+    "NAME_MAX_LENGTH": "Le nom de l'équipe ne doit pas dépasser 20 caractères",
+    "DELETE_CONFIRM": "Etes-vous sûr de vouloir supprimer l'équipe ?",
+    "DELETE_SUCCESS": "L'équipe a été supprimée avec succès",
+    "DELETE_ERROR": "Une erreur est survenue lors de la suppression de l'équipe",
+    "CREATE_SUCCESS": "L'équipe a été créée avec succès",
+    "CREATE_ERROR": "Une erreur est survenue lors de la création de l'équipe",
+    "UPDATE_SUCCESS": "L'équipe a été mise à jour avec succès",
+    "UPDATE_ERROR": "Une erreur est survenue lors de la mise à jour de l'équipe",
+    "CANCEL": "Annuler",
+    "CREATE": "Créer une équipe",
+    "UPDATE": "Mettre à jour cette équipe",
+    "DELETE": "Supprimer"
+  },
+
+  "FOOTER": {
+    "ALL_RIGHTS_RESERVED": "Tous droits réservés",
+    "KTH_LICENCE1": "Le travail de KTH est placée sous une licence Creative Commons",
+    "KTH_LICENCE2": "Attribution-NonCommercial-ShareAlike 4.0 International License."
+  }
+}

@@ -1,0 +1,7 @@
+<h1 mat-dialog-title>{{ "TEAM.DELETE_CONFIRM" | translate }}</h1>
+<mat-dialog-actions align="center">
+  <button mat-button [mat-dialog-close]>{{ "TEAM.CANCEL" | translate }}</button>
+  <button mat-button (click)="deleteTeam()">
+    {{ "TEAM.DELETE" | translate }}
+  </button>
+</mat-dialog-actions>

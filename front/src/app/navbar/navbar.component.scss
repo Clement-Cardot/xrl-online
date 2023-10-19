@@ -1,0 +1,39 @@
+.icon {
+    padding: 0 14px;
+  }
+
+mat-toolbar-row {
+    background-color: white;
+    position: fixed;
+    z-index: 2;
+    justify-content: space-between;
+}
+
+#barMenu {
+    display: flex;
+    align-items: center;
+}
+
+#mainButton {
+    font-family: Arial, Monospace;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: normal;
+    margin-right: 2rem;
+}
+
+.menuButton {
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.rightNavBarElement {
+    display: flex;
+    align-items: baseline;
+    flex-direction: row;
+}
+
+.rightNavBarElement button {
+    margin-left: 2rem;
+}

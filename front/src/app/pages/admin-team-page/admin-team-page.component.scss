@@ -1,0 +1,35 @@
+.body-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 0 6rem;
+}
+
+.user-container {
+  width: 30%;
+  //background-color: blueviolet;
+  display: flex;
+  justify-content: center;
+}
+
+.team-container {
+  width: 70%;
+  //background-color: aqua;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+app-team-card,
+app-add-team-card {
+  width: calc(50% - 80px);
+  margin: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+app-users-management {
+  width: 100%;
+  margin: 2rem 3rem;
+}
