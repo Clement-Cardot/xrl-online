@@ -10,12 +10,36 @@
 	</parent>
 	<groupId>fr.eseo.pfe</groupId>
 	<artifactId>xrlonline</artifactId>
+	<version>0.2</version>
 	<packaging>war</packaging>
 	<name>xrlonline</name>
 	<description>Web App implementing Readiness Level</description>
+
 	<properties>
 		<java.version>17</java.version>
 	</properties>
+
+	<profiles>
+		<profile>
+			<id>local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<activatedProperties>local</activatedProperties>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<activatedProperties>prod</activatedProperties>
+			</properties>
+		</profile>
+	</profiles>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
