@@ -10,7 +10,7 @@ COPY .tomcat/context.xml /usr/local/tomcat/webapps/host-manager/META-INF/context
 COPY .tomcat/context.xml /usr/local/tomcat/webapps/manager/META-INF/context.xml
 
 # Deploy Back End
-COPY back/target/*.war /usr/local/tomcat/webapps/
+COPY back/target/xrlonline-0.2.war /usr/local/tomcat/webapps/api.war
 
 # Deploy Front End
-COPY front/dist/xrl /usr/local/tomcat/webapps/xrl
+COPY front/dist/xrl /usr/local/tomcat/webapps/ROOT
