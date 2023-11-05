@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { TeamModel } from '../../core/data/models/team.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiTeamService } from '../../core/services/api-team.service';
-import { AddTeamDialogComponent } from '../dialogs/add-team-dialog/add-team-dialog.component';
+import { AddTeamDialogComponent } from '../add-team-dialog/add-team-dialog.component';
 
 @Component({
   selector: 'app-add-team-card',

@@ -5,23 +5,11 @@ stages:
   - build
   - test
   - sonar
-  - release
   - deploy
-  - e2e
 
 variables:
   MAVEN_OPTS: "-Dhttp.proxyHost=192.168.4.8 -Dhttp.proxyPort=3128 -Dhttps.proxyHost=192.168.4.8 -Dhttps.proxyPort=3128 -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
-  DEV_SERVER_IP: 172.24.1.26
-  DEV_SERVER_USER: etudiant
-  DOCKER_IMAGE_REPOSITORY_URL: srv-proxy.openstack.etudis.eseo.fr:1971
- 
-workflow:
-  rules:
-    - if: $CI_MERGE_REQUEST_IID
-    - if: $CI_COMMIT_TAG
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_COMMIT_REF_PROTECTED == "true"
 
 before_script:
   - export https_proxy=http://192.168.4.8:3128/
@@ -35,11 +23,6 @@ angular-build:
     - npm install
     - npm install -g @angular/cli
     - ng build
-  artifacts:
-    paths:
-      - front/dist
-    expire_in: 1 day
-    when: always
   cache:
     paths:
       - front/node_modules
@@ -51,6 +34,7 @@ java-build:
     - cd back
     - mvn --log-file $CI_PROJECT_DIR/mvn.log $MAVEN_CLI_OPTS $MAVEN_OPTS clean package -DskipTests=true
   artifacts:
+    name: "Maven artifacts from $CI_PROJECT_NAME on $CI_COMMIT_REF_SLUG"
     paths:
       - $CI_PROJECT_DIR/mvn.log
       - back/target/xrlonline-*.war
@@ -66,8 +50,7 @@ junit-test:
   script:
     - cd back
     - mvn --log-file $CI_PROJECT_DIR/mvn.log $MAVEN_CLI_OPTS compile test
-    - awk -F"," '{ instructions += $4 + $5; covered += $5 } END { printf "Total Coverage = %.0f%%", 100*covered/instructions }' target/site/jacoco/jacoco.csv
-  coverage: '/Total.*?([0-9]{1,3})%/'
+    - awk -F"," '{ instructions += $4 + $5; covered += $5 } END { print covered, "/", instructions, "instructions covered"; print 100*covered/instructions, "% covered" }' target/site/jacoco/jacoco.csv
   artifacts:
     reports:
       junit: back/target/surefire-reports/TEST*.xml
@@ -79,9 +62,6 @@ junit-test:
   cache:
     paths:
       - $CI_PROJECT_DIR/.m2/repository
-  needs:
-    - job: java-build
-      artifacts: true
 
 quality-dev:
   stage: sonar
@@ -99,87 +79,15 @@ quality-dev:
   cache:
     paths:
       - $CI_PROJECT_DIR/.m2/repository
-  needs:
-  - job: java-build
-    artifacts: true
-  - job: junit-test
-    artifacts: true
   only:
     - dev
+    - add-sonar-to-CI
 
-release:
-  stage: release
-  tags:
-    - runner9
-  variables:
-    DOCKER_TLS_CERTDIR: ""
-    DOCKER_HOST: "tcp://docker:2375"
-    HTTPS_PROXY: "http://192.168.4.8:3128/"
-    HTTP_PROXY: "http://192.168.4.8:3128/"
-    NO_PROXY: "192.168.4.8,srv-proxy.openstack.eseo.fr,172.24.0.0/16,docker,gitlab-etu.openstack.etudis.eseo.fr"
-  image: docker:24.0.6
-  services:
-    - docker:24.0.6-dind
-  script:
-    - docker compose build
-    - echo $DOCKER_USER
-    - echo $DOCKER_PASSWORD | docker login --username $DOCKER_USER --password-stdin docker.io
-    - docker compose push
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+# TODO: deploy to dev
+# deploy:
+#   stage: deploy
 
-deploy:
-  stage: deploy
-  tags:
-    - runner9
-  variables:
-    DOCKER_TLS_CERTDIR: ""
-    DOCKER_HOST: "tcp://docker:2375"
-    HTTPS_PROXY: "http://192.168.4.8:3128/"
-    HTTP_PROXY: "http://192.168.4.8:3128/"
-    NO_PROXY: "192.168.4.8,srv-proxy.openstack.eseo.fr,172.24.0.0/16,docker,gitlab-etu.openstack.etudis.eseo.fr,$DEV_SERVEUR"
-  image: docker:24.0.6
-  services:
-    - docker:24.0.6-dind
-  script:
-    # starts the SSH agent on the build machine
-    - eval $(ssh-agent -s)
-    # adds the SSH key to the ssh-agent for GitLab CI/CD pipeline.
-    - cat "$DEV_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
-    - mkdir /root/.ssh && chmod 0700 /root/.ssh
-    - ssh-keyscan $DEV_SERVER_IP >> /root/.ssh/known_hosts
-
-    - echo $DOCKER_PASSWORD | docker login --username $DOCKER_USER --password-stdin docker.io
-    - DOCKER_HOST=ssh://$DEV_SERVER_USER@$DEV_SERVER_IP docker compose down --remove-orphans
-    - DOCKER_HOST=ssh://$DEV_SERVER_USER@$DEV_SERVER_IP docker compose pull
-    - DOCKER_HOST=ssh://$DEV_SERVER_USER@$DEV_SERVER_IP docker compose up -d
-  needs:
-    - job: release
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-
-cypress-test:
-  stage: e2e
-  image: cypress/base:20.9.0
-  script:
-    - cd front
-    # put server IP
-    - sed -i "s/localhost:4200/$DEV_SERVER_IP:8080/g" ./cypress.config.ts
-    - sed -i "s/localhost:27017/$DEV_SERVER_IP:27017/g" ./cypress.config.ts
-    # install dependencies
-    - npm config set proxy http://192.168.4.8:3128/
-    - npm config set https-proxy http://192.168.4.8:3128/
-    - npm install
-    # run Cypress tests
-    - npm run cypress:run
-  after_script:
-    - cd front
-    # combine junit reports
-    - npm run merge-reports
-  artifacts:
-    reports:
-      junit: front/cypress/results/e2e-test-report.xml
-  needs:
-    - job: deploy
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+# # Tests E2E
+# # cypress-test:
+# #   stage: test
+# #   ...

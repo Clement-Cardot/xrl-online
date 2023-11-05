@@ -6,8 +6,6 @@ import fr.eseo.pfe.xrlonline.model.entity.Team;
 import fr.eseo.pfe.xrlonline.model.entity.User;
 import fr.eseo.pfe.xrlonline.repository.TeamRepository;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,8 +23,6 @@ public class TeamService {
 
     @Autowired
     private ModelMapper modelMapper;
-
-    Logger logger = LoggerFactory.getLogger(TeamService.class);
 
     public ResponseEntity<TeamDTO> getTeamById(String id) throws CustomRuntimeException {
         Team team = teamRepository.findById(id).orElse(null);
@@ -52,6 +48,9 @@ public class TeamService {
         if (teamDTO.getName() == null) {
             throw new CustomRuntimeException(CustomRuntimeException.TEAM_NAME_NULL);
         }
+        if (teamDTO.getMembers() == null) {
+            teamDTO.setMembers(new ArrayList<>());
+        }
         Team teamToSave = modelMapper.map(teamDTO, Team.class);
         if (teamRepository.findByName(teamToSave.getName()) != null) {
             throw new CustomRuntimeException(CustomRuntimeException.TEAM_NAME_ALREADY_EXISTS);
@@ -59,10 +58,7 @@ public class TeamService {
         if (teamToSave.getMembers() == null) {
             teamToSave.setMembers(new ArrayList<>());
         }
-        teamRepository.save(teamToSave);
-        Team teamSaved = teamRepository.findById(teamToSave.getId()).orElseThrow(
-                () -> new CustomRuntimeException(CustomRuntimeException.TEAM_NOT_CREATED)
-        );
+        Team teamSaved = teamRepository.save(teamToSave);
         return ResponseEntity.ok(modelMapper.map(teamSaved, TeamDTO.class));
     }
 
@@ -102,12 +98,9 @@ public class TeamService {
         // Update the team if all conditions are met
         existingTeam.setName(updatedTeamDTO.getName());
         existingTeam.setMembers(updatedMembers);
-        teamRepository.save(existingTeam);
+        Team updatedTeam = teamRepository.save(existingTeam);
 
-        Team updatedTeam = teamRepository.findById(updatedTeamDTO.getId()).orElseThrow(
-                () -> new CustomRuntimeException(CustomRuntimeException.TEAM_NOT_UPDATED)
-        );
-                // Update and return the DTO
+        // Update and return the DTO
         updatedTeamDTO = modelMapper.map(updatedTeam, TeamDTO.class);
         return ResponseEntity.ok(updatedTeamDTO);
     }

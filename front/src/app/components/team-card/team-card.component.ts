@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TeamModel } from 'src/app/core/data/models/team.model';
 import { ApiTeamService } from 'src/app/core/services/api-team.service';
-import { DeleteTeamDialogComponent } from '../dialogs/delete-team-dialog/delete-team-dialog.component';
+import { DeleteTeamDialogComponent } from '../delete-team-dialog/delete-team-dialog.component';
 
 @Component({
   selector: 'app-team-card',

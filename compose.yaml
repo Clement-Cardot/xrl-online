@@ -1,6 +1,5 @@
 services:
   mongodb:
-    image: clementcardot/xrl-online-db
     build:
       context: db
       dockerfile: Dockerfile
@@ -9,7 +8,6 @@ services:
     volumes:
       - ./db/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
   tomcat:
-    image: clementcardot/xrl-online-tomcat
     build:
       context: .
       dockerfile: Dockerfile

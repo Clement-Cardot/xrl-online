@@ -81,7 +81,7 @@
 				<version>0.8.10</version>
 				<configuration>
 					<excludes>
-						<exclude>fr/eseo/pfe/xrlonline/model/**/*</exclude>
+						<exclude>com/xrlonline/taf/models/**/*</exclude>
 					</excludes>
 				</configuration>
 				<executions>
