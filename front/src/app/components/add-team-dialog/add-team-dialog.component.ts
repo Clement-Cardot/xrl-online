@@ -6,7 +6,7 @@ import {
   FormBuilder,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TeamModel } from '../../../core/data/models/team.model';
+import { TeamModel } from '../../core/data/models/team.model';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({

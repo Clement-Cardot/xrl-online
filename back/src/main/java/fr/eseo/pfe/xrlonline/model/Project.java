@@ -1,4 +1,4 @@
-package fr.eseo.pfe.xrlonline.model.entity;
+package fr.eseo.pfe.xrlonline.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
