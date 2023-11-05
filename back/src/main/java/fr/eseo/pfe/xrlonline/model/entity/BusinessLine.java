@@ -11,4 +11,5 @@ public class BusinessLine {
   @Id
   private String id;
   private String name;
+  private String description;
 }

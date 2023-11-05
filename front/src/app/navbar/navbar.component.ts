@@ -45,6 +45,7 @@ export class NavbarComponent implements OnInit {
       enterAnimationDuration,
       exitAnimationDuration,
       disableClose: true,
+      autoFocus: false
     });
   }
 

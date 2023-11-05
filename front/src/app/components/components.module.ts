@@ -11,9 +11,9 @@ import { LanguageMenuComponent } from './language-menu/language-menu.component';
 import { UsersManagementComponent } from './users-management/users-management.component';
 import { DeleteUserDialogComponent } from './dialogs/delete-user-dialog/delete-user-dialog.component';
 import { UserFormDialogComponentComponent } from './dialogs/user-form-dialog-component/user-form-dialog-component.component';
-import { AddTeamDialogComponent } from './add-team-dialog/add-team-dialog.component';
+import { AddTeamDialogComponent } from './dialogs/add-team-dialog/add-team-dialog.component';
 import { AddTeamCardComponent } from './add-team-card/add-team-card.component';
-import { DeleteTeamDialogComponent } from './delete-team-dialog/delete-team-dialog.component';
+import { DeleteTeamDialogComponent } from './dialogs/delete-team-dialog/delete-team-dialog.component';
 
 @NgModule({
   declarations: [
@@ -29,12 +29,7 @@ import { DeleteTeamDialogComponent } from './delete-team-dialog/delete-team-dial
     AddTeamCardComponent,
     DeleteTeamDialogComponent,
   ],
-  imports: [
-    CommonModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    TranslateModule,
-  ],
+  imports: [CommonModule, MaterialModule, ReactiveFormsModule, TranslateModule],
   exports: [
     FooterComponent,
     LoginComponent,
@@ -44,6 +39,6 @@ import { DeleteTeamDialogComponent } from './delete-team-dialog/delete-team-dial
     UsersManagementComponent,
     AddTeamDialogComponent,
     AddTeamCardComponent,
-  ]
+  ],
 })
 export class ComponentsModule {}
