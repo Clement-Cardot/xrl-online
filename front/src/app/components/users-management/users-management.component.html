@@ -4,7 +4,7 @@
             <input type="text" matInput [formControl]="userControl" [attr.placeholder]="'USERS.SEARCH_USER' | translate">
         </mat-form-field>
         <mat-icon>search</mat-icon>
-        <mat-icon style="cursor: pointer;" (click)="openAddUserDialog()">add</mat-icon>
+        <mat-icon id="addUserBtn" style="cursor: pointer;" (click)="openAddUserDialog()">add</mat-icon>
     </div>
     
     <div id="list-users">

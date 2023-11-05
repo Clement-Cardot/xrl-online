@@ -19,7 +19,7 @@
     "LOGIN": "LOGIN",
     "LOGOUT": "LOGOUT",
     "LOGOUT_SUCCESS": "Good bye {{username}} !",
-    "ENTER_LOGIN": "Enter a login",
+    "ENTER_LOGIN": "Enter your login",
     "LOGIN_REQUIRED": "A login is required",
     "LOGIN_INCORRECT": "Login is incorrect",
     "SUCCESS": "Welcome back {{username}} !",
@@ -61,8 +61,8 @@
   },
 
   "FOOTER": {
-    "ALL_RIGHTS_RESERVED": "All rights reserved",
-    "KTH_LICENCE": "The KTH work is licensed under a Creative Commons",
+    "ALL_RIGHTS_RESERVED": "2023 - All rights reserved",
+    "KTH_LICENCE1": "The KTH work is licensed under a Creative Commons",
     "KTH_LICENCE2": "Attribution-NonCommercial-ShareAlike 4.0 International License."
   }
 }

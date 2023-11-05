@@ -1,6 +1,7 @@
 package fr.eseo.pfe.xrlonline.model.entity;
 
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,7 @@ public class Assessment {
 
   @Data
   private static class ReadinessLevelRank {
+    @DBRef
     private ReadinessLevel readinessLevel;
     private int rank;
     private String comment;

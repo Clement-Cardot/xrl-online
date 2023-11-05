@@ -19,7 +19,8 @@ public class CustomRuntimeException extends Exception {
     public static final String TEAM_NAME_ALREADY_EXISTS = "Team Name Already Exists !";
     public static final String USER_LOGIN_ALREADY_EXISTS = "User Login Already Exists !";
     public static final String DUPLICATE_MEMBERS = "Duplicate members found in the team !";
-
+    public static final String TEAM_NOT_CREATED = "Team Not Created !";
+    public static final String TEAM_NOT_UPDATED = "Team Not Updated !";
 
 
     public CustomRuntimeException(String message, Throwable cause){
@@ -44,6 +45,8 @@ public class CustomRuntimeException extends Exception {
                 return HttpStatus.BAD_REQUEST;
             case USER_LIST_EMPTY, TEAM_LIST_EMPTY:
                 return HttpStatus.NO_CONTENT;
+            case TEAM_NOT_CREATED, TEAM_NOT_UPDATED:
+                return HttpStatus.INTERNAL_SERVER_ERROR;
             default:
                 return HttpStatus.NOT_IMPLEMENTED;
         }
