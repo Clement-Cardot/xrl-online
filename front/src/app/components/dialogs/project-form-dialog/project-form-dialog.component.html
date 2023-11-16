@@ -1,0 +1,41 @@
+<div class="dialog">
+  <h1 mat-dialog-title>{{title | translate}}</h1>
+  <mat-dialog-content>
+    <mat-form-field id="name-form-field">
+      <mat-label>{{'PROJECTS.NAME' | translate}}</mat-label>
+      <input matInput [formControl]="nameFormControl">
+      <mat-error>{{getNameErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <div id="team-business-line-form-fields">
+      <mat-form-field id="team-form-field">
+          <mat-label>{{'PROJECTS.TEAM' | translate}}</mat-label>
+          <input matInput [formControl]="teamFormControl" [matAutocomplete]="autoTeam">
+          <mat-error>{{getTeamErrorMessage()}}</mat-error>
+          <mat-autocomplete #autoTeam="matAutocomplete" [displayWith]="displayTeamFn">
+            <mat-option *ngFor="let option of filteredTeams | async" [value]="option">
+              {{option.name}}
+            </mat-option>
+          </mat-autocomplete>
+      </mat-form-field>
+      <mat-form-field id="business-line-form-field">
+          <mat-label>{{'PROJECTS.BUSINESS_LINE' | translate}}</mat-label>
+          <input matInput [formControl]="businessLineFormControl" [matAutocomplete]="autoBusinessLine">
+          <mat-error>{{getBusinessLineErrorMessage()}}</mat-error>
+          <mat-autocomplete #autoBusinessLine="matAutocomplete" [displayWith]="displayBusinessLineFn">
+            <mat-option *ngFor="let option of filteredBusinessLines | async" [value]="option">
+              {{option.name}}
+            </mat-option>
+          </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <mat-form-field id="desc-form-field">
+      <mat-label>{{'PROJECTS.DESCRIPTION' | translate}}</mat-label>
+      <textarea matInput [formControl]="descriptionFormControl" cdkTextareaAutosize></textarea>
+      <!-- <mat-error>{{getLoginErrorMessage()}}</mat-error> -->
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button mat-button class="close-button" [mat-dialog-close]="false">{{'CANCEL' | translate}}</button>
+    <button mat-button class="primary-button" cdkFocusInitial (click)="saveUser()">{{save | translate}}</button>
+  </mat-dialog-actions>
+</div>

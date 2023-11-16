@@ -8,3 +8,68 @@ body {
   margin: auto;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.primary-button {
+  background-color: blue !important;
+}
+
+.close-button {
+  background-color: red !important;
+}
+
+.primary-button, .close-button {
+  color: white !important;
+}
+
+.dialog {
+  background-color: rgba(49, 162, 244, 0.20) !important;
+}
+
+$color-primary: rgba(49, 186, 244, 0.541);
+$color-primary-dark: rgba(49, 186, 244, 0.852);
+$color-primary-light: rgba(49, 186, 244, 0.2);
+
+.add-update-team-dialog {
+  mat-dialog-container {
+    height: 54em;
+    width: 65em;
+    border-radius: 20px;
+  }
+  mat-dialog-actions {
+    display: flex;
+    justify-content: center;
+  }
+  mat-dialog-actions button:nth-child(1):hover {
+    background-color: white;
+    color: red;
+    transform: scale(1.1);
+  }
+  mat-dialog-actions button:nth-child(2):hover {
+    background-color: white;
+    color: blue;
+    transform: scale(1.1);
+  }
+
+  mat-dialog-actions button {
+    margin: 0.5em 1em;
+  }
+
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    border-radius: 12px;
+  }
+}
+
+.delete-team-dialog {
+  mat-dialog-container {
+    height: 10em;
+    width: 40em;
+  }
+}
+
+mat-icon {
+  cursor: pointer;
+}
+
+mat-icon:hover {
+  transform: scale(1.2);
+}

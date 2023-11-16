@@ -1,0 +1,18 @@
+<div class="business-line-card">
+    <mat-card>
+        <mat-card-content>
+            <div id="business-line-title-container">
+                <h2>{{ businessLine.name }}</h2>
+                <button class="business-line-manage-button" (click)="openAddUpdateBusinessLineDialog()">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button class="business-line-manage-button" (click)="openDeleteDialog()">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+            <p>
+                <span class="business-line-ongoing-projects">X ongoing projects are associated with this Business Line</span>
+            </p>
+        </mat-card-content>
+    </mat-card>
+</div>

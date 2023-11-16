@@ -1,3 +1,22 @@
 site_name: xRL Online
 theme:
   name: readthedocs
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Project Environment: project-environnment.md
+  - Frontend:
+    - Snippets:
+      - API Services: front-end/snippets/api-service.md
+  - Backend:
+    - Snippets:
+      - Controller: back-end/snippets/controller.md
+  - Misc:
+    - Docker: misc/docker.md
+    - Gitlab CI/CD: misc/gitlab-ci-cd.md
+    - MongoDB: misc/mongodb.md
+    - Scripts: misc/scripts.md
+  - User Documentation:
+    - Navigation: user-documentation/navigation.md
+    - Language: user-documentation/language.md
+    - Login/Logout: user-documentation/login-logout.md

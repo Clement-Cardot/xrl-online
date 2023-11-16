@@ -1,0 +1,18 @@
+<div class="add-update-businessline-dialog-container">
+  <h1 mat-dialog-title>{{ getDialogTitle() }}</h1>
+  <div mat-dialog-content>
+    <mat-form-field>
+      <mat-label>{{ "BUSINESSLINE.NAME" | translate }}</mat-label>
+      <input matInput [formControl]="formControlBusinessLineName" autocomplete="off" />
+      <mat-error *ngIf="formControlBusinessLineName.invalid">{{
+        getNameErrorMessage()
+        }}</mat-error>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button [mat-dialog-close]>{{ "BUSINESSLINE.CANCEL" | translate }}</button>
+    <button mat-button (click)="saveBusinessLine()" [disabled]="formControlBusinessLineName.valid === false">
+      {{ "BUSINESSLINE.SAVE" | translate }}
+    </button>
+  </div>
+</div>

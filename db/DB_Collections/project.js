@@ -45,11 +45,11 @@ db.createCollection("projects", {
                     bsonType: "array",
                     items: {
                         bsonType: "object",
-                        required: ["timestamp", "tag", "comment", "readinessLevels"],
+                        required: ["date", "tag", "comment", "readinessLevels"],
                         properties: {
-                            timestamp: {
-                                bsonType: "timestamp",
-                                description: "must be a timestamp and is required"
+                            date: {
+                                bsonType: "date",
+                                description: "must be a date and is required"
                             },
                             tag: {
                                 bsonType: "string",

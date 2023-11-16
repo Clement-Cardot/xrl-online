@@ -1,0 +1,157 @@
+<h1 mat-dialog-title>
+  {{ getDialogTitle() }}
+</h1>
+<mat-dialog-content>
+  <div class="edit-name-container">
+    <mat-form-field>
+      <mat-label>{{ "TEAM.NAME" | translate }}</mat-label>
+      <input
+        matInput
+        [formControl]="formControlTeamName"
+        autocomplete="off"
+        [(ngModel)]="team.name"
+      />
+      <mat-error *ngIf="formControlTeamName.invalid">{{
+        getNameErrorMessage()
+      }}</mat-error>
+    </mat-form-field>
+  </div>
+  <div class="edit-members-container">
+    <div class="users-without-members-list">
+      <div class="search-user-container">
+        <mat-form-field class="usernameField" subscriptSizing="dynamic">
+          <mat-label>{{ "USERS.SEARCH_USER" | translate }}</mat-label>
+          <input
+            type="text"
+            matInput
+            [formControl]="userControl"
+            autocomplete="off"
+          />
+        </mat-form-field>
+        <mat-icon>search</mat-icon>
+      </div>
+
+      <div class="users-list">
+        <table mat-table [dataSource]="currentUsers">
+          <!-- FirstName Column -->
+          <ng-container matColumnDef="firstName">
+            <th mat-header-cell *matHeaderCellDef>Firstname</th>
+            <td
+              class="firstNameCell"
+              mat-cell
+              *matCellDef="let element"
+              (enter)="enterActionsButton(element)"
+              (leave)="leaveActionsButton(element)"
+            >
+              {{ element.firstName }}
+            </td>
+          </ng-container>
+
+          <!-- LastName Column -->
+          <ng-container matColumnDef="lastName">
+            <th mat-header-cell *matHeaderCellDef>Lastname</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              (enter)="enterActionsButton(element)"
+              (leave)="leaveActionsButton(element)"
+            >
+              {{ element.lastName }}
+            </td>
+          </ng-container>
+
+          <!-- Action Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              [attr.id]="'user-list-' + element.login"
+              class="user-list"
+              (enter)="enterActionsButton(element)"
+              (leave)="leaveActionsButton(element)"
+            >
+              <div
+                [attr.id]="'user-list-actions-' + element.login"
+                class="user-list-actions"
+              >
+                <button (click)="addUserToMembers(element)">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+    </div>
+    <div class="team-members-container">
+      <h2>{{ "TEAM.MEMBERS" | translate }}</h2>
+      <div class="users-list">
+        <table mat-table [dataSource]="team.members" #matTableMembers>
+          <!-- FirstName Column -->
+          <ng-container matColumnDef="firstName">
+            <th mat-header-cell *matHeaderCellDef>Firstname</th>
+            <td
+              class="firstNameCell"
+              mat-cell
+              *matCellDef="let element"
+              (enter)="enterActionsButton(element)"
+              (leave)="leaveActionsButton(element)"
+            >
+              {{ element.firstName }}
+            </td>
+          </ng-container>
+
+          <!-- LastName Column -->
+          <ng-container matColumnDef="lastName">
+            <th mat-header-cell *matHeaderCellDef>Lastname</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              (enter)="enterActionsButton(element)"
+              (leave)="leaveActionsButton(element)"
+            >
+              {{ element.lastName }}
+            </td>
+          </ng-container>
+
+          <!-- Action Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              [attr.id]="'user-list-' + element.login"
+              class="user-list"
+              (enter)="enterActionsButton(element)"
+              (leave)="leaveActionsButton(element)"
+            >
+              <div
+                [attr.id]="'user-list-actions-' + element.login"
+                class="user-list-actions"
+              >
+                <button (click)="removeUserFromMembers(element)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]>Cancel</button>
+  <button
+    mat-button
+    (click)="saveTeam()"
+    [disabled]="formControlTeamName.valid === false"
+  >
+    Save
+  </button>
+</mat-dialog-actions>

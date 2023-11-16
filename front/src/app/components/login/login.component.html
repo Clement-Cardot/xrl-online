@@ -1,45 +1,47 @@
 <div id="loginComponent">
 
-    <!-- Close Dialog Button -->
-    <button mat-icon-button class="close-button" [mat-dialog-close]="true">
-        <mat-icon class="close-icon" color="warn">close</mat-icon>
-    </button>
-    
-    <!-- Login Form -->
-    <form id="loginForm" [formGroup]="loginForm" (ngSubmit)="login()" [hidden]="requestInProgress === true">
+    <div [hidden]="requestInProgress === true">
+        <!-- Close Dialog Button -->
+        <button mat-icon-button class="close-button-login" [mat-dialog-close]="true">
+            <mat-icon class="close-icon" color="warn">close</mat-icon>
+        </button>
         
-        <!-- Login Form Field -->
-        <mat-form-field>
+        <!-- Login Form -->
+        <form id="loginForm" [formGroup]="loginForm" (ngSubmit)="login()">
+            
+            <!-- Login Form Field -->
+            <mat-form-field id="loginField">
 
-            <mat-label>{{ 'LOGIN.ENTER_LOGIN' | translate }}</mat-label>
-            <input matInput  type="text" placeholder="Ex. clement.cardot" [formControl]="usernameFormControl" [errorStateMatcher]="matcher" (change)="onChange()"/>
-            <mat-icon matSuffix>person</mat-icon>
+                <mat-label>{{ 'LOGIN.ENTER_LOGIN' | translate }}</mat-label>
+                <input matInput  type="text" placeholder="Ex. clement.cardot" [formControl]="usernameFormControl" [errorStateMatcher]="matcher" (change)="onChange()"/>
+                <mat-icon matSuffix>person</mat-icon>
 
-            <!-- Error to display if field is empty -->
-            <mat-error *ngIf="usernameFormControl.hasError('required')">
-                {{ 'LOGIN.LOGIN_REQUIRED' | translate }}
-            </mat-error>
+                <!-- Error to display if field is empty -->
+                <mat-error *ngIf="usernameFormControl.hasError('required')">
+                    {{ 'LOGIN.LOGIN_REQUIRED' | translate }}
+                </mat-error>
 
-            <!-- Error to display if the login is incorrect (not registered) -->
-            <mat-error *ngIf="usernameFormControl.hasError('incorrect')">
-                {{ 'LOGIN.LOGIN_INCORRECT' | translate }}
-            </mat-error>
+                <!-- Error to display if the login is incorrect (not registered) -->
+                <mat-error *ngIf="usernameFormControl.hasError('incorrect')">
+                    {{ 'LOGIN.LOGIN_INCORRECT' | translate }}
+                </mat-error>
 
-        </mat-form-field>
-        
-        <!-- Keep this commented part for now as we may want to implement password authentication -->
-        <!-- Password Form Field -->
-        <!-- <mat-form-field>
-            <mat-label>Enter your password</mat-label>
-            <input matInput [type]="showPassword ? 'password' : 'text'" [formControl]="passwordFormControl"  [errorStateMatcher]="matcher" (change)="onChange()">
-            <button mat-icon-button matSuffix (click)="showPassword = !showPassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="showPassword">
-              <mat-icon>{{showPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-            </button>
-        </mat-form-field> -->
+            </mat-form-field>
+            
+            <!-- Keep this commented part for now as we may want to implement password authentication -->
+            <!-- Password Form Field -->
+            <!-- <mat-form-field>
+                <mat-label>Enter your password</mat-label>
+                <input matInput [type]="showPassword ? 'password' : 'text'" [formControl]="passwordFormControl"  [errorStateMatcher]="matcher" (change)="onChange()">
+                <button mat-icon-button matSuffix (click)="showPassword = !showPassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="showPassword">
+                <mat-icon>{{showPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+            </mat-form-field> -->
 
-        <!-- Form submit button -->
-        <button mat-raised-button color="accent" id="loginBtn" [disabled]="loginForm.valid === false">{{'LOGIN.LOGIN' | translate}}</button>
-    </form>
+            <!-- Form submit button -->
+            <button mat-raised-button color="accent" id="loginSubmitBtn" [disabled]="loginForm.valid === false">{{'LOGIN.LOGIN' | translate}}</button>
+        </form>
+    </div>
 
     <!-- Spinner to display during API request -->
     <mat-spinner *ngIf="requestInProgress === true"></mat-spinner>

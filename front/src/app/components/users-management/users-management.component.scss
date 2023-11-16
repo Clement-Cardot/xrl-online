@@ -1,41 +1,41 @@
 #users-management {
-    border-radius: 20px;
-    border: 1px solid #000;
-    background: rgba(49, 185, 244, 0.20);
-    padding: 20px;
-    width: 100%;
+  border-radius: 20px;
+  border: 1px solid #000;
+  background: rgba(49, 185, 244, 0.2);
+  padding: 20px;
+  width: 100%;
+  max-width: 25em;
 }
 
-.usernameField{
-    min-width: 14rem;
-    max-width: 18rem;
-    width: 75%;
+.usernameField {
+  min-width: 14rem;
+  max-width: 18rem;
+  width: 75%;
 }
 
 .list-users-actions {
-    visibility: hidden;
+  visibility: hidden;
 }
 
 .list-users-actions button {
-    background: none;
-    border: none;
-    cursor: pointer;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .delete-user-icon {
-    color: red;
+  color: red;
 }
 
-
 #search-user-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 table {
-    background-color: transparent;
-  }
+  background-color: transparent;
+}
 
 // .firstNameCell{
 //     width: 5rem;

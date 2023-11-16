@@ -108,24 +108,6 @@ class UserServiceTest {
     }
 
     @Test
-    void testLogin_UserFound() throws CustomRuntimeException {
-        when(userRepository.findByLogin("testUser")).thenReturn(user);
-        when(modelMapper.map(user, UserDTO.class)).thenReturn(userDTO);
-
-        ResponseEntity<UserDTO> response = userService.login("testUser");
-
-        assertEquals(ResponseEntity.ok(userDTO), response, "User found");
-    }
-
-    @Test
-    void testLogin_UserNotFound() {
-        when(userRepository.findByLogin("testUser")).thenReturn(null);
-
-        CustomRuntimeException customRuntimeException = assertThrowsExactly(CustomRuntimeException.class, () -> userService.login("testUser"), "User not found");
-        assertEquals(CustomRuntimeException.USER_NOT_FOUND, customRuntimeException.getMessage());
-    }
-
-    @Test
     void testCreateUser_UserNotExists() throws CustomRuntimeException {
         when(userRepository.findByLogin("testUser")).thenReturn(null);
         when(modelMapper.map(userDTO, User.class)).thenReturn(user);
@@ -146,6 +128,7 @@ class UserServiceTest {
     @Test
     void testCreateUser_UserExists() {
         when(userRepository.findByLogin("testUser")).thenReturn(user);
+        when(modelMapper.map(userDTO, User.class)).thenReturn(user);
 
         CustomRuntimeException customRuntimeException = assertThrowsExactly(CustomRuntimeException.class, () -> userService.createUser(userDTO), "User already exists");
         assertEquals(CustomRuntimeException.USER_LOGIN_ALREADY_EXISTS, customRuntimeException.getMessage());

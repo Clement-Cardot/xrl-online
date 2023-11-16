@@ -18,4 +18,17 @@ export class AdminTeamPageComponent implements OnInit {
       error: (err) => console.log(err),
     });
   }
+
+  addTeam(team: TeamModel) {
+    this.teams.push(team);
+  }
+
+  updateTeam(team: TeamModel) {
+    const index = this.teams.findIndex((t) => t.id == team.id);
+    this.teams[index] = team;
+  }
+
+  deleteTeam(team: TeamModel) {
+    this.teams = this.teams.filter((t) => t.id != team.id);
+  }
 }

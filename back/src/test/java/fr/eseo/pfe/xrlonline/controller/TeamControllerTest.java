@@ -10,9 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
@@ -22,20 +20,17 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class TeamControllerTest {
 
-    @Autowired
     private MockMvc mockMvc;
+
     @Mock
     private TeamService teamService;
 
@@ -48,6 +43,7 @@ class TeamControllerTest {
 
     @BeforeEach
     public void setUp() {
+        MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(teamController).build();
 
         teamDTO = new TeamDTO();
@@ -80,7 +76,7 @@ class TeamControllerTest {
     void testGetTeamById_TeamFound() throws Exception {
         when(teamService.getTeamById("1")).thenReturn(ResponseEntity.ok(teamDTO));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/team?id=1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/teams/get-team-by-id?id=1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("testTeam"));
     }
@@ -89,7 +85,7 @@ class TeamControllerTest {
     void testGetTeamById_TeamNotFound() throws Exception {
         when(teamService.getTeamById("1")).thenThrow(new CustomRuntimeException(CustomRuntimeException.TEAM_NOT_FOUND));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/team?id=1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/team/get-team-by-id?id=1"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
@@ -97,7 +93,7 @@ class TeamControllerTest {
     void testGetAllTeam_TeamFound() throws Exception {
         when(teamService.getAllTeam()).thenReturn(ResponseEntity.ok(Collections.singletonList(teamDTO)));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/teams"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/teams/get-all-teams"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("testTeam"));
     }
@@ -106,7 +102,7 @@ class TeamControllerTest {
     void testGetAllTeam_TeamNotFound() throws Exception {
         when(teamService.getAllTeam()).thenThrow(new CustomRuntimeException(CustomRuntimeException.TEAM_LIST_EMPTY));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/teams"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/teams/get-all-teams"))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
@@ -114,7 +110,7 @@ class TeamControllerTest {
     void testCreateTeam_TeamCreated() throws Exception {
         when(teamService.createTeam(teamDTO)).thenReturn(ResponseEntity.ok(teamDTO));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/create-team")
+        mockMvc.perform(MockMvcRequestBuilders.post("/teams/create-team")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(teamDTO)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -125,7 +121,7 @@ class TeamControllerTest {
     void testCreateTeam_TeamNameAlreadyExists() throws Exception {
         when(teamService.createTeam(teamDTO)).thenThrow(new CustomRuntimeException(CustomRuntimeException.TEAM_NAME_ALREADY_EXISTS));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/create-team")
+        mockMvc.perform(MockMvcRequestBuilders.post("/teams/create-team")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(teamDTO)))
                 .andExpect(MockMvcResultMatchers.status().isConflict());
@@ -135,7 +131,7 @@ class TeamControllerTest {
     void testUpdateTeam_TeamUpdated() throws Exception {
         when(teamService.updateTeam(teamDTO)).thenReturn(ResponseEntity.ok(teamDTO));
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/update-team")
+        mockMvc.perform(MockMvcRequestBuilders.put("/teams/update-team")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(teamDTO)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -146,7 +142,7 @@ class TeamControllerTest {
     void testUpdateTeam_TeamNotFound() throws Exception {
         when(teamService.updateTeam(teamDTO)).thenThrow(new CustomRuntimeException(CustomRuntimeException.TEAM_NOT_FOUND));
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/update-team")
+        mockMvc.perform(MockMvcRequestBuilders.put("/teams/update-team")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(teamDTO)))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -157,7 +153,7 @@ class TeamControllerTest {
 
         when(teamService.updateTeam(badTeamDTO)).thenThrow(new CustomRuntimeException(CustomRuntimeException.DUPLICATE_MEMBERS));
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/update-team")
+        mockMvc.perform(MockMvcRequestBuilders.put("/teams/update-team")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(badTeamDTO)))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -167,7 +163,7 @@ class TeamControllerTest {
     void testDeleteTeam_TeamDeleted() throws Exception {
         when(teamService.deleteTeam("1")).thenReturn(ResponseEntity.ok(teamDTO));
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/delete-team?id=1"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/teams/delete-team?id=1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("testTeam"));
     }
@@ -176,7 +172,7 @@ class TeamControllerTest {
     void testDeleteTeam_TeamNotFound() throws Exception {
         when(teamService.deleteTeam("1")).thenThrow(new CustomRuntimeException(CustomRuntimeException.TEAM_NOT_FOUND));
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/delete-team?id=1"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/teams/delete-team?id=1"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 

@@ -8,6 +8,9 @@ import { ReadinessLevelPageComponent } from './readiness-level-page/readiness-le
 import { AdminReadinessLevelPageComponent } from './admin-readiness-level-page/admin-readiness-level-page.component';
 import { AdminTeamPageComponent } from './admin-team-page/admin-team-page.component';
 import { AdminBusinessLinePageComponent } from './admin-business-line-page/admin-business-line-page.component';
+import { MaterialModule } from '../material.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -18,7 +21,14 @@ import { AdminBusinessLinePageComponent } from './admin-business-line-page/admin
     AdminTeamPageComponent,
     AdminBusinessLinePageComponent,
   ],
-  imports: [CommonModule, ComponentsModule, MatGridListModule],
+  imports: [
+    CommonModule, 
+    ComponentsModule,
+    MatGridListModule,
+    MaterialModule, 
+    ReactiveFormsModule, 
+    TranslateModule
+  ],
   exports: [
     ProjectsPageComponent,
     HomePageComponent,

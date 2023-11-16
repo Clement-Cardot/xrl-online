@@ -100,19 +100,28 @@ class TeamServiceTest {
 
     @Test
     void testCreateTeam_TeamCreated() throws CustomRuntimeException {
+        ArrayList<User> members = new ArrayList<>();
+        User user1 = new User();
+        user1.setId("1");
+        members.add(user1);
+        User user2 = new User();
+        user2.setId("2");
+        members.add(user2);
+
         Team team = new Team();
         team.setId("1");
         team.setName("testTeam");
-        team.setMembers(new ArrayList<>());
+        team.setMembers(members);
 
         TeamDTO teamDTO = new TeamDTO();
         teamDTO.setId("1");
         teamDTO.setName("testTeam");
-        teamDTO.setMembers(new ArrayList<>());
+        teamDTO.setMembers(members);
 
         when(modelMapper.map(teamDTO, Team.class)).thenReturn(team);
         when(teamRepository.findByName(team.getName())).thenReturn(null);
         when(teamRepository.save(team)).thenReturn(team);
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
         when(modelMapper.map(team, TeamDTO.class)).thenReturn(teamDTO);
 
         ResponseEntity<TeamDTO> response = teamService.createTeam(teamDTO);

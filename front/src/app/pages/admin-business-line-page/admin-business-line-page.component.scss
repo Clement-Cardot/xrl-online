@@ -1,0 +1,12 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+app-business-line-item, app-add-businessline-card {
+    width: 48%;
+    margin: 0 1%;
+    box-sizing: border-box;
+    padding: 10px;
+}

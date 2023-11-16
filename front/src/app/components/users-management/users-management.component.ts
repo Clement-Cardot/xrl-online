@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UserModel } from 'src/app/core/data/models/user.model';
 import { ApiUserService } from 'src/app/core/services/api-user.service';
-import { DeleteUserDialogComponent } from '../dialogs/delete-user-dialog/delete-user-dialog.component';
+import { DeleteObjectDialogComponent } from '../dialogs/delete-object-dialog/delete-object-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
-import { UserFormDialogComponentComponent } from '../dialogs/user-form-dialog-component/user-form-dialog-component.component';
+import { UserFormDialogComponent } from '../dialogs/user-form-dialog/user-form-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -27,7 +27,7 @@ export class UsersManagementComponent implements OnInit {
     private snackBar: MatSnackBar,
     private translateService: TranslateService
   ) { 
-    this.apiUserService.getUsers().subscribe({
+    this.apiUserService.getAllUsers().subscribe({
       next: (v) => {
         this.users = v;
         this.currentUsers = v;
@@ -60,8 +60,11 @@ export class UsersManagementComponent implements OnInit {
   }
 
   openDeleteUserDialog(user: UserModel) {
-    const dialogRef = this.dialog.open(DeleteUserDialogComponent, {
-      data: user,
+    const dialogRef = this.dialog.open(DeleteObjectDialogComponent, {
+      data: {
+        title: 'USERS.DELETE_USER',
+        content: user.firstName + ' ' + user.lastName
+      },
       autoFocus: false
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -86,7 +89,7 @@ export class UsersManagementComponent implements OnInit {
       title: 'USERS.EDIT_USER',
       save: 'SAVE'
     }
-    const dialogRef = this.dialog.open(UserFormDialogComponentComponent, {
+    const dialogRef = this.dialog.open(UserFormDialogComponent, {
       data: data,
       autoFocus: false
     });
@@ -126,7 +129,7 @@ export class UsersManagementComponent implements OnInit {
       title: 'USERS.CREATE_USER',
       save: 'CREATE'
     }
-    const dialogRef = this.dialog.open(UserFormDialogComponentComponent, {
+    const dialogRef = this.dialog.open(UserFormDialogComponent, {
       data: data,
       autoFocus: false
     });
@@ -144,8 +147,6 @@ export class UsersManagementComponent implements OnInit {
           error: (e) => {
             if (e.status === 409) {
               dialogRef.componentInstance.loginFormControl.setErrors({loginAlreadyExists: true});
-            } else {
-              console.error(e);
             }
           }
         });

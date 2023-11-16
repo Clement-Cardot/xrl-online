@@ -5,6 +5,8 @@
   "SAVE": "Enregistrer",
   "CREATE": "Créer",
   "CLOSE": "Fermer",
+  "DELETE": "Supprimer",
+  "ADD": "Ajouter",
 
   "MENU": {
     "HOME": "Accueil",
@@ -28,26 +30,29 @@
   },
 
   "USERS": {
-      "DELETE_USER": "Voulez-vous vraiment supprimer l'utilisateur :",
-      "FIRSTNAME_REQUIRED": "Un prénom est requis",
-      "LASTNAME_REQUIRED": "Un nom est requis",
-      "LOGIN_REQUIRED": "Un identifiant est requis",
-      "LOGIN_ALREADY_EXISTS": "Cet identifiant existe déjà",
-      "SEARCH_USER": "Rechercher un utilisateur",
-      "CREATE_USER": "Créer un utilisateur",
-      "EDIT_USER": "Éditer un utilisateur",
-      "USER_CREATED": "Utilisateur créé",
-      "USER_UPDATED": "Utilisateur mis à jour",
-      "USER_DELETED": "Utilisateur supprimé",
-      "FIRSTNAME": "Prénom",
-      "LASTNAME": "Nom",
-      "LOGIN": "Identifiant"
+    "DELETE_USER": "Voulez-vous vraiment supprimer l'utilisateur :",
+    "FIRSTNAME_REQUIRED": "Un prénom est requis",
+    "LASTNAME_REQUIRED": "Un nom est requis",
+    "LOGIN_REQUIRED": "Un identifiant est requis",
+    "LOGIN_ALREADY_EXISTS": "Cet identifiant existe déjà",
+    "SEARCH_USER": "Rechercher un utilisateur",
+    "CREATE_USER": "Créer un utilisateur",
+    "EDIT_USER": "Éditer un utilisateur",
+    "USER_CREATED": "Utilisateur créé",
+    "USER_UPDATED": "Utilisateur mis à jour",
+    "USER_DELETED": "Utilisateur supprimé",
+    "FIRSTNAME": "Prénom",
+    "LASTNAME": "Nom",
+    "LOGIN": "Identifiant"
   },
 
   "TEAM": {
+    "NAME": "Nom de l'équipe",
+    "MEMBERS": "Membres de l'équipe",
     "NAME_REQUIRED": "Le nom de l'équipe est requis",
     "NAME_MIN_LENGTH": "Le nom de l'équipe doit contenir au moins 3 caractères",
     "NAME_MAX_LENGTH": "Le nom de l'équipe ne doit pas dépasser 20 caractères",
+    "NAME_ALREADY_EXISTS": "Ce nom d'équipe existe déjà",
     "DELETE_CONFIRM": "Etes-vous sûr de vouloir supprimer l'équipe ?",
     "DELETE_SUCCESS": "L'équipe a été supprimée avec succès",
     "DELETE_ERROR": "Une erreur est survenue lors de la suppression de l'équipe",
@@ -61,8 +66,51 @@
     "DELETE": "Supprimer"
   },
 
+  "PROJECTS": {
+    "UPDATE":"Mettre à jour le projet",
+    "UPDATE_SUCCESS":"Le projet a été mis à jour avec succès",
+    "NAME": "Nom",
+    "DESCRIPTION": "Description",
+    "BUSINESS_LINE": "Secteur d'activité",
+    "TEAM": "Equipe",
+    "NAME_REQUIRED":"Le nom du projet est requis",
+    "NAME_ALREADY_EXISTS": "Ce nom de projet existe déjà",
+    "TEAM_REQUIRED": "Une équipe est requise",
+    "TEAM_NOT_EXISTS": "Cette équipe n'existe pas",
+    "BUSINESS_LINE_REQUIRED": "Un secteur d'activité est requis",
+    "BUSINESS_LINE_NOT_EXISTS": "Ce secteur d'activité n'existe pas",
+    "DETAILS": "Détails",
+    "BACK": "Retour",
+    "DELETE": "Êtes-vous sûr de vouloir supprimer le projet ?",
+    "DELETE_SUCCESS":"Le projet a été supprimé avec succès",
+    "SEARCH_TYPE": "Type de recherche",
+    "SEARCH_NAME": "Nom",
+    "SEARCH_TEAM": "Equipe",
+    "SEARCH_BUSINESS_LINE": "Secteur d'activité",
+    "SEARCH": "Rechercher",
+    "CREATE": "Créer un projet",
+    "CREATE_SUCCESS": "Le projet a été créé avec succès",
+    "NO_DESCRIPTION": "Aucune description"
+  },
+
+  "BUSINESSLINE": {
+    "CANCEL": "Annuler",
+    "SAVE": "Sauvegarder",
+    "NAME_REQUIRED": "Le nom du secteur d'activité est requis",
+    "NAME_MIN_LENGTH": "Le nom du secteur d'activité doit contenir au moins 3 caractères",
+    "NAME_MAX_LENGTH": "Le nom du secteur d'activité ne doit pas dépasser 20 caractères",
+    "NAME": "Nom du secteur d'activité",
+    "BUSINESSLINE_CREATED": "Secteur d'activité créé",
+    "BUSINESSLINE_UPDATED": "Secteur d'activité mis à jour",
+    "NAME_ALREADY_EXISTS": "Ce nom de secteur d'activité existe déjà",
+    "UPDATE_BUSINESSLINE": "Mettre à jour le secteur d'activité",
+    "CREATE_BUSINESSLINE": "Créer un secteur d'activité",
+    "DELETE": "Êtes-vous sûr de vouloir supprimer le secteur d'activité ?",
+    "DELETE_SUCCESS": "Le secteur d'activité a été supprimé avec succès"
+  },
+
   "FOOTER": {
-    "ALL_RIGHTS_RESERVED": "Tous droits réservés",
+    "ALL_RIGHTS_RESERVED": "2023 - Tous droits réservés",
     "KTH_LICENCE1": "Le travail de KTH est placée sous une licence Creative Commons",
     "KTH_LICENCE2": "Attribution-NonCommercial-ShareAlike 4.0 International License."
   }

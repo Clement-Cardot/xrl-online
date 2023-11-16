@@ -1,1 +1,8 @@
-<p>admin-business-line-page works!</p>
+<div class="container">
+
+    <app-add-businessline-card (addBusinessLineEvent)="addBusinessLine($event)"></app-add-businessline-card>
+
+    <app-business-line-item *ngFor="let businessLine of businessLines"
+        [businessLine]="businessLine" (deleteBusinessLineEvent)="deleteBusinessLine($event)"></app-business-line-item>
+    
+</div>

@@ -1,1 +1,27 @@
-<p>projects-page works!</p>
+<section>
+    <div class="search-add-container">
+        <!-- invisible button to place the good à the end of the div (space between property) -->
+        <button class="invisible" color="primary">{{"ADD" | translate}}</button>
+        <div class="search-container">
+            <div class="search-form-container">
+                <mat-form-field subscriptSizing="dynamic">
+                    <mat-label>{{"PROJECTS.SEARCH_TYPE" | translate}}</mat-label>
+                    <mat-select (selectionChange)="updateProjectsToDisplay()" [(value)]="searchType">
+                        <mat-option value="name">{{"PROJECTS.SEARCH_NAME" | translate}}</mat-option>
+                        <mat-option value="team">{{"PROJECTS.SEARCH_TEAM" | translate}}</mat-option>
+                        <mat-option value="business-line">{{"PROJECTS.SEARCH_BUSINESS_LINE" | translate}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field id="search-field" subscriptSizing="dynamic">
+                    <mat-label>{{"PROJECTS.SEARCH" | translate}}</mat-label>
+                    <input matInput [formControl]="projectControl" (input)="updateProjectsToDisplay()">
+                </mat-form-field>
+            </div>
+            <mat-icon (click)="clearSearchInput()">close</mat-icon>
+        </div>
+        <button mat-raised-button color="primary" (click)="openAddProjectDialog()">{{"ADD" | translate}}</button>
+    </div>
+    <div id="project-grid">
+        <app-project-item-list *ngFor="let project of projectsToDisplay" [project]="project" (deleteProjectEvent)="deleteProject($event)"></app-project-item-list>
+    </div>
+</section>
