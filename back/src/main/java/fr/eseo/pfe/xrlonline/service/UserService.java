@@ -4,21 +4,26 @@ import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
 import fr.eseo.pfe.xrlonline.model.dto.UserDTO;
 import fr.eseo.pfe.xrlonline.model.entity.User;
 import fr.eseo.pfe.xrlonline.repository.UserRepository;
+import lombok.extern.log4j.Log4j2;
+
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Log4j2
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+
+    public UserService(UserRepository userRepository, ModelMapper modelMapper) {
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+    }
 
     public ResponseEntity<UserDTO> getUserById(String id) throws CustomRuntimeException {
         User user = userRepository.findById(id).orElse(null);
@@ -52,15 +57,6 @@ public class UserService {
 
     }
 
-    public ResponseEntity<UserDTO> login(String login) throws CustomRuntimeException {
-        User user = userRepository.findByLogin(login);
-        if (user == null) {
-            throw new CustomRuntimeException(CustomRuntimeException.USER_NOT_FOUND);
-        }
-        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
-        return ResponseEntity.ok(userDTO);
-    }
-
     public ResponseEntity<UserDTO> createUser(UserDTO userDTO) throws CustomRuntimeException {
         if(userDTO.getLogin() == null) {
             throw new CustomRuntimeException(CustomRuntimeException.USER_LOGIN_NULL);
@@ -72,6 +68,7 @@ public class UserService {
             throw new CustomRuntimeException(CustomRuntimeException.USER_LASTNAME_NULL);
         }
         User userToSave = modelMapper.map(userDTO, User.class);
+        userToSave.setId(null);
 
         if (userRepository.findByLogin(userDTO.getLogin()) == null) {
             User userSaved = userRepository.save(userToSave);

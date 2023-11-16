@@ -2,19 +2,15 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin: 0 6rem;
 }
 
 .user-container {
-  width: 30%;
-  //background-color: blueviolet;
-  display: flex;
-  justify-content: center;
+  width: 25%;
+  padding: 30px;
 }
 
 .team-container {
-  width: 70%;
-  //background-color: aqua;
+  width: 60%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -27,9 +23,26 @@ app-add-team-card {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-width: 25em;
 }
 
 app-users-management {
-  width: 100%;
-  margin: 2rem 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 1200px) {
+  .team-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  app-team-card,
+  app-add-team-card {
+    width: 80%;
+    margin: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 25em;
+  }
 }

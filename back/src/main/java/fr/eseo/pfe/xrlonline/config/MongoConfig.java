@@ -15,7 +15,9 @@ public class MongoConfig {
 
   @Autowired
   MongoDatabaseFactory mongoDbFactory;
-  @Autowired MongoMappingContext mongoMappingContext;
+
+  @Autowired
+  MongoMappingContext mongoMappingContext;
 
   @Bean
   public MappingMongoConverter mappingMongoConverter() {

@@ -13,7 +13,7 @@ db.projects.insertMany([
         },
         assessments:[
             {
-                timestamp: new Timestamp(1696154937, 1),
+                date: new Date("2021-08-27T19:00:38.000+00:00"),
                 tag:"INITIAL",
                 comment:"First assessment",
                 readinessLevels:[

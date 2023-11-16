@@ -8,6 +8,10 @@ export class UserModel {
         public firstName: string,
         public lastName: string
     ) {}
+
+    public isAdmin(): boolean {
+        return this.login === "admin";
+    }
 }
 
 @Injectable({

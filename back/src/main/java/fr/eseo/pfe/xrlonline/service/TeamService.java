@@ -5,8 +5,9 @@ import fr.eseo.pfe.xrlonline.model.dto.TeamDTO;
 import fr.eseo.pfe.xrlonline.model.entity.Team;
 import fr.eseo.pfe.xrlonline.model.entity.User;
 import fr.eseo.pfe.xrlonline.repository.TeamRepository;
+import lombok.extern.log4j.Log4j2;
+
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +16,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Log4j2
 @Service
 public class TeamService {
 
-    @Autowired
-    private TeamRepository teamRepository;
+    private final TeamRepository teamRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+
+    public TeamService(TeamRepository teamRepository, ModelMapper modelMapper) {
+        this.teamRepository = teamRepository;
+        this.modelMapper = modelMapper;
+    }
 
     public ResponseEntity<TeamDTO> getTeamById(String id) throws CustomRuntimeException {
         Team team = teamRepository.findById(id).orElse(null);
@@ -48,9 +53,7 @@ public class TeamService {
         if (teamDTO.getName() == null) {
             throw new CustomRuntimeException(CustomRuntimeException.TEAM_NAME_NULL);
         }
-        if (teamDTO.getMembers() == null) {
-            teamDTO.setMembers(new ArrayList<>());
-        }
+        teamDTO.setId(null);
         Team teamToSave = modelMapper.map(teamDTO, Team.class);
         if (teamRepository.findByName(teamToSave.getName()) != null) {
             throw new CustomRuntimeException(CustomRuntimeException.TEAM_NAME_ALREADY_EXISTS);
@@ -58,7 +61,10 @@ public class TeamService {
         if (teamToSave.getMembers() == null) {
             teamToSave.setMembers(new ArrayList<>());
         }
-        Team teamSaved = teamRepository.save(teamToSave);
+        teamRepository.save(teamToSave);
+        Team teamSaved = teamRepository.findById(teamToSave.getId()).orElseThrow(
+                () -> new CustomRuntimeException(CustomRuntimeException.TEAM_NOT_CREATED)
+        );
         return ResponseEntity.ok(modelMapper.map(teamSaved, TeamDTO.class));
     }
 
@@ -98,9 +104,12 @@ public class TeamService {
         // Update the team if all conditions are met
         existingTeam.setName(updatedTeamDTO.getName());
         existingTeam.setMembers(updatedMembers);
-        Team updatedTeam = teamRepository.save(existingTeam);
+        teamRepository.save(existingTeam);
 
-        // Update and return the DTO
+        Team updatedTeam = teamRepository.findById(updatedTeamDTO.getId()).orElseThrow(
+                () -> new CustomRuntimeException(CustomRuntimeException.TEAM_NOT_UPDATED)
+        );
+                // Update and return the DTO
         updatedTeamDTO = modelMapper.map(updatedTeam, TeamDTO.class);
         return ResponseEntity.ok(updatedTeamDTO);
     }

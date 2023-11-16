@@ -1,0 +1,63 @@
+.business-line-card {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    border-radius: 12px;
+    height: 100px;
+    overflow-y: auto;
+}
+
+.business-line-card mat-card{
+    width: 80%;
+    justify-content: center;
+    background: rgba(49, 185.5, 244, 0.2);
+    border-radius: 12px;
+    border: solid 1px black;
+}
+
+.business-line-card .business-line-manage-button {
+    display: flex;
+    visibility: hidden;
+}
+
+.business-line-card:hover .business-line-manage-button {
+    visibility: visible;
+}
+
+#business-line-title-container {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+#business-line-title-container h2 {
+    display: flex;
+    align-items: center;
+}
+
+#business-line-title-container h2 {
+    text-align: left;
+    width: 70%;
+    padding-left: 10%;
+    padding-right: 10%;
+    font-size: 25px;
+}
+
+.business-line-manage-button {
+    height: auto;
+    justify-content: center;
+    align-items: center;
+    margin: 6px;
+    background: rgba(49, 185.5, 244, 0.2);
+    border: none;
+    border-radius: 8px;
+}
+
+.business-line-manage-button:hover {
+    background-color: silver;
+    cursor: pointer;
+}
+
+.business-line-ongoing-projects {
+    font-weight: bold;
+}

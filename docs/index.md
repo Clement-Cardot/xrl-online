@@ -11,11 +11,6 @@ To visualize it in the browser :
 1. Install mkdocs :  ```pip install mkdocs```
 2. Run the server :  ```mkdocs serve``` OR ```python -m mkdocs serve```
 
-The documentation is divided in two parts :
-
-- The Dev Documentation
-- The Client Documentation
-
 ## Project layout
 
     back/               # Java Spring Back-end

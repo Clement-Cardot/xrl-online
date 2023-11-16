@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BusinessLineRepository extends MongoRepository<BusinessLine, String> {
+
+    BusinessLine findByName(String name);
+
 }

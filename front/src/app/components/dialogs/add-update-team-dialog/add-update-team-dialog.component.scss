@@ -1,0 +1,69 @@
+@import "src/styles.scss";
+
+.edit-members-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 100%;
+}
+
+.edit-name-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+.edit-name-container mat-form-field {
+  width: 40%;
+}
+
+.users-without-members-list,
+.team-members-container {
+  width: 20em;
+  background-color: $color-primary-light;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.team-members-container h2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  line-height: 56px;
+  border-bottom: solid 1px #969696;
+}
+
+.users-list {
+  height: 25em;
+  overflow-y: auto;
+}
+
+.search-user-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-user-container mat-form-field {
+  width: 100%;
+  padding-right: 5px;
+}
+
+.search-user-container mat-icon {
+  height: 25px;
+  width: 25px;
+  font-size: 25px;
+  padding: 5px;
+}
+
+.user-list-actions button {
+  background: none;
+  border: none;
+}
+
+.users-list tr {
+  background-color: $color-primary-light;
+}
