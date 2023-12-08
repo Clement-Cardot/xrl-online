@@ -33,8 +33,11 @@ db.createCollection("readinesslevels", {
                                 description: "must be a string and is required"
                             },
                             longDescription: {
-                                bsonType: "string",
-                                description: "must be a string and is required"
+                                bsonType: "array",
+                                items :{
+                                    bsonType: "string",
+                                    description: "must be a string and is required"
+                                }
                             }
                         }
                     }

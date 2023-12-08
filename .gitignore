@@ -6,3 +6,4 @@ db/mongo-init.js
 .vscode
 **.log
 logs
+target

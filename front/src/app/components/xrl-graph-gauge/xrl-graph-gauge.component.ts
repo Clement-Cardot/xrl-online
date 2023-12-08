@@ -1,89 +1,256 @@
-import { Component, Input } from '@angular/core';
-// import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexLegend, ApexPlotOptions, ApexTitleSubtitle, ApexXAxis } from 'ng-apexcharts';
-import { AssessmentModel } from 'src/app/core/data/models/assessment.model';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexDataLabels,
+  ApexLegend,
+  ApexPlotOptions,
+  ApexStates,
+  ApexTitleSubtitle,
+  ApexTooltip,
+  ApexXAxis,
+  ChartComponent,
+} from 'ng-apexcharts';
+import { ReadinessLevelRankModel } from 'src/app/core/data/models/readiness-level-rank.model';
 
 export type ChartOptions = {
-  // series: ApexAxisChartSeries;
-  // chart: ApexChart;
-  // dataLabels: ApexDataLabels;
-  // plotOptions: ApexPlotOptions;
-  // xaxis: ApexXAxis;
-  // colors: string[];
-  // legend: ApexLegend;
-  // title: ApexTitleSubtitle;
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  xaxis: ApexXAxis;
+  colors: string[];
+  legend: ApexLegend;
+  title: ApexTitleSubtitle;
+  states: ApexStates;
+  tooltip: ApexTooltip;
 };
 
 @Component({
   selector: 'app-xrl-graph-gauge',
   templateUrl: './xrl-graph-gauge.component.html',
-  styleUrls: ['./xrl-graph-gauge.component.scss']
+  styleUrls: ['./xrl-graph-gauge.component.scss'],
 })
-export class XrlGraphGaugeComponent {
+export class XrlGraphGaugeComponent implements OnInit, OnChanges {
+  @ViewChild('chart') chart!: ChartComponent;
 
-  @Input({ required: true }) actualXrl!: AssessmentModel;
+  @Input({ required: true }) readinessLevelRank!: ReadinessLevelRankModel;
+  @Input() scale: number = 1; // Important: Keep te ratio
 
-  public chartOptions: Partial<any> = {} as Partial<any>;
+  @Output() changeRankEvent: EventEmitter<ReadinessLevelRankModel> =
+    new EventEmitter<ReadinessLevelRankModel>();
+
+  private dimensions = { width: 80, height: 350 };
+
+  public ApexOptions: ChartOptions = {
+    series: [
+      {
+        name: '',
+        data: [1, 1, 1, 2, 1, 1, 1, 1],
+      },
+    ],
+    chart: {
+      type: 'bar',
+      height: this.dimensions.height * this.scale,
+      width: this.dimensions.width * this.scale,
+      events: {
+        dataPointSelection: (e: any, chart: any, options: any) => {
+          this.changeRank(e, chart, options);
+        },
+      },
+    },
+    plotOptions: {
+      bar: {
+        borderRadius: 0,
+        horizontal: true,
+        distributed: true,
+        barHeight: '80%',
+        isFunnel: true,
+      },
+    },
+    colors: [
+      '#F44F5E',
+      '#E55A89',
+      '#D863B1',
+      '#CA6CD8',
+      '#B57BED',
+      '#8D95EB',
+      '#62ACEA',
+      '#4BC3E6',
+    ],
+    dataLabels: {
+      enabled: true,
+      formatter: function (val: any, opt: any) {
+        return opt.w.globals.labels[opt.dataPointIndex];
+      },
+      dropShadow: {
+        enabled: true,
+      },
+    },
+    title: {},
+    xaxis: {
+      categories: [
+        'Sweets',
+        'Processed Foods',
+        'Healthy Fats',
+        'Meat',
+        'Beans & Legumes',
+        'Dairy',
+        'Fruits & Vegetables',
+        'Grains',
+      ],
+    },
+    legend: {
+      show: false,
+    },
+    states: {
+      hover: {
+        filter: {
+          type: 'none',
+        },
+      },
+      active: {
+        filter: {
+          type: 'none',
+        },
+      },
+    },
+    tooltip: {
+      enabled: false,
+      custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+        console.log(series, seriesIndex, dataPointIndex, w);
+        return (
+          '<div class="arrow_box">' +
+          '<span>' +
+          dataPointIndex +
+          '</span>' +
+          '</div>'
+        );
+      },
+    },
+  };
 
   ngOnInit(): void {
-    this.chartOptions = {
+    this.ApexOptions = this.setChartParameters();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
+    if (this.chart) {
+      if (changes['readinessLevelRank'] || changes['scale']) {
+        this.ApexOptions = this.setChartParameters();
+        this.chart.updateOptions(this.ApexOptions);
+        console.log('test');
+      }
+    }
+  }
+
+  setChartParameters(): ChartOptions {
+    return {
       series: [
         {
-          name: "",
-          data: [1, 1, 1, 2, 1, 1, 1, 1]
-        }
+          name: '',
+          data: this.getRank(),
+        },
       ],
       chart: {
-        type: "bar",
-        height: 350
+        type: 'bar',
+        height: this.dimensions.height * this.scale,
+        width: this.dimensions.width * this.scale,
+        events: {
+          dataPointSelection: (e: any, chart: any, options: any) => {
+            this.changeRank(e, chart, options);
+          },
+        },
+        toolbar: {
+          show: false,
+        },
       },
       plotOptions: {
         bar: {
           borderRadius: 0,
           horizontal: true,
           distributed: true,
-          barHeight: "80%",
-          isFunnel: true
-        }
+          barHeight: '80%',
+          isFunnel: true,
+        },
       },
       colors: [
-        "#F44F5E",
-        "#E55A89",
-        "#D863B1",
-        "#CA6CD8",
-        "#B57BED",
-        "#8D95EB",
-        "#62ACEA",
-        "#4BC3E6"
+        '#388E3C',
+        '#66BB6A',
+        '#AED581',
+        '#E6EE9C',
+        '#FFF59D',
+        '#FFCC66',
+        '#FFB266',
+        '#FF9966',
+        '#FF6666',
       ],
       dataLabels: {
         enabled: true,
-        formatter: function (val:any, opt:any) {
+        formatter: function (val: any, opt: any) {
           return opt.w.globals.labels[opt.dataPointIndex];
         },
         dropShadow: {
-          enabled: true
-        }
+          enabled: true,
+        },
       },
-      title: {
-        text: "Pyramid Chart",
-        align: "center"
-      },
+      title: {},
       xaxis: {
-        categories: [
-          "Sweets",
-          "Processed Foods",
-          "Healthy Fats",
-          "Meat",
-          "Beans & Legumes",
-          "Dairy",
-          "Fruits & Vegetables",
-          "Grains"
-        ]
+        categories: ['', '', '', '', '', '', '', '', '', ''],
       },
       legend: {
-        show: false
-      }
+        show: false,
+      },
+      states: {
+        active: {
+          filter: {
+            type: 'none',
+          },
+        },
+      },
+      tooltip: {
+        enabled: false,
+        custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+          console.log(series, seriesIndex, dataPointIndex, w);
+          return (
+            '<div class="arrow_box">' +
+            '<span>' +
+            dataPointIndex +
+            '</span>' +
+            '</div>'
+          );
+        },
+      },
     };
   }
 
+  getReadinessLevels(): string[] {
+    return this.readinessLevelRank.readinessLevel.levels
+      .map((level) => level.level)
+      .reverse();
+  }
+
+  getRank(): number[] {
+    let rankIndex = this.readinessLevelRank.rank - 1;
+    let array = [1, 1, 1, 1, 1, 1, 1, 1, 1];
+    array[rankIndex] = 1.5;
+    return array.reverse();
+  }
+
+  changeRank(e: any, chart: any, options: any): void {
+    let newRank = 10 - (options.dataPointIndex + 1);
+    this.readinessLevelRank.rank = newRank;
+    this.changeRankEvent.emit(this.readinessLevelRank);
+    this.chart.updateSeries([{ data: this.getRank() }]);
+  }
 }

@@ -35,11 +35,11 @@ describe('Login Tests', () => {
             it('login required error test', () => {
                 // Click inside and outside the login field
                 cy.get('mat-label.ng-tns-c1205077789-4').click();
-                cy.get('#mat-input-0').click();
+                cy.get('#mat-input-login').click();
                 cy.get('#loginComponent').click();
                 // Check error message
-                cy.get('#mat-mdc-error-0').should('be.visible');
-                cy.get('#mat-mdc-error-0').should('have.text', ' Un identifiant est requis ');
+                cy.get('#mat-error-empty').should('be.visible');
+                cy.get('#mat-error-empty').should('have.text', ' Un identifiant est requis ');
             })
     
             it('login click outside', () => {
@@ -105,8 +105,8 @@ describe('Login Tests', () => {
                 }).as('apiLogin')
     
                 // Connect as an admin
-                cy.get('mat-label.ng-tns-c1205077789-4').click();
-                cy.get('#mat-input-0').type('wronglogin');
+                cy.get('#mat-input-login').click({force: true});
+                cy.get('#mat-input-login').type('wronglogin');
                 cy.get('#loginSubmitBtn > .mdc-button__label').click();
     
                 // Check api response
@@ -116,8 +116,8 @@ describe('Login Tests', () => {
                 })
                 
                 // Check error message and button disabled
-                cy.get('#mat-mdc-error-1').should('be.visible');
-                cy.get('#mat-mdc-error-1').should('have.text', ' Identifiant incorrect ');
+                cy.get('#mat-error-wrong-login').should('be.visible');
+                cy.get('#mat-error-wrong-login').should('have.text', ' Identifiant incorrect ');
                 cy.get('#loginSubmitBtn').should('be.disabled')
             })
     
@@ -153,8 +153,8 @@ describe('Login Tests', () => {
                 }).as('apiLogin')
     
                 // Connect as an admin
-                cy.get('mat-label.ng-tns-c1205077789-4').click();
-                cy.get('#mat-input-0').type('wronglogin');
+                cy.get('#mat-input-login').click({force: true});
+                cy.get('#mat-input-login').type('wronglogin');
                 cy.get('#loginSubmitBtn > .mdc-button__label').click();
     
                 // Check api response
@@ -164,8 +164,8 @@ describe('Login Tests', () => {
                 })
                 
                 // Check error message and button disabled
-                cy.get('#mat-mdc-error-1').should('be.visible');
-                cy.get('#mat-mdc-error-1').should('have.text', ' Login is incorrect ');
+                cy.get('#mat-error-wrong-login').should('be.visible');
+                cy.get('#mat-error-wrong-login').should('have.text', ' Login is incorrect ');
                 cy.get('#loginSubmitBtn').should('be.disabled')
             })
     

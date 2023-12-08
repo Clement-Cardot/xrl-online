@@ -51,7 +51,7 @@ export class ProjectFormDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.nameFormControl = new FormControl(this.project?.name, [Validators.required]);
+    this.nameFormControl = new FormControl(this.project?.name, [Validators.required, Validators.maxLength(20), Validators.minLength(3)]);
     this.descriptionFormControl = new FormControl(this.project?.description);
     this.teamFormControl = new FormControl(this.project?.team, [Validators.required]);
     this.businessLineFormControl = new FormControl(this.project?.businessLine, [Validators.required]);
@@ -178,6 +178,12 @@ export class ProjectFormDialogComponent implements OnInit {
     }
     if (this.nameFormControl.hasError('projectNameAlreadyExists')) {
       return this.translateService.instant('PROJECTS.NAME_ALREADY_EXISTS');
+    }
+    if (this.nameFormControl.hasError('maxlength')) {
+      return this.translateService.instant('PROJECTS.NAME_MAX_LENGTH');
+    }
+    if (this.nameFormControl.hasError('minlength')) {
+      return this.translateService.instant('PROJECTS.NAME_MIN_LENGTH');
     }
     return '';
   }

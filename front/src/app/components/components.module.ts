@@ -12,17 +12,16 @@ import { UsersManagementComponent } from './users-management/users-management.co
 import { DeleteObjectDialogComponent } from './dialogs/delete-object-dialog/delete-object-dialog.component';
 import { UserFormDialogComponent } from './dialogs/user-form-dialog/user-form-dialog.component';
 import { AddUpdateTeamDialogComponent } from './dialogs/add-update-team-dialog/add-update-team-dialog.component';
-import { AddTeamCardComponent } from './add-team-card/add-team-card.component';
-import { DeleteTeamDialogComponent } from './dialogs/delete-team-dialog/delete-team-dialog.component';
-import { ProjectItemListComponent } from './project-item-list/project-item-list.component';
 import { ProjectFormDialogComponent } from './dialogs/project-form-dialog/project-form-dialog.component';
 import { XrlGraphRadarComponent } from './xrl-graph-radar/xrl-graph-radar.component';
 import { XrlGraphGaugeComponent } from './xrl-graph-gauge/xrl-graph-gauge.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { BusinessLineItemComponent } from './business-line-item/business-line-item.component';
-import { DeleteBusinesslineDialogComponent } from './dialogs/delete-businessline-dialog/delete-businessline-dialog.component';
+import { BusinessLineCardComponent } from './business-line-card/business-line-card.component';
 import { AddUpdateBusinesslineDialogComponent } from './dialogs/add-update-businessline-dialog/add-update-businessline-dialog.component';
-import { AddBusinesslineCardComponent } from './add-businessline-card/add-businessline-card.component';
+import { CreateAssessmentDialogComponent } from './dialogs/create-assessment-dialog/create-assessment-dialog.component';
+import { ReadinessLevelCardComponent } from './readiness-level-card/readiness-level-card.component';
+import { ReadinessLevelDialogComponent } from './dialogs/readiness-level-dialog/readiness-level-dialog.component';
+import { FilterAddToolboxComponent } from './filter-add-toolbox/filter-add-toolbox.component';
 
 @NgModule({
   declarations: [
@@ -35,16 +34,15 @@ import { AddBusinesslineCardComponent } from './add-businessline-card/add-busine
     DeleteObjectDialogComponent,
     UserFormDialogComponent,
     AddUpdateTeamDialogComponent,
-    AddTeamCardComponent,
-    DeleteTeamDialogComponent,
-    ProjectItemListComponent,
     ProjectFormDialogComponent,
-    BusinessLineItemComponent,
-    DeleteBusinesslineDialogComponent,
+    BusinessLineCardComponent,
     AddUpdateBusinesslineDialogComponent,
-    AddBusinesslineCardComponent,
     XrlGraphRadarComponent,
     XrlGraphGaugeComponent,
+    CreateAssessmentDialogComponent,
+    ReadinessLevelCardComponent,
+    ReadinessLevelDialogComponent,
+    FilterAddToolboxComponent,
   ],
   imports: [
     CommonModule,
@@ -61,14 +59,13 @@ import { AddBusinesslineCardComponent } from './add-businessline-card/add-busine
     LanguageMenuComponent,
     UsersManagementComponent,
     AddUpdateTeamDialogComponent,
-    AddTeamCardComponent,
-    ProjectItemListComponent,
     XrlGraphRadarComponent,
     XrlGraphGaugeComponent,
-    BusinessLineItemComponent,
-    DeleteBusinesslineDialogComponent,
+    BusinessLineCardComponent,
     AddUpdateBusinesslineDialogComponent,
-    AddBusinesslineCardComponent,
+    ReadinessLevelCardComponent,
+    ReadinessLevelDialogComponent,
+    FilterAddToolboxComponent,
   ],
 })
 export class ComponentsModule {}

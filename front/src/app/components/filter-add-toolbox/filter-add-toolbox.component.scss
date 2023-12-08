@@ -1,0 +1,36 @@
+mat-card {
+    container-type: inline-size;
+    width: 100%;
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+mat-divider {
+    height: 2rem;
+    margin: 0 1rem;
+}
+
+.search-container, .add-container, .search-fields {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.search-container mat-icon {
+    cursor: pointer;
+}
+
+@container (max-width: 630px) {
+    .search-container {
+        .search-fields{
+            flex-direction: column;
+        }
+    }
+
+    mat-divider {
+        height: 7rem;
+    }
+  }

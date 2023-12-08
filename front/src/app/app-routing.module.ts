@@ -6,24 +6,33 @@ import { ReadinessLevelPageComponent } from './pages/readiness-level-page/readin
 import { AdminReadinessLevelPageComponent } from './pages/admin-readiness-level-page/admin-readiness-level-page.component';
 import { AdminTeamPageComponent } from './pages/admin-team-page/admin-team-page.component';
 import { AdminBusinessLinePageComponent } from './pages/admin-business-line-page/admin-business-line-page.component';
+import { ProjectPageComponent } from './pages/project-page/project-page.component';
+import { NotFoundPage } from './pages/error-pages/not-found-page/not-found-page';
+import { ExpiredSessionPage } from './pages/error-pages/expired-session-page/expired-session-page';
 
-const websiteName = ' - xRL Online';
+const websiteName = 'xRL Online';
 
 const routes: Routes = [
 
   // Home Page
-  {path: '', title: 'Home' + websiteName, component: HomePageComponent},
+  {path: '', title: websiteName, component: HomePageComponent},
 
   // Projects Page
-  {path: 'Projects', title: 'Projects' + websiteName, component: ProjectsPageComponent},
+  {path: 'projects', title: websiteName, component: ProjectsPageComponent},
+  {path: 'project/:id', title: websiteName, component: ProjectPageComponent},
 
   // Readiness Levels Page
-  {path: 'ReadinessLevels', title: 'Readiness Levels' + websiteName, component: ReadinessLevelPageComponent},
+  {path: 'readiness-levels', title: websiteName, component: ReadinessLevelPageComponent},
 
   // Admin Pages :
-  {path: 'Admin/ReadinessLevels', title: 'Admin RL' + websiteName, component: AdminReadinessLevelPageComponent},
-  {path: 'Admin/Teams', title: 'Admin Teams' + websiteName, component: AdminTeamPageComponent},
-  {path: 'Admin/BusinessLines', title: 'Admin BL' + websiteName, component: AdminBusinessLinePageComponent},
+  {path: 'admin/readiness-levels', title: websiteName, component: AdminReadinessLevelPageComponent},
+  {path: 'admin/teams', title: websiteName, component: AdminTeamPageComponent},
+  {path: 'admin/business-lines', title: websiteName, component: AdminBusinessLinePageComponent},
+
+  // Error Pages :
+  {path: 'session-expired', title: websiteName, component: ExpiredSessionPage},
+  {path: '404', title: websiteName, component: NotFoundPage},
+  {path: '**', pathMatch: 'full', title: websiteName, component: NotFoundPage},
 ];
 
 @NgModule({

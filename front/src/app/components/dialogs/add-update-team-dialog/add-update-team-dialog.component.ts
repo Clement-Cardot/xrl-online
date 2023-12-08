@@ -20,13 +20,24 @@ import { TeamModel } from '../../../core/data/models/team.model';
   styleUrls: ['./add-update-team-dialog.component.scss'],
 })
 export class AddUpdateTeamDialogComponent implements OnInit {
+
   team: TeamModel = new TeamModel('', '', []);
-  createTeamForm!: FormGroup;
-  formControlTeamName!: FormControl;
+
+  userControl = new FormControl('');
+  formControlTeamName: FormControl = new FormControl('', [
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(20),
+  ]);
+  createTeamForm: FormGroup = this.formBuilder.group({
+    name: this.formControlTeamName,
+  });
+
   displayedColumns: string[] = ['firstName', 'lastName', 'actions'];
+
   users: UserModel[] = [];
   currentUsers: UserModel[] = [];
-  userControl = new FormControl('');
+
   @ViewChild('matTableMembers') table!: MatTable<UserModel>;
 
   constructor(
@@ -40,7 +51,10 @@ export class AddUpdateTeamDialogComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (this.data != null) this.team = this.data;
+    if (this.data != null) {
+      this.team = this.data;
+      this.formControlTeamName.markAsTouched();
+    }
     this.apiUserService.getAllUsers().subscribe({
       next: (v) => {
         const ids_list = this.team.members.map((user) => user.id);
@@ -48,16 +62,6 @@ export class AddUpdateTeamDialogComponent implements OnInit {
         this.currentUsers = this.users;
       },
       error: (e) => console.error(e),
-    });
-
-    this.formControlTeamName = new FormControl('', [
-      Validators.required,
-      Validators.minLength(3),
-      Validators.maxLength(20),
-    ]);
-
-    this.createTeamForm = this.formBuilder.group({
-      name: this.formControlTeamName,
     });
 
     this.userControl.valueChanges.subscribe((value) => {
@@ -110,6 +114,18 @@ export class AddUpdateTeamDialogComponent implements OnInit {
       return this.translateService.instant('TEAM.UPDATE');
     } else {
       return this.translateService.instant('TEAM.CREATE');
+    }
+  }
+
+  /**
+   * Returns the button text of the dialog based on whether the team is being updated or created.
+   * @returns The button text of the dialog as a string.
+   */
+  getDialogButton(): string {
+    if (this.team.id != '') {
+      return this.translateService.instant('ACTION.SAVE');
+    } else {
+      return this.translateService.instant('ACTION.CREATE');
     }
   }
 
@@ -225,7 +241,7 @@ export class AddUpdateTeamDialogComponent implements OnInit {
    */
   handleError(error: any): void {
     console.log(error);
-    switch (error) {
+    switch (error.status) {
       case 409: // Already exists
         this.formControlTeamName.setErrors({ nameAlreadyExists: true });
         console.log('Team name already exists');

@@ -12,15 +12,14 @@ public class Assessment {
   private Date date;
   private Tag tag;
   private String comment;
-  private List<ReadinessLevelRank> readinessLevels;
+  private List<ReadinessLevelRank> readinessLevelRanks;
 
   @Override
   public String toString() {
     return "Assessment{" +
         "date=" + date +
         ", tag=" + tag +
-        ", comment='" + comment + '\'' +
-        ", readinessLevels=" + readinessLevels +
+        ", readinessLevelsRanks=" + readinessLevelRanks +
         '}';
   }
 
@@ -36,14 +35,13 @@ public class Assessment {
       return "ReadinessLevelRank{" +
           "readinessLevel=" + readinessLevel.getName() +
           ", rank=" + rank +
-          ", comment='" + comment + '\'' +
           '}';
     }
   }
 
   enum Tag {
     INITIAL,
-    FINAL,
-    COMPLETED
+    DRAFT,
+    FINAL
   }
 }

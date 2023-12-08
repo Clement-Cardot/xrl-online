@@ -1,8 +1,12 @@
-<div class="container">
+<div class="body-container">
 
-    <app-add-businessline-card (addBusinessLineEvent)="addBusinessLine($event)"></app-add-businessline-card>
+    <div class="search-add-container">
+        <app-filter-add-toolbox (updateDisplayEvent)="updateBusinessLinesToDisplay($event)" [searchTypes]="searchTypes" (openAddDialogEvent)="openAddUpdateBusinessLineDialog()"></app-filter-add-toolbox>
+    </div>
 
-    <app-business-line-item *ngFor="let businessLine of businessLines"
-        [businessLine]="businessLine" (deleteBusinessLineEvent)="deleteBusinessLine($event)"></app-business-line-item>
+    <div class="business-lines-container">
+        <app-business-line-card class="business-line-card" *ngFor="let businessLine of businessLinesToDisplay"
+        [businessLine]="businessLine" (deleteBusinessLineEvent)="deleteBusinessLine($event)"></app-business-line-card>
+    </div>
     
 </div>

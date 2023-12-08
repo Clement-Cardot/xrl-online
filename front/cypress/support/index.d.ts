@@ -19,5 +19,6 @@ declare namespace Cypress {
         deleteProject(id: string, lang: string): Chainable<null>;
         addNewBusinessLine(name: string, lang: string): Chainable<null>;
         modifyExistingBusinessLine(previousName: string, newName:string, lang: string): Chainable<null>;
+        deleteExistingBusinessLine(lang: string): Chainable<null>;
     }
 }

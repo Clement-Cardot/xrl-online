@@ -6,6 +6,7 @@ import { CurrentUserService } from '../core/services/current-user.service';
 import { UserModel } from '../core/data/models/user.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { ApiUserService } from '../core/services/api-user.service';
 
 @Component({
   selector: 'app-navbar',
@@ -19,6 +20,7 @@ export class NavbarComponent implements OnInit {
   constructor(
     private router: Router,
     private currentUserService: CurrentUserService,
+    private apiUserService: ApiUserService,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private translate: TranslateService
@@ -32,6 +34,10 @@ export class NavbarComponent implements OnInit {
     this.currentUserService.getCurrentUser().subscribe((user: UserModel | undefined) => {
       this.currentUser = user;
     });
+
+    if (this.currentUser) {
+      this.checkConnexion();
+    }
   }
 
   /**
@@ -40,12 +46,22 @@ export class NavbarComponent implements OnInit {
    * @param exitAnimationDuration The duration of the exit animation in milliseconds.
    * @returns void
    */
-  openLoginDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  openLoginDialog(enterAnimationDuration: string = '500ms', exitAnimationDuration: string = '500ms'): void {
     this.dialog.open(LoginComponent, {
       enterAnimationDuration,
       exitAnimationDuration,
       disableClose: true,
       autoFocus: false
+    });
+  }
+
+  checkConnexion(): void {
+    this.apiUserService.checkConnexion().subscribe({
+      error: (e) => {
+        if (e.status === 403) {
+          this.logout();
+        }
+      },
     });
   }
 

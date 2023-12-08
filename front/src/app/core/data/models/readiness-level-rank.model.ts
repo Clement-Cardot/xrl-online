@@ -5,7 +5,8 @@ import { ReadinessLevelAdapter, ReadinessLevelModel } from "./readiness-level.mo
 export class ReadinessLevelRankModel {
     constructor(
       public readinessLevel: ReadinessLevelModel,
-      public rank: number
+      public rank: number,
+      public comment: string
     ) { }
 }
 
@@ -18,7 +19,8 @@ export class ReadinessLevelRankModel {
     adapt(item: any): ReadinessLevelRankModel {
       return new ReadinessLevelRankModel(
         this.readinessLevelAdapter.adapt(item.readinessLevel),
-        item.rank
+        item.rank,
+        item.comment
       );
     }
   }

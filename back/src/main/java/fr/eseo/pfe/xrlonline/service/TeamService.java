@@ -5,7 +5,6 @@ import fr.eseo.pfe.xrlonline.model.dto.TeamDTO;
 import fr.eseo.pfe.xrlonline.model.entity.Team;
 import fr.eseo.pfe.xrlonline.model.entity.User;
 import fr.eseo.pfe.xrlonline.repository.TeamRepository;
-import lombok.extern.log4j.Log4j2;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +14,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-@Log4j2
 @Service
 public class TeamService {
 
@@ -41,7 +40,7 @@ public class TeamService {
     public ResponseEntity<List<TeamDTO>> getAllTeam() throws CustomRuntimeException {
         List<TeamDTO> teamsDTO = teamRepository.findAll().stream()
                 .map(team -> modelMapper.map(team, TeamDTO.class))
-                .toList();
+                .collect(Collectors.toList());
         if (teamsDTO.isEmpty()) {
             throw new CustomRuntimeException(CustomRuntimeException.TEAM_LIST_EMPTY);
         } else {
@@ -80,8 +79,6 @@ public class TeamService {
         return false; // Return false if there are no duplicate members
     }
 
-
-
     public ResponseEntity<TeamDTO> updateTeam(TeamDTO updatedTeamDTO) throws CustomRuntimeException {
         // Check if the ID corresponds to an existing team
         Team existingTeam = teamRepository.findById(updatedTeamDTO.getId()).orElse(null);
@@ -113,8 +110,6 @@ public class TeamService {
         updatedTeamDTO = modelMapper.map(updatedTeam, TeamDTO.class);
         return ResponseEntity.ok(updatedTeamDTO);
     }
-
-
 
     public ResponseEntity<TeamDTO> deleteTeam(String id) throws CustomRuntimeException {
         Team teamToDelete = teamRepository.findById(id).orElse(null);

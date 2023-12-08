@@ -1,0 +1,56 @@
+<mat-card id="{{'business-line-card-'+businessLine.id}}">
+  <mat-card-header>
+
+    <div class="title-container">
+      <mat-card-title>{{ businessLine.name }}</mat-card-title>
+    </div>
+    <div class="icons-container">
+      <mat-icon id="modify" class="upscale-on-hover" (click)="openAddUpdateBusinessLineDialog()">edit</mat-icon>
+      <mat-icon id="delete" class="delete-icon upscale-on-hover" (click)="openDeleteDialog()">delete</mat-icon>
+    </div>
+
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <mat-expansion-panel *ngIf="getProjectCount() != 0">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ getProjectCount() }} linked projects
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <table mat-table [dataSource]="projects">
+        <caption hidden>Project affiliate with the Business Line</caption>
+
+        <!-- ProjectName Column -->
+        <ng-container matColumnDef="projectName">
+          <th mat-header-cell *matHeaderCellDef>projectName</th>
+          <td class="projectNameCell" mat-cell *matCellDef="let element">
+            {{ element.name }}
+          </td>
+        </ng-container>
+
+        <!-- ProjectTeamName Column -->
+        <ng-container matColumnDef="projectTeamName">
+          <th mat-header-cell *matHeaderCellDef>projectTeamName</th>
+          <td class="projectNameCell" mat-cell *matCellDef="let element">
+            {{ element.team.name }}
+          </td>
+        </ng-container>
+
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+    </mat-expansion-panel>
+
+    <mat-expansion-panel *ngIf="getProjectCount() == 0" disabled>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          No linked projects
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+    </mat-expansion-panel>
+
+  </mat-card-content>
+</mat-card>

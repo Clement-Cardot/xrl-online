@@ -1,0 +1,22 @@
+.body-container {
+  height: calc(100vh - 150px - 2rem);
+  padding: 1rem 1rem;
+  overflow-y: overlay;
+}
+
+.search-add-container {
+  margin: 1rem;
+}
+
+.readiness-levels-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+app-readiness-level-card {
+  width: 48%;
+  margin: 0 1%;
+  box-sizing: border-box;
+  padding: 10px;
+}

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Adapter } from '../adapter';
 import { BusinessLineAdapter, BusinessLineModel } from './business-line';
 import { TeamAdapter, TeamModel } from "./team.model";
-import { AssessmentAdapter, AssessmentModel } from './assessment';
+import { AssessmentAdapter, AssessmentModel } from './assessment.model';
 
 export class ProjectModel {
 
@@ -38,7 +38,7 @@ export class ProjectModel {
     }
 
     formatDate(date: Date): string {
-        if (date === null || date === undefined) return '';
+        if (date === null || date === undefined) return "";
         return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
     }
 }

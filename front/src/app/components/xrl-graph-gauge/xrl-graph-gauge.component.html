@@ -1,11 +1,12 @@
-<div id="divChart">
-    <!-- <apx-chart
-        [series]="chartOptions['series']"
-        [chart]="chartOptions['chart']"
-        [dataLabels]="chartOptions['dataLabels']"
-        [plotOptions]="chartOptions['plotOptions']"
-        [yaxis]="chartOptions['yaxis']"
-        [xaxis]="chartOptions['xaxis']"
-        [fill]="chartOptions['fill']"
-        [title]="chartOptions['title']"
-  ></apx-chart> -->
+<apx-chart #chart
+    [series]="ApexOptions.series"
+    [chart]="ApexOptions.chart"
+    [dataLabels]="ApexOptions.dataLabels"
+    [plotOptions]="ApexOptions.plotOptions"
+    [xaxis]="ApexOptions.xaxis"
+    [colors]="ApexOptions.colors"
+    [title]="ApexOptions.title"
+    [legend]="ApexOptions.legend"
+    [states]="ApexOptions.states"
+    [tooltip]="ApexOptions.tooltip"
+  ></apx-chart>

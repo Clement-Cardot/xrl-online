@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { AddUpdateTeamDialogComponent } from 'src/app/components/dialogs/add-update-team-dialog/add-update-team-dialog.component';
 import { TeamModel } from 'src/app/core/data/models/team.model';
 import { ApiTeamService } from 'src/app/core/services/api-team.service';
 
@@ -8,13 +10,28 @@ import { ApiTeamService } from 'src/app/core/services/api-team.service';
   styleUrls: ['./admin-team-page.component.scss'],
 })
 export class AdminTeamPageComponent implements OnInit {
-  teams: TeamModel[] = [];
 
-  constructor(private apiTeamService: ApiTeamService) {}
+  teams: TeamModel[] = [];
+  teamsToDisplay: TeamModel[] = [];
+
+  displayOptions: any = {filterValue: '', searchType: 'name'};
+
+  searchTypes: { typeValue: string; typeTranslation: string }[] = [
+    { typeValue: 'name', typeTranslation: 'TEAM.SEARCH_NAME' },
+    { typeValue: 'user', typeTranslation: 'TEAM.SEARCH_USER' }
+  ];
+
+  constructor(
+    private apiTeamService: ApiTeamService,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.apiTeamService.getAllTeams().subscribe({
-      next: (v) => (this.teams = v),
+      next: (v) => {
+        this.teams = v;
+        this.teamsToDisplay = v;
+      },
       error: (err) => console.log(err),
     });
   }
@@ -30,5 +47,51 @@ export class AdminTeamPageComponent implements OnInit {
 
   deleteTeam(team: TeamModel) {
     this.teams = this.teams.filter((t) => t.id != team.id);
+    this.updateTeamsToDisplay(this.displayOptions);
   }
+
+  /**
+   * Open the add team dialog
+   * @returns void
+   */
+  openAddUpdateTeamDialog() {
+    const dialogRef = this.dialog.open(AddUpdateTeamDialogComponent, {
+      disableClose: false,
+      panelClass: 'add-update-team-dialog',
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.addTeam(result);
+      }
+    });
+  }
+
+  updateTeamsToDisplay(options: any) {
+    this.displayOptions = options;
+    if (options.filterValue == null || options.filterValue == '') {
+      this.teamsToDisplay = this.teams;
+      return;
+    }
+    switch (options.searchType) {
+      case 'name':
+        this.teamsToDisplay = this.teams.filter((t) => this._fcs(t.name).includes(this._fcs(options.filterValue ?? '')));
+        break;
+      case 'user':
+        this.teamsToDisplay = this.teams.filter((t) => 
+          t.members.some(member => this._fcs(member.firstName + member.lastName).includes(this._fcs(options.filterValue ?? ''))));
+        break;
+      default:
+        this.teamsToDisplay = this.teams;
+        break;
+    }
+  }
+
+  // Remove accents and lowercase string
+  private _fcs(value: string): string {
+    value = value.toLowerCase();
+    value = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    return value;
+  }
+
 }

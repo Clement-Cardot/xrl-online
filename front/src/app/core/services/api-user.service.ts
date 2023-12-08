@@ -1,18 +1,23 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserAdapter, UserModel } from '../data/models/user.model';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Observable, catchError, map } from 'rxjs';
+import { BaseService } from './base-service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ApiUserService {
+export class ApiUserService extends BaseService{
   private baseUrl = '/api/users';
 
   constructor(
     private http: HttpClient,
-    private userAdapter: UserAdapter
-    ) { }
+    private userAdapter: UserAdapter,
+    router: Router
+    ) {
+      super(router);
+     }
 
   /**
    * Logs in a user with the given login to the API
@@ -27,7 +32,22 @@ export class ApiUserService {
       map((response: any) => this.userAdapter.adapt(response))
     )
     .pipe(
-      catchError(this.handleError)
+      catchError((error: HttpErrorResponse) => this.handleError(error))
+    );
+  }
+
+  /**
+   * Checks the connection status.
+   * @returns An Observable that emits a boolean indicating the connection status.
+   */
+  checkConnexion(): Observable<boolean> {
+    const url = `${this.baseUrl}/check-connexion`;
+    return this.http.get(url)
+    .pipe(
+      map((response: any) => response)
+    )
+    .pipe(
+      catchError((error: HttpErrorResponse) => this.handleError(error))
     );
   }
 
@@ -43,7 +63,7 @@ export class ApiUserService {
       map((response: any[]) => response.map((item: any) => this.userAdapter.adapt(item)))
     )
     .pipe(
-      catchError(this.handleError)
+      catchError((error: HttpErrorResponse) => this.handleError(error))
     );
   }
 
@@ -60,7 +80,7 @@ export class ApiUserService {
       map((response: any) => this.userAdapter.adapt(response))
     )
     .pipe(
-      catchError(this.handleError)
+      catchError((error: HttpErrorResponse) => this.handleError(error))
     );
   }
 
@@ -74,7 +94,7 @@ export class ApiUserService {
     const url = `${this.baseUrl}/delete-user`;
     return this.http.delete(url, {params: {id}})
     .pipe(
-      catchError(this.handleError)
+      catchError((error: HttpErrorResponse) => this.handleError(error))
     );
   }
 
@@ -88,7 +108,7 @@ export class ApiUserService {
     const url = `${this.baseUrl}/update-user`;
     return this.http.put(url, user)
     .pipe(
-      catchError(this.handleError)
+      catchError((error: HttpErrorResponse) => this.handleError(error))
     );
   }
 
@@ -102,27 +122,8 @@ export class ApiUserService {
     const url = `${this.baseUrl}/create-user`;
     return this.http.post(url, user)
     .pipe(
-      catchError(this.handleError)
+      catchError((error: HttpErrorResponse) => this.handleError(error))
     );
   }
-
-  /**
-   * Handles HTTP errors and returns an observable with a user-facing error message.
-   * @param error - The HttpErrorResponse object to handle.
-   * @returns An observable with a user-facing error message.
-   */
-  private handleError(error: HttpErrorResponse) {
-    if (error.status === 0) {
-        // A client-side or network error occurred. Handle it accordingly.
-        console.error('An error occurred:', error.error);
-      } else {
-        // The backend returned an unsuccessful response code.
-        // The response body may contain clues as to what went wrong.
-        console.error(
-          `Backend returned code ${error.status}, body was: `, error.error);
-      }
-      // Return an observable with a user-facing error message.
-      return throwError(() => error);
-    }
 
 }

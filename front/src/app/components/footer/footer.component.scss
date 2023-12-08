@@ -1,18 +1,16 @@
+@import "src/styles.scss";
+
 .footer {
-    background-color: #D9D9D9;
-    // position: fixed;
+    background-color: $color-primary-dark; // #D9D9D9 previous color
     left: 0;
     bottom: 0;
-    width: 100%;
+    width: 90%;
     text-align: center;
-    padding: 1rem 0;
-}
-
-.footerRow{
+    padding: 0.8rem 5%;
     display: flex;
 }
 
-.footerRow div {
+.footer div {
     width: 50%;
     display: flex;
     justify-content: center;
@@ -21,15 +19,11 @@
 }
 
 img {
-    width: 6rem;
+    width: 10rem;
 }
 
-ul {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-}
-
-li {
-    margin: 0 1rem;
+p {
+    color: #d9d9d9;
+    font-size: smaller;
+    margin: 0;
 }

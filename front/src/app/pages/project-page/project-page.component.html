@@ -1,0 +1,80 @@
+<mat-card *ngIf="this.project !== undefined">
+    <mat-card-header>
+        <mat-card-title>{{this.project.name}}</mat-card-title>
+        <mat-card-subtitle>
+                <p>{{this.project.team.name}} - {{this.project.businessLine.name}}</p>
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="half">
+            <mat-tab-group>
+
+                <mat-tab>
+
+                    <div>
+                        <ng-template mat-tab-label>
+                            {{ "OBJECT.PROJECT" | translate }}
+                          </ng-template>
+                            <div class="tab-content">
+                                {{this.project.description}}
+                            </div>
+                    </div>
+
+                    <div>
+                        <ng-template mat-tab-label>
+                            {{ "OBJECT.ASSESSMENT" | translate }}
+                          </ng-template>
+                          <div class="tab-content">
+                                <div id="commentDiv" *ngIf="assessmentIndex != -1">
+                                    <div *ngIf="isInTeam() && isLastAssessment()">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>{{"ACTION.LEAVE_COMMENT" | translate}}</mat-label>
+                                            <textarea matInput rows="5" id="lastAssessmentComment">{{ this.project.assessments[assessmentIndex].comment }}</textarea>
+                                        </mat-form-field>
+                                        <button mat-raised-button color="primary" (click)="(modifyLastAssesmentComment())">{{"ACTION.SAVE" | translate}}</button>
+                                    </div>
+                                    
+                                    <p *ngIf="!(isInTeam() && isLastAssessment())">{{this.project.assessments[assessmentIndex].comment}}</p>
+                                </div>
+                                <div *ngIf="assessmentIndex == -1">
+                                    {{ "PROJECT.NO_ASSESSMENT" | translate }}
+                                </div>
+                            </div>
+                    </div>
+                  
+                </mat-tab>
+
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        {{ "OBJECT.READINESS_LEVEL" | translate }}
+                    </ng-template>
+                    <div class="tab-content">
+                          TODO
+                      </div>
+                  </mat-tab>
+
+            </mat-tab-group>
+        </div>
+        
+        <div class="half">
+            <app-xrl-graph-radar [actualXrl]="this.project.assessments[assessmentIndex]" [scale]=2></app-xrl-graph-radar>
+            <div class="radar-tools">
+                <mat-paginator #paginator
+                    class="demo-paginator"
+                    (page)="handlePaginatorEvent($event)"
+                    [length]="this.project.assessments.length"
+                    [pageSize]="1"
+                    [showFirstLastButtons]="true"
+                    [hidePageSize]="true"
+                    [pageIndex]="this.assessmentIndex"
+                    aria-label="Select page">
+                </mat-paginator>
+                <button id="compare" mat-raised-button color="primary">{{"ACTION.COMPARE" | translate}}</button>
+                <button id="modify" mat-raised-button color="primary" [disabled]="!isInTeam()" (click)="{}">{{"ACTION.MODIFY" | translate}}</button>
+                <button id="create" mat-raised-button color="primary" [disabled]="!isInTeam()" (click)="openNewAssessmentDialog()">{{"ACTION.NEW" | translate}}</button>
+            </div>
+        </div>
+
+        
+    </mat-card-content>
+</mat-card>

@@ -1,0 +1,23 @@
+<mat-card>
+    <div class="search-container">
+        <div class="search-fields">
+            <mat-form-field subscriptSizing="dynamic">
+                <mat-label>{{"PROJECTS.SEARCH_TYPE" | translate}}</mat-label>
+                <mat-select (selectionChange)="updateFilter()" [(value)]="searchType">
+                    <mat-option *ngFor="let type of searchTypes" [value]="type.typeValue">
+                        {{type.typeTranslation | translate}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field id="search-field" subscriptSizing="dynamic">
+                <mat-label>{{"PROJECTS.SEARCH" | translate}}</mat-label>
+                <input matInput [formControl]="filterFormControl" (input)="updateFilter()">
+            </mat-form-field>
+        </div>
+        <mat-icon [style.visibility]="filterFormControl.value ? 'visible': 'hidden'" (click)="clearSearchInput()">close</mat-icon>
+    </div>
+    <mat-divider [vertical]="true"></mat-divider>
+    <div class="add-container">
+        <button mat-raised-button color="primary" (click)="openAddDialogEvent.emit()">{{"ACTION.ADD" | translate}}</button>
+    </div>
+</mat-card>

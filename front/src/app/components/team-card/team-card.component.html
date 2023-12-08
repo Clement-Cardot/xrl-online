@@ -1,18 +1,22 @@
-<mat-card>
+<mat-card id="{{'team-card-'+team.id}}">
   <mat-card-header>
-    <mat-card-title>{{ team.name }}</mat-card-title>
+    <div class="title-container">
+      <mat-card-title>{{ team.name }}</mat-card-title>
+    </div>
     <div class="icons-container">
-      <!-- <i class="fa-regular fa-pen-to-square fa-bounce"></i> -->
-      <mat-icon (click)="openAddUpdateTeamDialog()">edit</mat-icon>
-      <!-- <i class="fa-solid fa-trash fa-shake"></i> -->
-      <mat-icon (click)="openDeleteTeamDialog()">delete</mat-icon>
+      <mat-icon id="modify" class="upscale-on-hover" (click)="openAddUpdateTeamDialog()">edit</mat-icon>
+      <mat-icon id="delete" class="delete-icon upscale-on-hover"
+        (click)="openDeleteTeamDialog()"
+        >delete</mat-icon
+      >
     </div>
   </mat-card-header>
   <mat-card-content>
     <table mat-table [dataSource]="team.members">
+      <caption hidden>Members of the team</caption>
       <!-- FirstName Column -->
       <ng-container matColumnDef="firstName">
-        <th mat-header-cell *matHeaderCellDef>Firstname</th>
+        <th mat-header-cell *matHeaderCellDef id="firstName">Firstname</th>
         <td class="firstNameCell" mat-cell *matCellDef="let element">
           {{ element.firstName }}
         </td>
@@ -20,7 +24,7 @@
 
       <!-- LastName Column -->
       <ng-container matColumnDef="lastName">
-        <th mat-header-cell *matHeaderCellDef>Lastname</th>
+        <th mat-header-cell *matHeaderCellDef id="lastName">Lastname</th>
         <td mat-cell *matCellDef="let element">{{ element.lastName }}</td>
       </ng-container>
 

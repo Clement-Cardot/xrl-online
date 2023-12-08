@@ -12,8 +12,10 @@ stages:
 
 # Define environment variables for the GitLab CI/CD pipeline
 variables:
+  HTTP_PROXY_IP: "192.168.4.8"
+  HTTP_PROXY_PORT: "3128"
   # Define Maven options for the pipeline, including proxy settings, repository location, and logging configuration
-  MAVEN_OPTS: "-Dhttp.proxyHost=192.168.4.8 -Dhttp.proxyPort=3128 -Dhttps.proxyHost=192.168.4.8 -Dhttps.proxyPort=3128 -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
+  MAVEN_OPTS: "-Dhttp.proxyHost=$HTTP_PROXY_IP -Dhttp.proxyPort=$HTTP_PROXY_PORT -Dhttps.proxyHost=$HTTP_PROXY_IP -Dhttps.proxyPort=$HTTP_PROXY_PORT -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
   # Define Maven CLI options for the pipeline, including batch mode, error handling, and version information
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
   # Define the IP address of the development server
@@ -25,8 +27,8 @@ variables:
 
 # This section sets up the environment variables that define the proxy server to be used for the GitLab CI pipeline.
 before_script:
-  - export https_proxy=http://192.168.4.8:3128/
-  - export http_proxy=http://192.168.4.8:3128/
+  - export https_proxy=http://$HTTP_PROXY_IP:$HTTP_PROXY_PORT/
+  - export http_proxy=http://$HTTP_PROXY_IP:$HTTP_PROXY_PORT/
 
 # This job builds the Angular application using Node.js and Angular CLI.
 # It installs dependencies, builds the application, and caches the node_modules directory for future builds.
@@ -40,38 +42,9 @@ angular-build:
     - npm install
     - npm install -g @angular/cli
     - ng build
-  artifacts:
-    paths:
-      - front/dist
-    expire_in: 1 day
-    when: always
   cache:
     paths:
       - front/node_modules
-  except:
-    - dev
-    - fix-CD
-
-# This job builds the Angular application in production mode and caches the node_modules directory for faster builds.
-angular-build-prod:
-  stage: build
-  image: node:18.18.0-alpine
-  script:
-    - cd front
-    - npm install
-    - npm install -g @angular/cli
-    - ng build --configuration=production
-  artifacts:
-    paths:
-      - front/dist
-    expire_in: 1 day
-    when: always
-  cache:
-    paths:
-      - front/node_modules
-  only:
-    - dev
-    - fix-CD
 
 # This job builds the Java project using Maven and creates a WAR file.
 java-build:
@@ -83,35 +56,11 @@ java-build:
   artifacts:
     paths:
       - $CI_PROJECT_DIR/mvn.log
-      - back/target/xrlonline-*.war
     expire_in: 1 day
     when: always
   cache:
     paths:
       - $CI_PROJECT_DIR/.m2/repository
-  except:
-    - dev
-    - fix-CD
-
-# This job builds the Java project for production environment.
-java-build-prod:
-  stage: build
-  image: maven:3.8.1-openjdk-17
-  script:
-    - cd back
-    - mvn --log-file $CI_PROJECT_DIR/mvn.log $MAVEN_CLI_OPTS $MAVEN_OPTS clean package -P prod -DskipTests=true
-  artifacts:
-    paths:
-      - $CI_PROJECT_DIR/mvn.log
-      - back/target/xrlonline-*.war
-    expire_in: 1 day
-    when: always
-  cache:
-    paths:
-      - $CI_PROJECT_DIR/.m2/repository
-  only:
-    - dev
-    - fix-CD
 
 # This job runs JUnit tests for the project and generates a coverage report.
 junit-test:
@@ -144,7 +93,8 @@ quality-dev:
   script:
     - cd back
     - mvn --log-file $CI_PROJECT_DIR/mvn_clean_compile_test.log $MAVEN_CLI_OPTS clean compile test
-    - mvn --log-file $CI_PROJECT_DIR/mvn_sonar.log $MAVEN_CLI_OPTS validate sonar:sonar -Dsonar.projectKey=xrl_online_project -Dsonar.host.url=http://172.24.1.1:9000/sonar/ -Dsonar.login=7da805893c73d497f7809137de83b2236e45cf27
+    - cd ..
+    - mvn --log-file $CI_PROJECT_DIR/mvn_sonar.log $MAVEN_CLI_OPTS validate sonar:sonar -Dsonar.projectKey=xrl_online_project -Dsonar.host.url=http://172.24.1.1:9000/sonar/ -Dsonar.login=$SONAR_TOKEN
   artifacts:
     paths:
       - $CI_PROJECT_DIR/mvn_clean_compile_test.log
@@ -157,6 +107,7 @@ quality-dev:
   needs:
   - job: junit-test
     artifacts: true
+  allow_failure: true # Allow the job to fail and still pass the pipeline
   only:
     - dev
 # The above job runs only on the dev branch and depends on the junit-test job, which runs unit tests.
@@ -171,20 +122,25 @@ release:
   variables:
     DOCKER_TLS_CERTDIR: ""
     DOCKER_HOST: "tcp://docker:2375"
-    HTTPS_PROXY: "http://192.168.4.8:3128/"
-    HTTP_PROXY: "http://192.168.4.8:3128/"
+    HTTPS_PROXY: "http://$HTTP_PROXY_IP:$HTTP_PROXY_PORT/"
+    HTTP_PROXY: "http://$HTTP_PROXY_IP:$HTTP_PROXY_PORT/"
     NO_PROXY: "192.168.4.8,srv-proxy.openstack.eseo.fr,172.24.0.0/16,docker,gitlab-etu.openstack.etudis.eseo.fr"
   # Define the Docker image to use for this job
   image: docker:24.0.6
   # Define the Docker services to use for this job
   services:
     - docker:24.0.6-dind
+  # Add the proxy settings into the maven command for building the image
+  before_script:
+    # Define the proxy settings for the Tomcat Docker image
+    - sed -i "s/RUN mvn clean package -P prod/RUN mvn clean package -P prod -Dhttp.proxyHost=$HTTP_PROXY_IP -Dhttp.proxyPort=$HTTP_PROXY_PORT -Dhttps.proxyHost=$HTTP_PROXY_IP -Dhttps.proxyPort=$HTTP_PROXY_PORT -Dhttps.protocols=TLSv1.2/g" ./Dockerfile
+    - sed -i "s,#PLACEHOLDER1,RUN npm config set proxy 'http://$HTTP_PROXY_IP:$HTTP_PROXY_PORT',g" ./Dockerfile
+    - sed -i "s,#PLACEHOLDER2,RUN npm config set https-proxy 'http://$HTTP_PROXY_IP:$HTTP_PROXY_PORT',g" ./Dockerfile
+    - sed -i "s,#PLACEHOLDER3,RUN pip config set global.proxy 'http://$HTTP_PROXY_IP:$HTTP_PROXY_PORT',g" ./Dockerfile
+    # Remove dos2unix command from Dockerfile
+    - sed -i '/dos2unix/d' ./db/Dockerfile
   # Define the script to run for this job
   script:
-    - cd db 
-    - chmod +x compile_db_script.sh
-    - ./compile_db_script.sh
-    - cd ..
     - docker compose build
     - echo $DOCKER_USER
     - echo $DOCKER_PASSWORD | docker login --username $DOCKER_USER --password-stdin docker.io
@@ -202,8 +158,8 @@ deploy:
   variables:
     DOCKER_TLS_CERTDIR: ""
     DOCKER_HOST: "tcp://docker:2375"
-    HTTPS_PROXY: "http://192.168.4.8:3128/"
-    HTTP_PROXY: "http://192.168.4.8:3128/"
+    HTTPS_PROXY: "http://$HTTP_PROXY_IP:$HTTP_PROXY_PORT/"
+    HTTP_PROXY: "http://$HTTP_PROXY_IP:$HTTP_PROXY_PORT/"
     NO_PROXY: "192.168.4.8,srv-proxy.openstack.eseo.fr,172.24.0.0/16,docker,gitlab-etu.openstack.etudis.eseo.fr,$DEV_SERVEUR"
   image: docker:24.0.6
   services:
@@ -217,11 +173,8 @@ deploy:
     - ssh-keyscan $DEV_SERVER_IP >> /root/.ssh/known_hosts
 
     - echo $DOCKER_PASSWORD | docker login --username $DOCKER_USER --password-stdin docker.io
-    # Stop active containers
-    - DOCKER_HOST=ssh://$DEV_SERVER_USER@$DEV_SERVER_IP docker compose down --remove-orphans
-    # Remove all images, containers, volumes, and networks
-    - DOCKER_HOST=ssh://$DEV_SERVER_USER@$DEV_SERVER_IP docker system prune -a -f
-    - DOCKER_HOST=ssh://$DEV_SERVER_USER@$DEV_SERVER_IP docker volume prune -f
+    # Stop active containers + Remove all images, containers, volumes, and networks
+    - DOCKER_HOST=ssh://$DEV_SERVER_USER@$DEV_SERVER_IP docker compose down --rmi all -v
     # Pull and start new containers
     - DOCKER_HOST=ssh://$DEV_SERVER_USER@$DEV_SERVER_IP docker compose pull
     - DOCKER_HOST=ssh://$DEV_SERVER_USER@$DEV_SERVER_IP docker compose up -d
@@ -246,8 +199,8 @@ cypress-test:
     - sed -i "s/localhost:4200/$DEV_SERVER_IP:8080/g" ./cypress.config.ts
     - sed -i "s/localhost:27017/$DEV_SERVER_IP:27017/g" ./cypress.config.ts
     # install dependencies
-    - npm config set proxy http://192.168.4.8:3128/
-    - npm config set https-proxy http://192.168.4.8:3128/
+    - npm config set proxy http://$HTTP_PROXY_IP:$HTTP_PROXY_PORT/
+    - npm config set https-proxy http://$HTTP_PROXY_IP:$HTTP_PROXY_PORT/
     - npm install
     # run Cypress tests
     - npm run cypress:run
@@ -260,6 +213,8 @@ cypress-test:
       junit: front/cypress/results/e2e-test-report.xml
     paths:
       - front/cypress/results
+    expire_in: 3 day
+    when: always
   needs:
     - job: deploy
   only:

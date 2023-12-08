@@ -3,12 +3,18 @@ import { Adapter } from "../adapter";
 import { ReadinessLevelRankAdapter, ReadinessLevelRankModel } from "./readiness-level-rank.model";
 
 
+export enum Tag {
+  INITIAL = "INITIAL",
+  DRAFT = "DRAFT",
+  FINAL = "FINAL",
+}
+
 export class AssessmentModel {
     constructor(
-        public timestamp: string,
-        public tag: string,
+        public date: Date,
+        public tag: Tag | undefined,
         public comment: string,
-        public readinessLevels: ReadinessLevelRankModel[]
+        public readinessLevelRanks: ReadinessLevelRankModel[]
     ) {}
   }
   
@@ -20,10 +26,10 @@ export class AssessmentModel {
 
     adapt(item: any): AssessmentModel {
       return new AssessmentModel(
-        item.timestamp,
+        new Date(item.date),
         item.tag,
         item.comment,
-        item.readinessLevels.map((readinessLevel: any) => this.readinessLevelRankAdapter.adapt(readinessLevel))
+        item.readinessLevelRanks.map((readinessLevel: any) => this.readinessLevelRankAdapter.adapt(readinessLevel))
       );
     }
   }

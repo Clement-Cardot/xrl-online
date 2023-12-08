@@ -1,0 +1,52 @@
+mat-card {
+    display: flex;
+    text-align: center;
+    justify-content: flex-start;
+    height: 100%
+}
+
+mat-card-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8em;
+}
+
+mat-card-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.title-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+mat-icon {
+    cursor: pointer;
+    margin: 0 0.4em;
+}
+
+.icons-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.business-line-ongoing-projects {
+    font-weight: bolder;
+    font-size: 15px;
+}
+
+.delete-icon {
+    color: red;
+}
+
+mat-expansion-panel {
+    width: 100%;
+}

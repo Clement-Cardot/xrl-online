@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
@@ -17,8 +16,11 @@ export class ProjectsPageComponent implements OnInit {
   projects: ProjectModel[] = [];
   projectsToDisplay: ProjectModel[] = [];
 
-  searchType: string = "";
-  projectControl = new FormControl('');
+  searchTypes: {typeValue: string, typeTranslation: string}[] = [
+    {typeValue: 'name', typeTranslation: 'PROJECTS.SEARCH_NAME'},
+    {typeValue: 'team', typeTranslation: 'PROJECTS.SEARCH_TEAM'},
+    {typeValue: 'business-line', typeTranslation: 'PROJECTS.SEARCH_BUSINESS_LINE'},
+  ];
 
   constructor(
     private projectService: ApiProjectService,
@@ -28,7 +30,7 @@ export class ProjectsPageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.projectService.getProjects().subscribe({
+    this.projectService.getAllProjects().subscribe({
       next: (v) => {
         this.projects = v;
         this.projectsToDisplay = v;
@@ -42,25 +44,20 @@ export class ProjectsPageComponent implements OnInit {
     this.projectsToDisplay = this.projectsToDisplay.filter((p) => p.id !== project.id);
   }
 
-  clearSearchInput() {
-    this.projectControl.setValue('');
-    this.updateProjectsToDisplay();
-  }
-
-  updateProjectsToDisplay() {
-    if (this.projectControl.value == null || this.projectControl.value == '') {
+  updateProjectsToDisplay(options: any) {
+    if (options.filterValue == null || options.filterValue == '') {
       this.projectsToDisplay = this.projects;
       return;
     }
-    switch (this.searchType) {
+    switch (options.searchType) {
       case 'name':
-        this.projectsToDisplay = this.projects.filter((p) => this._fcs(p.name).includes(this._fcs(this.projectControl.value!)));
+        this.projectsToDisplay = this.projects.filter((p) => this._fcs(p.name).includes(this._fcs(options.filterValue ?? '')));
         break;
       case 'team':
-        this.projectsToDisplay = this.projects.filter((p) => this._fcs(p.team.name).includes(this._fcs(this.projectControl.value!)));
+        this.projectsToDisplay = this.projects.filter((p) => this._fcs(p.team.name).includes(this._fcs(options.filterValue ?? '')));
         break;
       case 'business-line':
-        this.projectsToDisplay = this.projects.filter((p) => this._fcs(p.businessLine.name).includes(this._fcs(this.projectControl.value!)));
+        this.projectsToDisplay = this.projects.filter((p) => this._fcs(p.businessLine.name).includes(this._fcs(options.filterValue ?? '')));
         break;
       default:
         this.projectsToDisplay = this.projects;
@@ -72,7 +69,6 @@ export class ProjectsPageComponent implements OnInit {
   private _fcs(value: string): string {
     value = value.toLowerCase();
     value = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
     return value;
   }
 

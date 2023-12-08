@@ -89,8 +89,9 @@ export class AddUpdateBusinesslineDialogComponent implements OnInit {
   }
 
   handleError(error: any): void {
-    switch (error) {
+    switch (error.status) {
       case 409: // Conflict
+        console.log('Error 409: ', error);
         this.formControlBusinessLineName.setErrors({ nameAlreadyExist: true });
         break;
       default:

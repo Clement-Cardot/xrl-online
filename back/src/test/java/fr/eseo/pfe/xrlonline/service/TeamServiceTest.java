@@ -1,9 +1,12 @@
 package fr.eseo.pfe.xrlonline.service;
 
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
+import fr.eseo.pfe.xrlonline.model.dto.ProjectDTO;
 import fr.eseo.pfe.xrlonline.model.dto.TeamDTO;
+import fr.eseo.pfe.xrlonline.model.entity.Project;
 import fr.eseo.pfe.xrlonline.model.entity.Team;
 import fr.eseo.pfe.xrlonline.model.entity.User;
+import fr.eseo.pfe.xrlonline.repository.ProjectRepository;
 import fr.eseo.pfe.xrlonline.repository.TeamRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +31,9 @@ class TeamServiceTest {
 
     @Mock
     private TeamRepository teamRepository;
+
+    @Mock
+    private ProjectRepository projectRepository;
 
     @Mock
     private ModelMapper modelMapper;
@@ -298,4 +304,36 @@ class TeamServiceTest {
             assertEquals(CustomRuntimeException.TEAM_NOT_FOUND, e.getMessage(), "Team not found");
         }
     }
+
+    // TODO: transfer this test to projectServiceTest
+//    @Test
+//    void testGetProjectsByTeamId_TeamFound() throws CustomRuntimeException {
+//        Team team = new Team();
+//        team.setId("1");
+//        team.setName("testTeam");
+//        team.setMembers(new ArrayList<>());
+//
+//        Project project = new Project();
+//        project.setId("1");
+//        project.setName("testProject");
+//        project.setTeam(team);
+//
+//        List<Project> projects = new ArrayList<>();
+//        projects.add(project);
+//
+//        List<ProjectDTO> projectsDTO = new ArrayList<>();
+//        ProjectDTO projectDTO = new ProjectDTO();
+//        projectDTO.setId("1");
+//        projectDTO.setName("testProject");
+//        projectDTO.setTeam(team);
+//        projectsDTO.add(projectDTO);
+//
+//        when(teamRepository.findById("1")).thenReturn(Optional.of(team));
+//        when(projectRepository.findByTeam(team)).thenReturn(projects);
+//        when(modelMapper.map(project, ProjectDTO.class)).thenReturn(projectDTO);
+//
+//        ResponseEntity<List<ProjectDTO>> response = teamService.getProjectsByTeamId("1");
+//
+//        assertEquals(ResponseEntity.ok(projectsDTO), response, "Projects found");
+//    }
 }
