@@ -17,16 +17,17 @@ body {
   background-color: red !important;
 }
 
-.primary-button, .close-button {
+.primary-button,
+.close-button {
   color: white !important;
 }
 
 .dialog {
-  background-color: rgba(49, 162, 244, 0.20) !important;
+  background-color: rgba(49, 162, 244, 0.2) !important;
 }
 
-$color-primary: rgba(49, 186, 244, 0.541);
-$color-primary-dark: rgba(49, 186, 244, 0.852);
+$color-primary: #3f51b5;
+$color-primary-dark: #2e4053;
 $color-primary-light: rgba(49, 186, 244, 0.2);
 
 .add-update-team-dialog {
@@ -70,6 +71,30 @@ mat-icon {
   cursor: pointer;
 }
 
-mat-icon:hover {
+.upscale-on-hover:hover {
   transform: scale(1.2);
+}
+
+// Global definition for ApexCharts toolbar
+.apexcharts-toolbar {
+  flex-direction: row-reverse !important;
+}
+
+// Global Scrollbar
+::-webkit-scrollbar {
+  width: 0.8rem;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 15px;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 15px;
+  background-color: $color-primary-dark;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: $color-primary;
 }

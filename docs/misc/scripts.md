@@ -5,7 +5,7 @@ To make easier the deployement of the project during developpment we have create
 ## Build_LOCAL.sh
 
 We have created a build script to test the dev env and build the project.<br>
-Use the Build_Script.sh file in a shell env (git bash)
+Use the Build_LOCAL.sh file in a shell env (git bash)
 
 This script will :
 
@@ -56,6 +56,8 @@ docker compose up
 
 ## Build_DB.sh
 
+This script is for developpment purpose only. It allows to build the DB and deploy it in a docker container independantly from the rest of the project.
+
 ```sh
 # # This Script is used to build the mongoDB Database and run it in a docker container.
 
@@ -73,7 +75,7 @@ docker compose build mongodb
 docker compose up -d mongodb
 ```
 
-## Compile_DB_Script.sh
+## compile_db_script.sh
 
 This script recompile our DB init script with the latest version of our Collections and Insertions
 

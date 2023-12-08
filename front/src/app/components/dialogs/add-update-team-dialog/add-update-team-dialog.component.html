@@ -5,13 +5,13 @@
   <div class="edit-name-container">
     <mat-form-field>
       <mat-label>{{ "TEAM.NAME" | translate }}</mat-label>
-      <input
+      <input id="team-name-input"
         matInput
         [formControl]="formControlTeamName"
         autocomplete="off"
         [(ngModel)]="team.name"
       />
-      <mat-error *ngIf="formControlTeamName.invalid">{{
+      <mat-error id="team-name-mat-error" *ngIf="formControlTeamName.invalid">{{
         getNameErrorMessage()
       }}</mat-error>
     </mat-form-field>
@@ -28,14 +28,15 @@
             autocomplete="off"
           />
         </mat-form-field>
-        <mat-icon>search</mat-icon>
+        <mat-icon class="upscale-on-hover">search</mat-icon>
       </div>
 
       <div class="users-list">
         <table mat-table [dataSource]="currentUsers">
+          <caption hidden>Available Users</caption>
           <!-- FirstName Column -->
           <ng-container matColumnDef="firstName">
-            <th mat-header-cell *matHeaderCellDef>Firstname</th>
+            <th mat-header-cell *matHeaderCellDef id="firstName">Firstname</th>
             <td
               class="firstNameCell"
               mat-cell
@@ -49,7 +50,7 @@
 
           <!-- LastName Column -->
           <ng-container matColumnDef="lastName">
-            <th mat-header-cell *matHeaderCellDef>Lastname</th>
+            <th mat-header-cell *matHeaderCellDef id="lastName">Lastname</th>
             <td
               mat-cell
               *matCellDef="let element"
@@ -62,7 +63,7 @@
 
           <!-- Action Column -->
           <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <th mat-header-cell *matHeaderCellDef id="actions">Actions</th>
             <td
               mat-cell
               *matCellDef="let element"
@@ -76,7 +77,7 @@
                 class="user-list-actions"
               >
                 <button (click)="addUserToMembers(element)">
-                  <mat-icon>add</mat-icon>
+                  <mat-icon class="upscale-on-hover">add</mat-icon>
                 </button>
               </div>
             </td>
@@ -90,9 +91,10 @@
       <h2>{{ "TEAM.MEMBERS" | translate }}</h2>
       <div class="users-list">
         <table mat-table [dataSource]="team.members" #matTableMembers>
+          <caption hidden>Team Members</caption>
           <!-- FirstName Column -->
           <ng-container matColumnDef="firstName">
-            <th mat-header-cell *matHeaderCellDef>Firstname</th>
+            <th mat-header-cell *matHeaderCellDef id="firstName">Firstname</th>
             <td
               class="firstNameCell"
               mat-cell
@@ -106,7 +108,7 @@
 
           <!-- LastName Column -->
           <ng-container matColumnDef="lastName">
-            <th mat-header-cell *matHeaderCellDef>Lastname</th>
+            <th mat-header-cell *matHeaderCellDef id="lastName">Lastname</th>
             <td
               mat-cell
               *matCellDef="let element"
@@ -119,7 +121,7 @@
 
           <!-- Action Column -->
           <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <th mat-header-cell *matHeaderCellDef id="actions">Actions</th>
             <td
               mat-cell
               *matCellDef="let element"
@@ -133,7 +135,7 @@
                 class="user-list-actions"
               >
                 <button (click)="removeUserFromMembers(element)">
-                  <mat-icon>delete</mat-icon>
+                  <mat-icon class="upscale-on-hover">delete</mat-icon>
                 </button>
               </div>
             </td>
@@ -146,12 +148,12 @@
   </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button [mat-dialog-close]>Cancel</button>
-  <button
+  <button id="close" mat-button [mat-dialog-close]>Cancel</button>
+  <button id="confirm"
     mat-button
     (click)="saveTeam()"
     [disabled]="formControlTeamName.valid === false"
   >
-    Save
+    {{ getDialogButton() }}
   </button>
 </mat-dialog-actions>

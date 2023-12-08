@@ -1,6 +1,5 @@
 package fr.eseo.pfe.xrlonline.model.dto;
 
-import fr.eseo.pfe.xrlonline.model.entity.Assessment;
 import fr.eseo.pfe.xrlonline.model.entity.BusinessLine;
 import fr.eseo.pfe.xrlonline.model.entity.Team;
 import lombok.Data;
@@ -17,5 +16,5 @@ public class ProjectDTO {
   private String description;
   private Team team;
   private BusinessLine businessLine;
-  private List<Assessment> assessments;
+  private List<AssessmentDTO> assessments;
 }

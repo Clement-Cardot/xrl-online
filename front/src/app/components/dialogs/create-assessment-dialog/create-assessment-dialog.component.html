@@ -1,0 +1,246 @@
+<mat-dialog-content>
+  <!-- Close Dialog Button -->
+  <button mat-icon-button class="close-button-login" [mat-dialog-close]="true">
+    <mat-icon class="close-icon" color="warn">close</mat-icon>
+  </button>
+  <mat-stepper linear headerPosition="bottom" #stepper>
+    <!-- Readiness Levels Choice -->
+    <mat-step class="readiness-level-container" [editable]="true" [completed]="selectedReadinessLevels.length >= 3 && selectedReadinessLevels.length <= 10">
+      <ng-template matStepLabel>{{"ASSESSMENT_DIALOG.SELECT_RL_STEP" | translate}}</ng-template>
+      <ng-template matStepContent>
+        <div class="dialog-title">
+          <h1>{{"ASSESSMENT_DIALOG.SELECT_RL_TITLE" | translate}}</h1>
+          <mat-error id="readiness-level-mat-error" *ngIf="selectedReadinessLevels.length > 10">{{"ASSESSMENT_DIALOG.SELECT_RL_MAX" | translate}}</mat-error>
+          <mat-error id="readiness-level-mat-error" *ngIf="selectedReadinessLevels.length < 3">{{"ASSESSMENT_DIALOG.SELECT_RL_MIN" | translate}}</mat-error>
+        </div>
+        <div class="edit-readiness-level-container">
+          <div class="readiness-level-list-container">
+            <h2>{{"ASSESSMENT_DIALOG.AVAILABLE_RL" | translate}}</h2>        
+              <div class="readiness-level-list">
+                <table mat-table [dataSource]="readinessLevels" #matTableReadinessLevel>
+                  <caption hidden>Available Readiness Levels</caption>
+                  <!-- Readiness Level Column -->
+                  <ng-container matColumnDef="readinessLevel">
+                    <th mat-header-cell *matHeaderCellDef id="readiness-levels">readinessLevel</th>
+                    <td
+                      class="readinessLevelCell"
+                      mat-cell
+                      *matCellDef="let element"
+                      (enter)="enterActionsButton(element)"
+                      (leave)="leaveActionsButton(element)"
+                    >
+                      {{ element.name }}
+                    </td>
+                  </ng-container>
+        
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef id="actions">Actions</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let element"
+                      [attr.id]="'readiness-level-list-' + element.id"
+                      (enter)="enterActionsButton(element)"
+                      (leave)="leaveActionsButton(element)"
+                    >
+                      <div
+                        [attr.id]="'readiness-level-list-actions-' + element.id"
+                        class="readiness-level-list-actions"
+                      >
+                        <button (click)="addReadinessLevelToAssessment(element)">
+                          <mat-icon>add</mat-icon>
+                        </button>
+                      </div>
+                    </td>
+                  </ng-container>
+        
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                </table>
+              </div>
+          </div>
+          <div class="readiness-level-list-container">
+            <h2>{{"ASSESSMENT_DIALOG.SELECTED_RL" | translate}}</h2>
+            <div class="readiness-level-list">
+              <table mat-table [dataSource]="selectedReadinessLevels" #matTableSelectReadinessLevel>
+                <caption hidden>Enabled Readiness Levels</caption>
+                <!-- readinessLevel Column -->
+                <ng-container matColumnDef="readinessLevel">
+                  <th mat-header-cell *matHeaderCellDef id="readiness-levels">readinessLevel</th>
+                  <td
+                    class="readinessLevelCell"
+                    mat-cell
+                    *matCellDef="let element"
+                    (enter)="enterActionsButton(element)"
+                    (leave)="leaveActionsButton(element)"
+                  >
+                    {{ element.name }}
+                  </td>
+                </ng-container>
+      
+                <!-- Action Column -->
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef id="actions">Actions</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    [attr.id]="'readiness-level-list-' + element.id"
+                    (enter)="enterActionsButton(element)"
+                    (leave)="leaveActionsButton(element)"
+                  >
+                    <div
+                      [attr.id]="'readiness-level-list-actions-' + element.id"
+                      class="readiness-level-list-actions"
+                    >
+                      <button (click)="removeReadinessLevelFromAssessment(element)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+      
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="button-container">
+          <button 
+            id="next-button-rl-choice"
+            mat-raised-button 
+            matStepperNext 
+            (click)="submitReadinessLevelsSelection()"
+            [disabled]="selectedReadinessLevels.length < 3 || selectedReadinessLevels.length > 10"
+            color="primary">
+              {{"ACTION.NEXT" | translate}}
+          </button>
+        </div>
+      </ng-template>
+    </mat-step>
+
+    <!-- Readiness Levels Rank -->
+    <mat-step class="rank-container" *ngFor="let readinessLevelRank of newAssessmentReadinessLevelRanks; let index = index" [stepControl]="rankCommentFormControls[index]" [editable]="isEditable" >
+      <ng-template matStepLabel>{{readinessLevelRank.readinessLevel.name}}</ng-template>
+      <ng-template matStepContent><form [formGroup]="rankCommentFormControls[index]" (ngSubmit)="submitRankAndComment(index)">
+
+        <div class="dialog-head">
+          <h2>{{readinessLevelRank.readinessLevel.name}}</h2>
+          <p>{{readinessLevelRank.readinessLevel.description}}</p>
+        </div>
+
+        <div class="dialog-content">
+
+          <app-xrl-graph-gauge [readinessLevelRank]="readinessLevelRank" (changeRankEvent)="updateReadinessLevelRank($event)" #gauge></app-xrl-graph-gauge>
+        
+          <div class="description-container no-level" *ngIf="readinessLevelRank.rank == 0">
+            <p>{{"ASSESSMENT_DIALOG.NO_RANK_SELECTED" | translate}}</p>
+          </div>
+
+          <div class="description-container" *ngIf="readinessLevelRank.rank > 0">
+
+            <div class="two-columns">
+
+              <div class="col">
+
+                <h2>{{"ASSESSMENT_DIALOG.RANK" | translate}} {{readinessLevelRank.rank}}</h2>
+
+                <div class="shortDescription">
+                  <p>{{readinessLevelRank.readinessLevel.levels[readinessLevelRank.rank - 1].shortDescription}}</p>
+                </div>
+
+                <div class="rankComment">
+                  <mat-form-field>
+                    <mat-label>{{"OBJECT.COMMENT" | translate}}</mat-label>
+                    <textarea id="rankComment-input-{{index}}"
+                      matInput
+                      formControlName="rankCommentControl"
+                      required
+                      cdkTextareaAutosize
+                      cdkAutosizeMinRows="3"
+                      cdkAutosizeMaxRows="8">
+                    </textarea>
+                  </mat-form-field>
+                </div>
+
+              </div>
+
+              <div class="col">              
+                <div class="longDescription">
+                  <div *ngFor="let longDescriptionElement of readinessLevelRank.readinessLevel.levels[readinessLevelRank.rank - 1].longDescription">
+                    <p class="longDescription">{{longDescriptionElement}}</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="button-container">
+          <button id="{{'previous-button-'+index}}" mat-raised-button matStepperPrevious>{{"ACTION.BACK" | translate}}</button>
+          <button id="{{'next-button-'+index}}" mat-raised-button matStepperNext [disabled]="!rankCommentFormControls[index].valid" color="primary">{{"ACTION.NEXT" | translate}}</button>
+        </div>
+
+      </form></ng-template>
+    </mat-step>
+
+    <!-- Assessment Comment & Tags -->
+    <mat-step [stepControl]="commentAndTagFormControl" [editable]="isEditable">
+      <ng-template matStepLabel>{{"OBJECT.COMMENT" | translate}}</ng-template>
+
+      <ng-template matStepContent>
+        <div class="AssessmentComment">
+          <form [formGroup]="commentAndTagFormControl" (ngSubmit)="createNewAssessment()">
+            <div class="comment-form">
+
+              <mat-form-field class="comment-input">
+                <mat-label>{{"OBJECT.COMMENT" | translate}}</mat-label>
+                <textarea id="comment-input"
+                  matInput 
+                  formControlName="commentControl" 
+                  required
+                  cdkTextareaAutosize
+                  cdkAutosizeMinRows="3"
+                  cdkAutosizeMaxRows="8">
+                </textarea>
+                <mat-error id="comment-mat-error">{{"ASSESSMENT_DIALOG.ENTER_COMMENT" | translate}}</mat-error>
+              </mat-form-field>
+              
+              <mat-radio-group formControlName="tagControl">
+                <mat-radio-button id="select-initial" value="INITIAL" [disabled]="this.lastAssessment != null">Initial</mat-radio-button>
+                <mat-radio-button id="select-draft" value="DRAFT">Draft</mat-radio-button>
+                <mat-radio-button id="select-final" value="FINAL">Final</mat-radio-button>
+              </mat-radio-group>
+
+            </div>
+
+            <div class="button-container">
+              <button id="previous-button-comment" mat-raised-button matStepperPrevious>{{"ACTION.BACK" | translate}}</button>
+              <button id="next-button-comment" mat-raised-button matStepperNext [disabled]="commentAndTagFormControl.invalid" color="primary">{{"ACTION.SUBMIT" | translate}}</button>
+            </div>
+
+          </form>
+        </div>
+      </ng-template>
+
+    </mat-step>
+
+    <!-- Confirm -->
+    <mat-step class="confirm-container" [editable]="isEditable" >
+      <ng-template matStepLabel>{{"ACTION.CONFIRM" | translate}}</ng-template>
+      <ng-template matStepContent>
+        <div class="dialog-head">
+          <h2>{{"ASSESSMENT_DIALOG.CONFIRM_ASSESSMENT" | translate}}</h2>
+        </div>
+        <div class="center">
+          <app-xrl-graph-radar *ngIf="lastAssessment != null" [actualXrl]="lastAssessment" [newXrl]="newAssessment" [scale]="2"></app-xrl-graph-radar>
+          <app-xrl-graph-radar *ngIf="lastAssessment == null" [actualXrl]="newAssessment" [scale]="2"></app-xrl-graph-radar>
+        </div>
+        <div class="button-container">
+          <button id="previous" mat-raised-button matStepperPrevious>{{"ACTION.BACK" | translate}}</button>
+          <button id="confirm" mat-raised-button (click)="this.dialogRef.close(this.newAssessment)" color="primary">{{"ACTION.CONFIRM" | translate}}</button>
+        </div>
+      </ng-template>
+    </mat-step>
+
+  </mat-stepper>
+</mat-dialog-content>

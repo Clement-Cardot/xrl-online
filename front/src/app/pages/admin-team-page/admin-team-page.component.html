@@ -3,12 +3,18 @@
     <app-users-management></app-users-management>
   </div>
   <div class="team-container">
-    <app-add-team-card (addTeamEvent)="addTeam($event)"></app-add-team-card>
-    <app-team-card
-      *ngFor="let team of teams"
-      [team]="team"
-      (updateTeamEvent)="updateTeam($event)"
-      (deleteTeamEvent)="deleteTeam($event)"
-    ></app-team-card>
+
+    <div class="search-add-container">
+      <app-filter-add-toolbox (updateDisplayEvent)="updateTeamsToDisplay($event)" [searchTypes]="searchTypes" (openAddDialogEvent)="openAddUpdateTeamDialog()"></app-filter-add-toolbox>
+    </div>
+
+    <div class="team-card-list">
+      <app-team-card class="team-card"
+        *ngFor="let team of teamsToDisplay"
+        [team]="team"
+        (updateTeamEvent)="updateTeam($event)"
+        (deleteTeamEvent)="deleteTeam($event)"
+      ></app-team-card>
+    </div>
   </div>
 </div>

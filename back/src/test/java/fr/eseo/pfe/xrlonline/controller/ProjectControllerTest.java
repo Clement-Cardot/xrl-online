@@ -1,10 +1,13 @@
 package fr.eseo.pfe.xrlonline.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
+import fr.eseo.pfe.xrlonline.model.dto.AssessmentDTO;
+import fr.eseo.pfe.xrlonline.model.dto.AssessmentDTO.Tag;
 import fr.eseo.pfe.xrlonline.model.dto.ProjectDTO;
 import fr.eseo.pfe.xrlonline.model.entity.Project;
+import fr.eseo.pfe.xrlonline.model.entity.Team;
+import fr.eseo.pfe.xrlonline.model.entity.User;
 import fr.eseo.pfe.xrlonline.service.ProjectService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,18 +23,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.web.servlet.function.RequestPredicates.param;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ProjectControllerTest {
+class ProjectControllerTest {
 
   @Autowired
   MockMvc mockMvc;
@@ -47,7 +50,7 @@ public class ProjectControllerTest {
   List<ProjectDTO> existingProjects;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     existingProjects = new ArrayList<>();
     Project project1 = new Project();
     project1.setId("1");
@@ -61,12 +64,12 @@ public class ProjectControllerTest {
 
   @Test
   @WithMockUser(username = "user")
-  public void getProjectsTest() throws Exception {
+  void getProjectsTest() throws Exception {
     // Arrange
-    when(projectService.getProjects()).thenReturn(existingProjects);
+    when(projectService.getAllProjects()).thenReturn(existingProjects);
 
     // Act
-    MvcResult result = mockMvc.perform(get("/projects"))
+    MvcResult result = mockMvc.perform(get("/projects/get-all-projects"))
         .andExpect(status().isOk())
         .andReturn();
 
@@ -76,20 +79,20 @@ public class ProjectControllerTest {
         objectMapper.getTypeFactory().constructCollectionType(List.class, ProjectDTO.class));
     assertEquals(existingProjects, actualProjects);
 
-    verify(projectService).getProjects();
+    verify(projectService).getAllProjects();
     verifyNoMoreInteractions(projectService);
   }
 
   @Test
   @WithMockUser(username = "user")
-  public void createProjectTest() throws Exception {
+  void createProjectTest() throws Exception {
     Project projectToCreate = new Project();
     projectToCreate.setName("Project 3");
     ProjectDTO projectDTOToCreate = modelMapper.map(projectToCreate, ProjectDTO.class);
 
     when(projectService.createProject(projectDTOToCreate)).thenReturn(projectDTOToCreate);
 
-    MvcResult result = mockMvc.perform(post("/project")
+    MvcResult result = mockMvc.perform(post("/projects/create-project")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(projectDTOToCreate)))
         .andExpect(status().isOk())
@@ -105,14 +108,14 @@ public class ProjectControllerTest {
 
   @Test
   @WithMockUser(username = "user")
-  public void createProjectWhenInvalidFormTest() throws Exception {
+  void createProjectWhenInvalidFormTest() throws Exception {
     Project projectToCreate = new Project();
     projectToCreate.setName("Project 2");
     ProjectDTO projectDTOToCreate = modelMapper.map(projectToCreate, ProjectDTO.class);
 
     when(projectService.createProject(projectDTOToCreate)).thenThrow(new CustomRuntimeException(CustomRuntimeException.PROJECT_NAME_ALREADY_EXISTS));
 
-    mockMvc.perform(post("/project")
+    mockMvc.perform(post("/projects/create-project")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(projectDTOToCreate)))
         .andExpect(status().is4xxClientError())
@@ -124,7 +127,7 @@ public class ProjectControllerTest {
 
   @Test
   @WithMockUser(username = "user")
-  public void deleteProjectTest() throws Exception {
+  void deleteProjectTest() throws Exception {
     // Arrange
     String id = existingProjects.get(0).getId();
     ProjectDTO projectDTOToDelete = existingProjects.get(0);
@@ -132,7 +135,7 @@ public class ProjectControllerTest {
     when(projectService.deleteProject(id)).thenReturn(projectDTOToDelete);
 
     // Act
-    MvcResult result = mockMvc.perform(delete("/project/" + id))
+    MvcResult result = mockMvc.perform(delete("/projects/delete-project?id=" + id))
         .andExpect(status().isOk())
         .andReturn();
 
@@ -147,14 +150,14 @@ public class ProjectControllerTest {
 
   @Test
   @WithMockUser(username = "user")
-  public void deleteProjectWhenInvalidIdTest() throws Exception {
+  void deleteProjectWhenInvalidIdTest() throws Exception {
     // Arrange
     String id = "invalidId";
 
     when(projectService.deleteProject(id)).thenThrow(new CustomRuntimeException(CustomRuntimeException.PROJECT_NOT_FOUND));
 
     // Act
-    mockMvc.perform(delete("/project/" + id))
+    mockMvc.perform(delete("/projects/delete-project?id=" + id))
         .andExpect(status().is4xxClientError())
         .andReturn();
 
@@ -165,7 +168,7 @@ public class ProjectControllerTest {
 
   @Test
   @WithMockUser(username = "user")
-  public void updateProjectTest() throws Exception {
+  void updateProjectTest() throws Exception {
     // Arrange
     Project projectToUpdate = new Project();
     projectToUpdate.setId("1");
@@ -175,7 +178,7 @@ public class ProjectControllerTest {
     when(projectService.updateProject(projectDTOToUpdate)).thenReturn(projectDTOToUpdate);
 
     // Act
-    MvcResult result = mockMvc.perform(put("/project")
+    MvcResult result = mockMvc.perform(put("/projects/update-project")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(projectDTOToUpdate)))
         .andExpect(status().isOk())
@@ -192,7 +195,7 @@ public class ProjectControllerTest {
 
   @Test
   @WithMockUser(username = "user")
-  public void updateProjectWhenInvalidFormTest() throws Exception {
+  void updateProjectWhenInvalidFormTest() throws Exception {
     // Arrange
     Project projectToUpdate = new Project();
     projectToUpdate.setId("1");
@@ -202,7 +205,7 @@ public class ProjectControllerTest {
     when(projectService.updateProject(projectDTOToUpdate)).thenThrow(new CustomRuntimeException(CustomRuntimeException.PROJECT_NAME_ALREADY_EXISTS));
 
     // Act
-    mockMvc.perform(put("/project")
+    mockMvc.perform(put("/projects/update-project")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(projectDTOToUpdate)))
         .andExpect(status().is4xxClientError())
@@ -212,4 +215,268 @@ public class ProjectControllerTest {
     verify(projectService).updateProject(projectDTOToUpdate);
     verifyNoMoreInteractions(projectService);
   }
+
+  @Test
+  @WithMockUser(username = "cardotcl")
+  void addNewAssessmentTest() throws Exception {
+    // Arrange
+    String projectId = "1";
+    AssessmentDTO assessmentDTO = new AssessmentDTO();
+    assessmentDTO.setDate(new Date());
+    assessmentDTO.setComment("Comment 1");
+    assessmentDTO.setTag(Tag.INITIAL);
+
+    ProjectDTO projectDTO = new ProjectDTO();
+    projectDTO.setId(projectId);
+    projectDTO.setName("Project 1");
+    projectDTO.setAssessments(new ArrayList<>());
+    projectDTO.getAssessments().add(assessmentDTO);
+
+    Team team = new Team();
+    ArrayList<User> members = new ArrayList<>();
+    User user = new User();
+
+    user.setLogin("cardotcl");
+    members.add(user);
+    team.setMembers(members);
+
+    projectDTO.setTeam(team);
+
+    when(projectService.getProjectById(projectId)).thenReturn(projectDTO);
+    when(projectService.addNewAssessment(projectId, assessmentDTO)).thenReturn(projectDTO);
+
+    // Act
+    MvcResult result = mockMvc.perform(post("/projects/add-new-assessment")
+            .param("projectId", projectId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(assessmentDTO)))
+        .andExpect(status().isOk())
+        .andReturn();
+
+    // Assert
+    String actualResponseBody = result.getResponse().getContentAsString();
+    ProjectDTO actualProject = objectMapper.readValue(actualResponseBody, ProjectDTO.class);
+    assertEquals(projectDTO, actualProject);
+
+    verify(projectService).addNewAssessment(projectId, assessmentDTO);
+    verify(projectService).getProjectById(projectId);
+    verifyNoMoreInteractions(projectService);
+  }
+
+  @Test
+  @WithMockUser(username = "cardotcl")
+  void addNewAssessmentWhenInvalidFormTest() throws Exception {
+    // Arrange
+    String projectId = "1";
+    AssessmentDTO assessmentDTO = new AssessmentDTO();
+
+    ProjectDTO projectDTO = new ProjectDTO();
+    projectDTO.setId(projectId);
+    projectDTO.setName("Project 1");
+    projectDTO.setAssessments(new ArrayList<>());
+    projectDTO.getAssessments().add(assessmentDTO);
+
+    Team team = new Team();
+    ArrayList<User> members = new ArrayList<>();
+    User user = new User();
+
+    user.setLogin("cardotcl");
+    members.add(user);
+    team.setMembers(members);
+
+    projectDTO.setTeam(team);
+
+    when(projectService.getProjectById(projectId)).thenReturn(projectDTO);
+
+    when(projectService.addNewAssessment(projectId, assessmentDTO)).thenThrow(new CustomRuntimeException(CustomRuntimeException.PROJECT_NOT_FOUND));
+
+    // Act
+    mockMvc.perform(post("/projects/add-new-assessment")
+            .param("projectId", projectId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(assessmentDTO)))
+        .andExpect(status().isNotFound())
+        .andReturn();
+
+    // Assert
+    doThrow(new CustomRuntimeException(CustomRuntimeException.PROJECT_NOT_FOUND)).when(projectService).addNewAssessment(projectId, assessmentDTO);
+    verify(projectService).addNewAssessment(projectId, assessmentDTO);
+    verify(projectService).getProjectById(projectId);
+    verifyNoMoreInteractions(projectService);
+  }
+
+  @Test
+  @WithMockUser(username = "cardotcl")
+  void addNewAssessmentTestNotMember() throws Exception {
+    // Arrange
+    String projectId = "1";
+    AssessmentDTO assessmentDTO = new AssessmentDTO();
+
+    ProjectDTO projectDTO = new ProjectDTO();
+    projectDTO.setId(projectId);
+    projectDTO.setName("Project 1");
+    projectDTO.setAssessments(new ArrayList<>());
+    projectDTO.getAssessments().add(assessmentDTO);
+
+    Team team = new Team();
+    ArrayList<User> members = new ArrayList<>();
+    User user = new User();
+
+    user.setLogin("ledumaxe");
+    members.add(user);
+    team.setMembers(members);
+
+    projectDTO.setTeam(team);
+
+    when(projectService.getProjectById(projectId)).thenReturn(projectDTO);
+
+    when(projectService.addNewAssessment(projectId, assessmentDTO)).thenThrow(new CustomRuntimeException(CustomRuntimeException.USER_NOT_MEMBER_OF_TEAM_PROJECT));
+
+    // Act
+    mockMvc.perform(post("/projects/add-new-assessment")
+                    .param("projectId", projectId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(assessmentDTO)))
+            .andExpect(status().isUnauthorized())
+            .andReturn();
+
+    // Assert
+    doThrow(new CustomRuntimeException(CustomRuntimeException.USER_NOT_MEMBER_OF_TEAM_PROJECT)).when(projectService).addNewAssessment(projectId, assessmentDTO);
+    verify(projectService).getProjectById(projectId);
+    verifyNoMoreInteractions(projectService);
+  }
+
+  @Test
+  @WithMockUser(username = "user")
+  void getProjectByIdTest() throws Exception {
+    // Arrange
+    String id = "1";
+    ProjectDTO projectDTO = new ProjectDTO();
+    projectDTO.setId(id);
+    projectDTO.setName("Project 1");
+
+    when(projectService.getProjectById(id)).thenReturn(projectDTO);
+
+    // Act
+    MvcResult result = mockMvc.perform(get("/projects/get-project-by-id")
+            .param("id", id))
+        .andExpect(status().isOk())
+        .andReturn();
+
+    // Assert
+    String actualResponseBody = result.getResponse().getContentAsString();
+    ProjectDTO actualProject = objectMapper.readValue(actualResponseBody, ProjectDTO.class);
+    assertEquals(projectDTO, actualProject);
+
+    verify(projectService).getProjectById(id);
+    verifyNoMoreInteractions(projectService);
+  }
+
+  @Test
+  @WithMockUser(username = "user")
+  void getProjectByIdWhenInvalidIdTest() throws Exception {
+    // Arrange
+    String id = "invalidId";
+    CustomRuntimeException exception = new CustomRuntimeException(CustomRuntimeException.PROJECT_NOT_FOUND);
+
+    when(projectService.getProjectById(id)).thenThrow(exception);
+
+    // Act
+    MvcResult result = mockMvc.perform(get("/projects/get-project-by-id")
+            .param("id", id))
+        .andExpect(status().isNotFound())
+        .andReturn();
+
+    // Assert
+    String actualResponseBody = result.getResponse().getContentAsString();
+    assertEquals(exception.getHttpCode().value(), result.getResponse().getStatus());
+
+    verify(projectService).getProjectById(id);
+    verifyNoMoreInteractions(projectService);
+  }
+
+  @Test
+  @WithMockUser(username = "cardotcl")
+  void modifyLastAssessmentCommentTest() throws Exception {
+    // Arrange
+    String projectId = "1";
+    String comment = "Comment 1";
+    AssessmentDTO assessmentDTO = new AssessmentDTO();
+    assessmentDTO.setComment(comment);
+
+    ProjectDTO projectDTO = new ProjectDTO();
+    projectDTO.setId(projectId);
+    projectDTO.setName("Project 1");
+    projectDTO.setAssessments(new ArrayList<>());
+    projectDTO.getAssessments().add(assessmentDTO);
+
+    Team team = new Team();
+    ArrayList<User> members = new ArrayList<>();
+    User user = new User();
+
+    user.setLogin("cardotcl");
+    members.add(user);
+    team.setMembers(members);
+
+    projectDTO.setTeam(team);
+
+    when(projectService.getProjectById(projectId)).thenReturn(projectDTO);
+    when(projectService.modifyLastAssessmentComment(projectId, comment)).thenReturn(projectDTO);
+
+    // Act
+    mockMvc.perform(post("/projects/modify-last-assessment-comment")
+                    .param("projectId", projectId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(comment))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    // Assert
+    verify(projectService).modifyLastAssessmentComment(projectId, comment);
+    verify(projectService).getProjectById(projectId);
+    verifyNoMoreInteractions(projectService);
+  }
+
+  @Test
+  @WithMockUser(username = "cardotcl")
+  void modifyLastAssessmentCommentNotMemberTest() throws Exception {
+    // Arrange
+    String projectId = "1";
+    String comment = "Comment 1";
+    AssessmentDTO assessmentDTO = new AssessmentDTO();
+    assessmentDTO.setComment(comment);
+
+    ProjectDTO projectDTO = new ProjectDTO();
+    projectDTO.setId(projectId);
+    projectDTO.setName("Project 1");
+    projectDTO.setAssessments(new ArrayList<>());
+    projectDTO.getAssessments().add(assessmentDTO);
+
+    Team team = new Team();
+    ArrayList<User> members = new ArrayList<>();
+    User user = new User();
+
+    user.setLogin("ledumaxe");
+    members.add(user);
+    team.setMembers(members);
+
+    projectDTO.setTeam(team);
+
+    when(projectService.getProjectById(projectId)).thenReturn(projectDTO);
+    when(projectService.modifyLastAssessmentComment(projectId, comment)).thenThrow(new CustomRuntimeException(CustomRuntimeException.USER_NOT_MEMBER_OF_TEAM_PROJECT));
+
+    // Act
+    mockMvc.perform(post("/projects/modify-last-assessment-comment")
+                    .param("projectId", projectId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(comment))
+            .andExpect(status().isUnauthorized())
+            .andReturn();
+
+    // Assert
+    doThrow(new CustomRuntimeException(CustomRuntimeException.USER_NOT_MEMBER_OF_TEAM_PROJECT)).when(projectService).modifyLastAssessmentComment(projectId, comment);
+    verify(projectService).getProjectById(projectId);
+    verifyNoMoreInteractions(projectService);
+  }
+
 }

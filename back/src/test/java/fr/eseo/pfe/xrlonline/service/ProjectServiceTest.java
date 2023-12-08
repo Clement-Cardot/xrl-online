@@ -1,6 +1,7 @@
 package fr.eseo.pfe.xrlonline.service;
 
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
+import fr.eseo.pfe.xrlonline.model.dto.AssessmentDTO;
 import fr.eseo.pfe.xrlonline.model.dto.ProjectDTO;
 import fr.eseo.pfe.xrlonline.model.entity.Assessment;
 import fr.eseo.pfe.xrlonline.model.entity.BusinessLine;
@@ -22,11 +23,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class ProjectServiceTest {
+class ProjectServiceTest {
 
   @MockBean
   private ProjectRepository projectRepository;
@@ -45,7 +47,7 @@ public class ProjectServiceTest {
 
 
   @Test
-  public void testGetProjects() {
+  void testGetProjects() {
     // Arrange
     List<Project> projects = new ArrayList<>();
     Project project1 = new Project();
@@ -60,7 +62,7 @@ public class ProjectServiceTest {
     when(projectRepository.findAll()).thenReturn(projects);
 
     // Act
-    List<ProjectDTO> result = projectService.getProjects();
+    List<ProjectDTO> result = projectService.getAllProjects();
     System.out.println(result);
 
     // Assert
@@ -75,12 +77,12 @@ public class ProjectServiceTest {
 
   // Returns an empty list when projectRepository has no projects
   @Test
-  public void testGetProjectsWithEmptyList() {
+  void testGetProjectsWithEmptyList() {
     // Arrange
     when(projectRepository.findAll()).thenReturn(new ArrayList<>());
 
     // Act
-    List<ProjectDTO> result = projectService.getProjects();
+    List<ProjectDTO> result = projectService.getAllProjects();
 
     // Assert
     assertTrue(result.isEmpty());
@@ -89,7 +91,7 @@ public class ProjectServiceTest {
   }
 
   @Test
-  public void testCreateValidProject() {
+  void testCreateValidProject() {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setName("Test Project");
@@ -124,13 +126,13 @@ public class ProjectServiceTest {
     assertEquals(result.getName(), projectDTO.getName());
     assertEquals(result.getBusinessLine(), projectDTO.getBusinessLine());
     assertEquals(result.getTeam(), projectDTO.getTeam());
-    assertEquals(result.getDescription(), "");
+    assertEquals("", result.getDescription());
     assertEquals(result.getAssessments(), List.of());
     verify(projectRepository).save(projectToCreate);
   }
 
   @Test
-  public void testCreateProjectWithProjectNameNull() {
+  void testCreateProjectWithProjectNameNull() {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setBusinessLine(new BusinessLine());
@@ -145,7 +147,7 @@ public class ProjectServiceTest {
   }
 
   @Test
-  public void testCreateProjectWithBusinessLineNull() {
+  void testCreateProjectWithBusinessLineNull() {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setName("Test Project");
@@ -158,7 +160,7 @@ public class ProjectServiceTest {
   }
 
   @Test
-  public void testCreateProjectWithTeamNull() {
+  void testCreateProjectWithTeamNull() {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setName("Test Project");
@@ -171,7 +173,7 @@ public class ProjectServiceTest {
   }
 
   @Test
-  public void testCreateProjectWithProjectNameAlreadyExist() {
+  void testCreateProjectWithProjectNameAlreadyExist() {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setName("Test Project");
@@ -198,7 +200,7 @@ public class ProjectServiceTest {
   }
 
   @Test
-  public void testCreateProjectWithBusinessLineNotFound() {
+  void testCreateProjectWithBusinessLineNotFound() {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setName("Test Project");
@@ -219,7 +221,7 @@ public class ProjectServiceTest {
   }
 
   @Test
-  public void testCreateProjectWithTeamNotFound() {
+  void testCreateProjectWithTeamNotFound() {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setName("Test Project");
@@ -241,7 +243,7 @@ public class ProjectServiceTest {
   }
 
   @Test
-  public void testDeleteValidProject() {
+  void testDeleteValidProject() {
     // Arrange
     String projectId = "validId";
     ProjectDTO expectedDeletedProject = new ProjectDTO();
@@ -266,7 +268,7 @@ public class ProjectServiceTest {
   }
 
   @Test
-  public void testDeleteNonExistingProject() {
+  void testDeleteNonExistingProject() {
     // Arrange
     String projectId = "nonexistentId";
 
@@ -279,7 +281,7 @@ public class ProjectServiceTest {
   }
 
   @Test
-  public void testDeleteProjectWithNullId() {
+  void testDeleteProjectWithNullId() {
     // Arrange
     String projectId = null;
 
@@ -290,7 +292,7 @@ public class ProjectServiceTest {
   }
 
   @Test
-  public void testUpdateAllFieldOfProject() {
+  void testUpdateAllFieldOfProject() {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setId("1");
@@ -304,8 +306,8 @@ public class ProjectServiceTest {
     team.setId("1");
     team.setName("New Team");
     projectDTO.setTeam(team);
-    List<Assessment> assessments = new ArrayList<>();
-    Assessment assessment = new Assessment();
+    List<AssessmentDTO> assessments = new ArrayList<>();
+    AssessmentDTO assessment = new AssessmentDTO();
     assessment.setComment("New comment");
     assessments.add(assessment);
     projectDTO.setAssessments(assessments);
@@ -354,7 +356,7 @@ public class ProjectServiceTest {
   }
 
   @Test
-  public void testUpdateProjectWithNullId() {
+  void testUpdateProjectWithNullId() {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setName("New Name");
@@ -369,7 +371,7 @@ public class ProjectServiceTest {
   }
 
   @Test
-  public void testUpdateNonExistingProject() {
+  void testUpdateNonExistingProject() {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setId("1");
@@ -387,7 +389,7 @@ public class ProjectServiceTest {
   }
 
   @Test
-  public void testUpdateProjectWithAlreadyExistingName() {
+  void testUpdateProjectWithAlreadyExistingName() {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setId("1");
@@ -411,7 +413,7 @@ public class ProjectServiceTest {
   }
 
   @Test
-  public void testUpdateProjectWithNonExistingBusinessLine() {
+  void testUpdateProjectWithNonExistingBusinessLine() {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setId("1");
@@ -440,7 +442,7 @@ public class ProjectServiceTest {
   }
 
   @Test
-  public void testUpdateProjectWithNonExistingTeam() {
+  void testUpdateProjectWithNonExistingTeam() {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setId("1");
@@ -467,4 +469,139 @@ public class ProjectServiceTest {
     verify(projectRepository).findByName("New Name");
     verify(teamRepository).findById("1");
   }
+
+  @Test
+  void testAddNewAssessment() {
+    // Arrange
+    String projectId = "1";
+    AssessmentDTO assessmentDTO = new AssessmentDTO();
+    assessmentDTO.setComment("New comment");
+
+    Project existingProject = new Project();
+    existingProject.setId(projectId);
+    existingProject.setAssessments(new ArrayList<>());
+
+    when(projectRepository.findById(projectId)).thenReturn(Optional.of(existingProject));
+    when(projectRepository.save(existingProject)).thenReturn(existingProject);
+
+    // Act
+    ProjectDTO result = null;
+    try {
+      result = projectService.addNewAssessment(projectId, assessmentDTO);
+    } catch (CustomRuntimeException e) {
+      fail("Should not throw exception", e);
+    }
+
+    // Assert
+    assertNotNull(result);
+    assertEquals(projectId, result.getId());
+    assertEquals(1, result.getAssessments().size());
+    assertEquals(assessmentDTO.getComment(), result.getAssessments().get(0).getComment());
+
+    verify(projectRepository).findById(projectId);
+    verify(projectRepository).save(existingProject);
+  }
+
+  @Test
+  void testAddNewAssessmentWithNonExistingProject() {
+    // Arrange
+    String projectId = "nonexistentId";
+    AssessmentDTO assessmentDTO = new AssessmentDTO();
+    assessmentDTO.setComment("New comment");
+
+    when(projectRepository.findById(projectId)).thenReturn(Optional.empty());
+
+    // Act and Assert
+    assertThrows(CustomRuntimeException.class,
+        () -> projectService.addNewAssessment(projectId, assessmentDTO),
+        CustomRuntimeException.PROJECT_NOT_FOUND);
+
+    verify(projectRepository).findById(projectId);
+  }
+
+  @Test
+  void testModifyLastAssessmentComment() {
+    // Arrange
+    String projectId = "1";
+    String comment = "New comment";
+    List<Assessment> assessments = new ArrayList<>();
+    Assessment assessment = new Assessment();
+    assessment.setComment("First Comment");
+    assessments.add(assessment);
+
+    Project existingProject = new Project();
+    existingProject.setId(projectId);
+    existingProject.setAssessments(assessments);
+
+    when(projectRepository.findById(projectId)).thenReturn(Optional.of(existingProject));
+    when(projectRepository.save(existingProject)).thenReturn(existingProject);
+
+    // Act
+    ProjectDTO result = null;
+    try {
+      result = projectService.modifyLastAssessmentComment(projectId, comment);
+    } catch (CustomRuntimeException e) {
+      fail("Should not throw exception", e);
+    }
+
+    // Assert
+    assertNotNull(result);
+    assertEquals(projectId, result.getId());
+    assertEquals(1, result.getAssessments().size());
+    assertEquals(comment, result.getAssessments().get(0).getComment());
+
+    verify(projectRepository).findById(projectId);
+    verify(projectRepository).save(existingProject);
+  }
+
+  @Test
+  void testModifyLastAssessmentCommentNull() {
+    // Arrange
+    String projectId = "1";
+    String newComment = null;
+    String firstComment = "First Comment";
+    List<Assessment> assessments = new ArrayList<>();
+    Assessment assessment = new Assessment();
+    assessment.setComment(firstComment);
+    assessments.add(assessment);
+
+    Project existingProject = new Project();
+    existingProject.setId(projectId);
+    existingProject.setAssessments(assessments);
+
+    when(projectRepository.findById(projectId)).thenReturn(Optional.of(existingProject));
+
+    // Act
+    // Assert
+    CustomRuntimeException customRuntimeException = assertThrowsExactly(CustomRuntimeException.class,
+            () -> projectService.modifyLastAssessmentComment(projectId, newComment),
+            CustomRuntimeException.PROJECT_LAST_ASSESSMENT_COMMENT_NULL);
+    assertEquals(CustomRuntimeException.PROJECT_LAST_ASSESSMENT_COMMENT_NULL, customRuntimeException.getMessage());
+
+    verify(projectRepository).findById(projectId);
+  }
+
+  @Test
+  void testModifyLastAssessmentCommentAssessmentListEmpty() {
+    // Arrange
+    String projectId = "1";
+    String newComment = "New Comment";
+    List<Assessment> assessments = new ArrayList<>();
+
+    Project existingProject = new Project();
+    existingProject.setId(projectId);
+    existingProject.setAssessments(assessments);
+
+    when(projectRepository.findById(projectId)).thenReturn(Optional.of(existingProject));
+
+    // Act
+    // Assert
+    CustomRuntimeException customRuntimeException = assertThrowsExactly(CustomRuntimeException.class,
+            () -> projectService.modifyLastAssessmentComment(projectId, newComment),
+            CustomRuntimeException.PROJECT_ASSESSMENT_LIST_IS_EMPTY);
+    assertEquals(CustomRuntimeException.PROJECT_ASSESSMENT_LIST_IS_EMPTY, customRuntimeException.getMessage());
+
+    verify(projectRepository).findById(projectId);
+  }
+
 }

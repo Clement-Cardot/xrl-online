@@ -11,6 +11,9 @@ import { AdminBusinessLinePageComponent } from './admin-business-line-page/admin
 import { MaterialModule } from '../material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { ProjectPageComponent } from './project-page/project-page.component';
+import { NotFoundPage } from './error-pages/not-found-page/not-found-page';
+import { ExpiredSessionPage } from './error-pages/expired-session-page/expired-session-page';
 
 @NgModule({
   declarations: [
@@ -20,6 +23,9 @@ import { TranslateModule } from '@ngx-translate/core';
     AdminReadinessLevelPageComponent,
     AdminTeamPageComponent,
     AdminBusinessLinePageComponent,
+    ProjectPageComponent,
+    NotFoundPage,
+    ExpiredSessionPage
   ],
   imports: [
     CommonModule, 
@@ -30,12 +36,6 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule
   ],
   exports: [
-    ProjectsPageComponent,
-    HomePageComponent,
-    ReadinessLevelPageComponent,
-    AdminReadinessLevelPageComponent,
-    AdminTeamPageComponent,
-    AdminBusinessLinePageComponent,
   ],
 })
 export class PagesModule {}

@@ -14,18 +14,18 @@
         <div fxShow="true" fxHide.lt-md="true">
             <button mat-button class="menuButton" (click)="switchPage('/')">{{ 'MENU.HOME' | translate }}</button>
 
-            <button mat-button class="menuButton" (click)="switchPage('/Projects')">{{ 'MENU.PROJECTS' | translate }}</button>
+            <button mat-button class="menuButton" (click)="switchPage('/projects')">{{ 'MENU.PROJECTS' | translate }}</button>
 
-            <button mat-button class="menuButton" (click)="switchPage('/ReadinessLevels')">{{ 'MENU.READINESS_LEVELS' | translate }}</button>
+            <button mat-button class="menuButton" (click)="switchPage('/readiness-levels')">{{ 'MENU.READINESS_LEVELS' | translate }}</button>
           
             <button mat-button  class="menuButton" [matMenuTriggerFor]="menu" *ngIf="currentUser?.login==='admin'">
                 <mat-icon>keyboard_arrow_down</mat-icon>
                 {{ 'MENU.MANAGEMENT' | translate }}
             </button>
             <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="switchPage('/Admin/ReadinessLevels')">{{ 'MENU.READINESS_LEVELS' | translate }}</button>
-                <button mat-menu-item (click)="switchPage('/Admin/Teams')">{{ 'MENU.TEAMS' | translate }}</button>
-                <button mat-menu-item (click)="switchPage('/Admin/BusinessLines')">{{ 'MENU.BUSINESS_LINES' | translate }}</button>
+                <button mat-menu-item (click)="switchPage('/admin/readiness-levels')">{{ 'MENU.READINESS_LEVELS' | translate }}</button>
+                <button mat-menu-item (click)="switchPage('/admin/teams')">{{ 'MENU.TEAMS' | translate }}</button>
+                <button mat-menu-item (click)="switchPage('/admin/business-lines')">{{ 'MENU.BUSINESS_LINES' | translate }}</button>
             </mat-menu>
         </div>
         
@@ -37,7 +37,7 @@
         <app-language-menu></app-language-menu>
 
         <div *ngIf="currentUser===undefined">
-          <button mat-flat-button id="loginBtn" color="primary" (click)="openLoginDialog('500ms', '500ms')">{{ 'LOGIN.LOGIN' | translate }}</button>
+          <button mat-flat-button id="loginBtn" color="primary" (click)="openLoginDialog()">{{ 'LOGIN.LOGIN' | translate }}</button>
         </div>
 
         <div *ngIf="currentUser!==undefined">
@@ -56,18 +56,18 @@
     <mat-nav-list>
         <button mat-list-item class="menuButton" (click)="switchPage('/')">{{ 'MENU.HOME' | translate }}</button>
 
-        <button mat-list-item class="menuButton" (click)="switchPage('/Projects')">{{ 'MENU.PROJECTS' | translate }}</button>
+        <button mat-list-item class="menuButton" (click)="switchPage('/projects')">{{ 'MENU.PROJECTS' | translate }}</button>
 
-        <button mat-list-item class="menuButton" (click)="switchPage('/ReadinessLevels')">{{ 'MENU.READINESS_LEVELS' | translate }}</button>
+        <button mat-list-item class="menuButton" (click)="switchPage('/readiness-levels')">{{ 'MENU.READINESS_LEVELS' | translate }}</button>
       
         <button mat-list-item  class="menuButton" [matMenuTriggerFor]="menu" onclick="reverseArrow()">
             <mat-icon>keyboard_arrow_down</mat-icon>
             {{ 'MENU.MANAGEMENT' | translate }}
         </button>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="switchPage('/Admin/ReadinessLevels')">{{ 'MENU.READINESS_LEVELS' | translate }}</button>
-            <button mat-menu-item (click)="switchPage('/Admin/Teams')">{{ 'MENU.TEAMS' | translate }}</button>
-            <button mat-menu-item (click)="switchPage('/Admin/BusinessLevels')">{{ 'MENU.BUSINESS_LINES' | translate }}</button>
+            <button mat-menu-item (click)="switchPage('/admin/readiness-levels')">{{ 'MENU.READINESS_LEVELS' | translate }}</button>
+            <button mat-menu-item (click)="switchPage('/admin/teams')">{{ 'MENU.TEAMS' | translate }}</button>
+            <button mat-menu-item (click)="switchPage('/admin/business-lins')">{{ 'MENU.BUSINESS_LINES' | translate }}</button>
         </mat-menu>
       <button (click)="sidenav.toggle()" mat-list-item>
         <mat-icon>close</mat-icon> {{ 'MENU.CLOSE' | translate }}
@@ -78,7 +78,7 @@
 
   <!-- Router Outlet -->
   <mat-sidenav-content fxLayout="column" fxFlexFill>
-    <div fxFlex>
+    <div class="content" fxFlex>
       <router-outlet></router-outlet>
     </div>
     <app-footer></app-footer>

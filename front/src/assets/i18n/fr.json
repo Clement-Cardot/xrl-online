@@ -1,12 +1,29 @@
 {
-  "YES": "Oui",
-  "NO": "Non",
-  "CANCEL": "Annuler",
-  "SAVE": "Enregistrer",
-  "CREATE": "Créer",
-  "CLOSE": "Fermer",
-  "DELETE": "Supprimer",
-  "ADD": "Ajouter",
+  "ACTION": {
+    "YES": "Oui",
+    "NO": "Non",
+    "CANCEL": "Annuler",
+    "SAVE": "Enregistrer",
+    "CREATE": "Créer",
+    "CLOSE": "Fermer",
+    "DELETE": "Supprimer",
+    "ADD": "Ajouter",
+    "NEW": "Nouveau",
+    "COMPARE": "Comparer",
+    "NEXT": "Suivant",
+    "BACK": "Retour",
+    "CONFIRM": "Confirmer",
+    "SUBMIT": "Soumettre",
+    "LEAVE_COMMENT": "Laisser un commentaire"
+  },
+
+  "OBJECT": {
+    "PROJECT": "Projet",
+    "ASSESSMENT": "Evaluation",
+    "READINESS_LEVEL": "Niveau de Maturité",
+    "COMMENT": "Commentaire",
+    "TAG": "Tag"
+  },
 
   "MENU": {
     "HOME": "Accueil",
@@ -63,17 +80,19 @@
     "CANCEL": "Annuler",
     "CREATE": "Créer une équipe",
     "UPDATE": "Mettre à jour cette équipe",
-    "DELETE": "Supprimer"
+    "DELETE": "Supprimer",
+    "SEARCH_NAME": "Nom",
+    "SEARCH_USER": "Utilisateur"
   },
 
   "PROJECTS": {
-    "UPDATE":"Mettre à jour le projet",
-    "UPDATE_SUCCESS":"Le projet a été mis à jour avec succès",
+    "UPDATE": "Mettre à jour le projet",
+    "UPDATE_SUCCESS": "Le projet a été mis à jour avec succès",
     "NAME": "Nom",
     "DESCRIPTION": "Description",
     "BUSINESS_LINE": "Secteur d'activité",
     "TEAM": "Equipe",
-    "NAME_REQUIRED":"Le nom du projet est requis",
+    "NAME_REQUIRED": "Le nom du projet est requis",
     "NAME_ALREADY_EXISTS": "Ce nom de projet existe déjà",
     "TEAM_REQUIRED": "Une équipe est requise",
     "TEAM_NOT_EXISTS": "Cette équipe n'existe pas",
@@ -82,7 +101,7 @@
     "DETAILS": "Détails",
     "BACK": "Retour",
     "DELETE": "Êtes-vous sûr de vouloir supprimer le projet ?",
-    "DELETE_SUCCESS":"Le projet a été supprimé avec succès",
+    "DELETE_SUCCESS": "Le projet a été supprimé avec succès",
     "SEARCH_TYPE": "Type de recherche",
     "SEARCH_NAME": "Nom",
     "SEARCH_TEAM": "Equipe",
@@ -90,7 +109,30 @@
     "SEARCH": "Rechercher",
     "CREATE": "Créer un projet",
     "CREATE_SUCCESS": "Le projet a été créé avec succès",
-    "NO_DESCRIPTION": "Aucune description"
+    "NO_DESCRIPTION": "Aucune description",
+    "NO_ASSESSMENT": "Aucune évaluation",
+    "NAME_MAX_LENGTH": "Le nom du projet ne doit pas dépasser 20 caractères",
+    "NAME_MIN_LENGTH": "Le nom du projet doit contenir au moins 3 caractères",
+    "RADAR_CHART_EMPTY": "Aucune donnée pour ce projet",
+    "ASSESSMENT_COMMENT_CHANGED": "Le commentaire a été mis à jour"
+  },
+
+  "ASSESSMENT_DIALOG": {
+    "SELECT_RL_STEP": "Choix Niveaux",
+    "SELECT_RL_TITLE": "Choisissez entre 3 et 10 niveaux de maturité",
+    "SELECT_RL_MIN": "Vous avez choisi moins de 3 niveaux de maturité",
+    "SELECT_RL_MAX": "Vous avez choisi plus de 10 niveaux de maturité",
+    "AVAILABLE_RL": "Niveaux de maturité disponibles",
+    "SELECTED_RL": "Niveaux de maturité sélectionnés",
+    "NO_RANK_SELECTED": "Choisissez un niveau de maturité pour voir sa description",
+    "RANK": "Rang",
+    "SHORT_DESCRIPTION": "Description courte",
+    "LONG_DESCRIPTION": "Description longue",
+    "SHOW_COMPLETE_DESCRIPTION": "Afficher la description complète",
+    "HIDE_COMPLETE_DESCRIPTION": "Masquer la description complète",
+    "ENTER_COMMENT": "Vous devez entrer un commentaire",
+    "ENTER_TAG": "Vous devez entrer un tag",
+    "CONFIRM_ASSESSMENT": "Confirmer l'évaluation"
   },
 
   "BUSINESSLINE": {
@@ -106,7 +148,29 @@
     "UPDATE_BUSINESSLINE": "Mettre à jour le secteur d'activité",
     "CREATE_BUSINESSLINE": "Créer un secteur d'activité",
     "DELETE": "Êtes-vous sûr de vouloir supprimer le secteur d'activité ?",
-    "DELETE_SUCCESS": "Le secteur d'activité a été supprimé avec succès"
+    "DELETE_SUCCESS": "Le secteur d'activité a été supprimé avec succès",
+    "SEARCH_NAME": "Nom"
+  },
+
+  "READINESS_LEVEL": {
+    "NAME": "Nom du niveau de maturité",
+    "DESCRIPTION": "Description du niveau de maturité",
+    "NAME_REQUIRED": "Le nom du niveau de maturité est requis",
+    "NAME_MIN_LENGTH": "Le nom du niveau de maturité doit contenir au moins 3 caractères",
+    "NAME_MAX_LENGTH": "Le nom du niveau de maturité ne doit pas dépasser 20 caractères",
+    "NAME_ALREADY_EXISTS": "Ce nom déjà pris",
+    "DESCRIPTION_REQUIRED": "Une description est requise",
+    "DESCRIPTION_MAX_LENGTH": "La description ne doit pas dépasser 1000 caractères",
+    "LONG_DESCRIPTION_REQUIRED": "Au moins une description détaillée est requise",
+    "DELETE": "Êtes-vous sûr de vouloir supprimer le niveau de maturité ?",
+    "DELETE_SUCCESS": "Le niveau de maturité a été supprimé avec succès",
+    "CREATE": "Créer un niveau de maturité",
+    "CREATE_SUCCESS": "Le niveau de maturité a été créé avec succès",
+    "UPDATE_SUCCESS": "Le niveau de maturité a été mis à jour avec succès",
+    "LEVEL": "Niveau",
+    "RESUME": "Courte description",
+    "DETAILS": "Description détaillée",
+    "SEARCH_NAME": "Nom"
   },
 
   "FOOTER": {

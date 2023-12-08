@@ -1,1 +1,18 @@
-<p>admin-readiness-level-page works!</p>
+<div class="body-container">
+  <div class="search-add-container">
+    <app-filter-add-toolbox
+      (updateDisplayEvent)="updateReadinessLevelToDisplay($event)"
+      [searchTypes]="searchTypes"
+      (openAddDialogEvent)="openReadinessLevelDialog()"
+    ></app-filter-add-toolbox>
+  </div>
+
+  <div class="readiness-levels-container">
+    <app-readiness-level-card
+      class="readiness-level-card"
+      *ngFor="let readinessLevel of readinessLevelsToDisplay"
+      [readinessLevel]="readinessLevel"
+      (updateReadinessLevelEvent)="updateReadinessLevel($event)"
+    ></app-readiness-level-card>
+  </div>
+</div>

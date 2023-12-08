@@ -3,7 +3,8 @@
   }
 
 mat-toolbar-row {
-    background-color: white;
+    background-color: #2E4053;
+    color: #f3f3f3;
     position: fixed;
     z-index: 2;
     justify-content: space-between;
@@ -29,8 +30,7 @@ mat-sidenav-container {
 }
 
 .menuButton {
-    font-size: 14px;
-    font-weight: 800;
+    font-size: 1rem;
 }
 
 .rightNavBarElement {
@@ -41,4 +41,10 @@ mat-sidenav-container {
 
 .rightNavBarElement button {
     margin-left: 2rem;
+}
+
+.content {
+    background-color: #eeeeee;
+    height: calc(100vh - 150px);
+    width: 100%;
 }

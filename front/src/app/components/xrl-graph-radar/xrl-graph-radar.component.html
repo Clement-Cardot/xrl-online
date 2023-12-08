@@ -1,33 +1,9 @@
-<div id="divChart">
-  <apx-chart #chart
-    [chart]="chartOptions"
-    [plotOptions]="plotOptions"
-    [dataLabels]="dataLabelsDisable"
-    [series]="series"
-    [xaxis]="xaxis"
-    [yaxis]="yaxis"
-  ></apx-chart>
-
-  <apx-chart #chart
-    [chart]="chartOptions"
-    [plotOptions]="plotOptions"
-    [dataLabels]="dataLabels"
-    [series]="series"
-    [xaxis]="xaxis"
-    [yaxis]="yaxisDisabled"
-  ></apx-chart>
-
-  <apx-chart #chart
-    [chart]="chartOptionsDisabled"
-    [plotOptions]="plotOptions"
-    [dataLabels]="dataLabelsDisable"
-    [series]="series"
-    [xaxis]="xaxis"
-    [yaxis]="yaxisDisabled"
-  ></apx-chart>
-
-</div>
-
-<button mat-icon-button (click)="downloadChartAsPNG('test')">
-  <mat-icon>download</mat-icon>
-</button>
+<apx-chart #chart
+  [chart]="ApexOptions.chart"
+  [plotOptions]="ApexOptions.plotOptions"
+  [dataLabels]="ApexOptions.dataLabels"
+  [series]="ApexOptions.series"
+  [xaxis]="ApexOptions.xaxis"
+  [yaxis]="ApexOptions.yaxis"
+  [noData]="ApexOptions.noData"
+></apx-chart>

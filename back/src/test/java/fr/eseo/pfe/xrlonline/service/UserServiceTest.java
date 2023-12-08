@@ -215,6 +215,15 @@ class UserServiceTest {
         CustomRuntimeException customRuntimeException = assertThrowsExactly(CustomRuntimeException.class, () -> userService.deleteUser("1"), "User not found");
         assertEquals(CustomRuntimeException.USER_NOT_FOUND, customRuntimeException.getMessage());
     }
+
+    @Test
+    void testDeleteUser_UserAdmin() {
+        user.setLogin("admin");
+        when(userRepository.findById("1")).thenReturn(Optional.of(user));
+
+        CustomRuntimeException customRuntimeException = assertThrowsExactly(CustomRuntimeException.class, () -> userService.deleteUser("1"), "User admin");
+        assertEquals(CustomRuntimeException.USER_ADMIN_DELETE, customRuntimeException.getMessage());
+    }
 }
 
 

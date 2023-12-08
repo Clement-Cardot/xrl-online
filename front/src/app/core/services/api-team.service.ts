@@ -1,18 +1,24 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, throwError } from 'rxjs';
+import { Observable, catchError, map } from 'rxjs';
 import { TeamAdapter, TeamModel } from '../data/models/team.model';
+import { BaseService } from './base-service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ApiTeamService {
+export class ApiTeamService extends BaseService{
+  
   private baseUrl = '/api/teams';
 
   constructor(
     private http: HttpClient,
-    private teamAdapter: TeamAdapter
-  ) {}
+    private teamAdapter: TeamAdapter,
+    router: Router
+    ) {
+      super(router);
+     }
 
   /**
    * Retrieves all teams from the API.
@@ -27,7 +33,7 @@ export class ApiTeamService {
           response.map((item: any) => this.teamAdapter.adapt(item))
         )
       )
-      .pipe(catchError(this.handleError));
+      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
   }
 
   /**
@@ -40,7 +46,7 @@ export class ApiTeamService {
     return this.http
       .get(url)
       .pipe(map((response: any) => this.teamAdapter.adapt(response)))
-      .pipe(catchError(this.handleError));
+      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
   }
 
   /**
@@ -53,7 +59,7 @@ export class ApiTeamService {
     return this.http
       .post(url, team)
       .pipe(map((response: any) => this.teamAdapter.adapt(response)))
-      .pipe(catchError(this.handleError));
+      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
   }
 
   /**
@@ -66,7 +72,7 @@ export class ApiTeamService {
     return this.http
       .put(url, team)
       .pipe(map((response: any) => this.teamAdapter.adapt(response)))
-      .pipe(catchError(this.handleError));
+      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
   }
 
   /**
@@ -74,33 +80,13 @@ export class ApiTeamService {
    * @param id The ID of the team to delete.
    * @returns An observable of the HTTP response.
    */
-  deleteTeam(id: string) {
+  deleteTeam(id: string): Observable<TeamModel> {
     const url = `${this.baseUrl}/delete-team?id=${id}`;
     console.log('deleteTeam', id);
     return this.http
       .delete(url)
-      .pipe(catchError(this.handleError));
-  }
-
-  /**
-   * Handles HTTP errors.
-   * @param error The HttpErrorResponse object.
-   * @returns An observable of the HTTP error status.
-   */
-  private handleError(error: HttpErrorResponse) {
-    if (error.status === 0) {
-      // A client-side or network error occurred. Handle it accordingly.
-      console.error('An error occurred:', error.error);
-    } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong.
-      console.error(
-        `Backend returned code ${error.status}, body was: `,
-        error.error
-      );
-    }
-    // Return an observable with a user-facing error message.
-    return throwError(() => error.status);
+      .pipe(map((response: any) => this.teamAdapter.adapt(response)))
+      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
   }
 
 }

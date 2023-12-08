@@ -1,19 +1,20 @@
-<div id="users-management">
+<mat-card id="users-management">
     <div id="search-user-container">
         <mat-form-field class="usernameField" subscriptSizing="dynamic">
             <input type="text" matInput [formControl]="userControl" [attr.placeholder]="'USERS.SEARCH_USER' | translate">
         </mat-form-field>
-        <mat-icon>search</mat-icon>
-        <mat-icon id="addUserBtn" style="cursor: pointer;" (click)="openAddUserDialog()">add</mat-icon>
+        <mat-icon class="upscale-on-hover">search</mat-icon>
+        <mat-icon class="upscale-on-hover" id="addUserBtn" style="cursor: pointer;" (click)="openAddUserDialog()">add</mat-icon>
     </div>
 
     <div id="list-users">
 
         <table mat-table [dataSource]="currentUsers">
+            <caption hidden>Utilisateurs</caption>
 
             <!-- FirstName Column -->
             <ng-container matColumnDef="firstName">
-                <th mat-header-cell *matHeaderCellDef> Firstname </th>
+                <th mat-header-cell *matHeaderCellDef id="firstName"> Firstname </th>
                 <td class="firstNameCell" mat-cell *matCellDef="let element" (mouseenter)="mouseEnterActionsButton(element)" (mouseleave)="mouseLeaveActionsButton(element)">
                     {{element.firstName}}
                 </td>
@@ -21,7 +22,7 @@
 
             <!-- LastName Column -->
             <ng-container matColumnDef="lastName">
-                <th mat-header-cell *matHeaderCellDef> Lastname </th>
+                <th mat-header-cell *matHeaderCellDef id="lastName"> Lastname </th>
                 <td mat-cell *matCellDef="let element" (mouseenter)="mouseEnterActionsButton(element)" (mouseleave)="mouseLeaveActionsButton(element)">
                     {{element.lastName}}
                 </td>
@@ -29,14 +30,14 @@
 
             <!-- Action Column -->
             <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                <th mat-header-cell *matHeaderCellDef id="actions"> Actions </th>
                 <td mat-cell *matCellDef="let element" [attr.id]="'list-user-'+element.login" class="list-user" (mouseenter)="mouseEnterActionsButton(element)" (mouseleave)="mouseLeaveActionsButton(element)">
                     <div [attr.id]="'list-users-actions-'+element.login" class="list-users-actions">
-                        <button (click)="openEditUserDialog(element)">
-                            <mat-icon>edit</mat-icon>
+                        <button id="{{'modify-'+element.login}}" (click)="openEditUserDialog(element)">
+                            <mat-icon class="upscale-on-hover">edit</mat-icon>
                         </button>
-                        <button (click)="openDeleteUserDialog(element)">
-                            <mat-icon class="delete-user-icon">delete</mat-icon>
+                        <button id="{{'delete-'+element.login}}" [attr.class]="element.isAdmin() ? 'invisible' : ''" (click)="openDeleteUserDialog(element)">
+                            <mat-icon class="delete-user-icon upscale-on-hover">delete</mat-icon>
                         </button>
                     </div>
                 </td>
@@ -45,4 +46,4 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
     </div>
-</div>
+</mat-card>

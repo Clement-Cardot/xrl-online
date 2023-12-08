@@ -1,11 +1,12 @@
 package fr.eseo.pfe.xrlonline.controller;
 
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
+import fr.eseo.pfe.xrlonline.logger.UserLogger;
+import fr.eseo.pfe.xrlonline.logger.UserLoggerFactory;
 import fr.eseo.pfe.xrlonline.model.dto.BusinessLineDTO;
 import fr.eseo.pfe.xrlonline.service.BusinessLineService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,61 +19,63 @@ public class BusinessLineController {
 
   private final BusinessLineService businessLineService;
 
+  UserLogger logger = UserLoggerFactory.getLogger(ProjectController.class, log);
+
   public BusinessLineController(BusinessLineService businessLineService) {
     this.businessLineService = businessLineService;
   }
 
   @GetMapping("/get-all-businessLines")
-  public ResponseEntity<List<BusinessLineDTO>> getAllBusinessLine(@CurrentSecurityContext(expression="authentication?.name") String username) {
-    log.info("AS [{}] REQUEST: Get all businesslines", username);
+  public ResponseEntity<List<BusinessLineDTO>> getAllBusinessLine() {
+    logger.logInfo("REQUEST: Get all businesslines");
     try {
       return businessLineService.getAllBusinessLine();
     } catch (CustomRuntimeException e) {
-      log.error("AS [{}] Error while trying to get all businesslines, Error Details : {}",username ,e.getMessage());
+      logger.logError("Error while trying to get all businesslines, Error Details : {}", e.getMessage());
       return new ResponseEntity<>(e.getHttpCode());
     }
   }
 
   @GetMapping("/get-businessLine-by-id")
-  public ResponseEntity<BusinessLineDTO> getBusinessLineById(@CurrentSecurityContext(expression="authentication?.name") String username, @RequestParam String id) {
-    log.info("AS [{}] REQUEST: Get businessline by id with : {}", username, id);
+  public ResponseEntity<BusinessLineDTO> getBusinessLineById(@RequestParam String id) {
+    logger.logInfo("REQUEST: Get businessline by id with : {}", id);
     try {
       return businessLineService.getBusinessLineById(id);
     } catch (CustomRuntimeException e) {
-      log.error("AS [{}] Error while trying to get businnesline by id with : {}, Error Details : {}", username, id, e.getMessage());
+      logger.logError("Error while trying to get businnesline by id with : {}, Error Details : {}", id, e.getMessage());
       return new ResponseEntity<>(e.getHttpCode());
     }
   }
 
   @PostMapping("/create-businessLine")
-  public ResponseEntity<BusinessLineDTO> createBusinessLine(@CurrentSecurityContext(expression="authentication?.name") String username, @RequestBody BusinessLineDTO businessLineDTO) {
-    log.info("AS [{}] REQUEST: Create businessline with {}", username, businessLineDTO.toString());
+  public ResponseEntity<BusinessLineDTO> createBusinessLine(@RequestBody BusinessLineDTO businessLineDTO) {
+    logger.logInfo("REQUEST: Create businessline with {}", businessLineDTO.toString());
     try {
       return businessLineService.createBusinessLine(businessLineDTO);
     } catch (CustomRuntimeException e) {
-      log.error("AS [{}] Error while trying to create businessline with : {}, Error Details : {}", username, businessLineDTO, e.getMessage());
+      logger.logError("Error while trying to create businessline with : {}, Error Details : {}", businessLineDTO, e.getMessage());
       return new ResponseEntity<>(e.getHttpCode());
     }
   }
 
   @PutMapping("/update-businessLine")
-  public ResponseEntity<BusinessLineDTO> updateBusinessLine(@CurrentSecurityContext(expression="authentication?.name") String username, @RequestBody BusinessLineDTO businessLineDTO) {
-    log.info("AS [{}] REQUEST: Update businessline with {}", username, businessLineDTO.toString());
+  public ResponseEntity<BusinessLineDTO> updateBusinessLine(@RequestBody BusinessLineDTO businessLineDTO) {
+    logger.logInfo("REQUEST: Update businessline with {}", businessLineDTO.toString());
     try {
       return businessLineService.updateBusinessLine(businessLineDTO);
     } catch (CustomRuntimeException e) {
-      log.error("AS [{}] Error while trying to update businessline with : {}, Error Details : {}", username, businessLineDTO, e.getMessage());
+      logger.logError("Error while trying to update businessline with : {}, Error Details : {}", businessLineDTO, e.getMessage());
       return new ResponseEntity<>(e.getHttpCode());
     }
   }
 
   @DeleteMapping("/delete-businessLine")
-  public ResponseEntity<BusinessLineDTO> deleteBusinessLine(@CurrentSecurityContext(expression="authentication?.name") String username, @RequestParam String id) {
-    log.info("AS [{}] REQUEST: Delete businessline with id : {}", username, id);
+  public ResponseEntity<BusinessLineDTO> deleteBusinessLine(@RequestParam String id) {
+    logger.logInfo("REQUEST: Delete businessline with id : {}", id);
     try {
       return businessLineService.deleteBusinessLine(id);
     } catch (CustomRuntimeException e) {
-      log.error("AS [{}] Error while trying to delete businessline with : {}, Error Details : {}", username, id, e.getMessage());
+      logger.logError("Error while trying to delete businessline with : {}, Error Details : {}", id, e.getMessage());
       return new ResponseEntity<>(e.getHttpCode());
     }
   }

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReadinessLevelRepository extends MongoRepository<ReadinessLevel, String> {
+    ReadinessLevel findByName(String name);
 }

@@ -1,0 +1,128 @@
+@import "src/styles.scss";
+
+.close-button-login{
+  float: right;
+  top:-24px;
+  right:-24px;
+}
+
+.edit-readiness-level-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 100%;
+}
+
+.readiness-level-list-container {
+  width: 20em;
+  background-color: $color-primary-light;
+  padding: 15px;
+  margin: 0 1rem;
+  border-radius: 5px;
+  h2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    line-height: 56px;
+    border-bottom: solid 1px #969696;
+  }
+}
+
+.readiness-level-list {
+  height: 16em;
+  overflow-y: auto;
+}
+
+.readiness-level-list-actions button {
+  background: none;
+  border: none;
+}
+
+.readiness-level-list tr {
+  background-color: $color-primary-light;
+}
+
+.dialog-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dialog-content {
+  display: flex;
+  flex-direction: row;
+}
+
+.description-container {
+  margin: 2rem 4rem;
+  width: 100%;
+}
+
+.mat-mdc-dialog-content {
+  max-height: none!important;
+}
+
+.no-level {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.two-columns {
+  display: flex;
+  width: 100%
+}
+
+.col {
+  width: 50%;
+  padding: 0 1rem;
+}
+
+.rankComment mat-form-field {
+  min-width: 85%;
+  min-height: 9rem;
+}
+
+.comment-input {
+  width: 100%;
+  min-height: 9rem;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.button-container {
+  margin: 2rem 0 1rem 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  button {
+    margin: 0 1rem;
+  }
+}
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.tag-input {
+  width: 13rem;
+}
+
+.dialog-title {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}

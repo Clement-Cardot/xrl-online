@@ -1,0 +1,55 @@
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-name-container,
+.edit-description-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.edit-description-container mat-form-field {
+  width: 100%;
+  min-width: 60em;
+}
+
+table mat-form-field {
+  width: 100%;
+}
+
+.mat-column-shortDescription {
+  width: 20%;
+}
+
+.mat-column-longDescription {
+  width: 70%;
+}
+
+.mat-column-level {
+  text-align: center;
+  font-size: large;
+  width: 2%;
+}
+
+mat-dialog-actions {
+  display: flex;
+  justify-content: center;
+}
+mat-dialog-actions button:nth-child(1):hover {
+  background-color: white;
+  color: red;
+  transform: scale(1.1);
+}
+mat-dialog-actions button:nth-child(2):hover {
+  background-color: white;
+  color: blue;
+  transform: scale(1.1);
+}
+
+mat-dialog-actions button {
+  margin: 0.5em 1em;
+}

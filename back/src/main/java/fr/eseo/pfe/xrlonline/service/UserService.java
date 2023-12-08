@@ -4,15 +4,14 @@ import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
 import fr.eseo.pfe.xrlonline.model.dto.UserDTO;
 import fr.eseo.pfe.xrlonline.model.entity.User;
 import fr.eseo.pfe.xrlonline.repository.UserRepository;
-import lombok.extern.log4j.Log4j2;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Log4j2
 @Service
 public class UserService {
 
@@ -48,7 +47,7 @@ public class UserService {
     public ResponseEntity<List<UserDTO>> getAllUser() throws CustomRuntimeException {
         List<UserDTO> usersDTO = userRepository.findAll().stream()
                 .map(user -> modelMapper.map(user, UserDTO.class))
-                .toList();
+                .collect(Collectors.toList());
 
         if (!usersDTO.isEmpty()) {
             return ResponseEntity.ok(usersDTO);
@@ -102,10 +101,13 @@ public class UserService {
         User userToDelete = userRepository.findById(id).orElse(null);
         UserDTO userToDeleteDTO = modelMapper.map(userToDelete, UserDTO.class);
 
-        if (userToDelete != null) {
-            userRepository.delete(userToDelete);
-            return ResponseEntity.ok(userToDeleteDTO);
+        if (userToDelete == null) {
+            throw new CustomRuntimeException(CustomRuntimeException.USER_NOT_FOUND);
         }
-        throw new CustomRuntimeException(CustomRuntimeException.USER_NOT_FOUND);
+        if (userToDelete.isAdmin()) {
+            throw new CustomRuntimeException(CustomRuntimeException.USER_ADMIN_DELETE);
+        }
+        userRepository.delete(userToDelete);
+        return ResponseEntity.ok(userToDeleteDTO);
     }
 }

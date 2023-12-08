@@ -31,12 +31,10 @@ describe("Admin Team Page tests", () => {
 
         // Create new user
         cy.get("#addUserBtn").click();
-        cy.get("#mat-input-2").type(database.users[1].firstName);
-        cy.get("#mat-input-3").type(database.users[1].lastName);
-        cy.get("#mat-input-4").type(database.users[1].login);
-        cy.get(
-          ".mat-mdc-dialog-actions > :nth-child(2) > .mdc-button__label"
-        ).click();
+        cy.get("#firstName-input").type(database.users[1].firstName);
+        cy.get("#lastName-input").type(database.users[1].lastName);
+        cy.get("#login-input").type(database.users[1].login);
+        cy.get('#confirm').click();
 
         // Check api response
         cy.wait("@apiCreateUser").then((interception) => {
@@ -48,56 +46,44 @@ describe("Admin Team Page tests", () => {
         });
 
         // Check error message
-        cy.get("#mat-mdc-error-3").should(
-          "have.text",
-          "Cet identifiant existe déjà"
-        );
-        cy.get("#mat-mdc-error-3").should("be.visible");
+        cy.get("#login-mat-error").should("have.text", "Cet identifiant existe déjà");
+        cy.get("#login-mat-error").should("be.visible");
       });
 
       it("Create a new User login null", () => {
         // Create new user
         cy.get("#addUserBtn").click();
-        cy.get("#mat-input-2").type("Jean");
-        cy.get("#mat-input-3").type("Durant");
-        cy.get(
-          ".mat-mdc-dialog-actions > :nth-child(2) > .mdc-button__label"
-        ).click();
+        cy.get("#firstName-input").type("Jean");
+        cy.get("#lastName-input").type("Durant");
+        cy.get('#confirm').click();
 
         // Check error message
-        cy.get("#mat-mdc-error-3").should(
-          "have.text",
-          "Un identifiant est requis"
-        );
-        cy.get("#mat-mdc-error-3").should("be.visible");
+        cy.get("#login-mat-error").should("have.text", "Un identifiant est requis");
+        cy.get("#login-mat-error").should("be.visible");
       });
 
       it("Create a new User firstname null", () => {
         // Create new user
         cy.get("#addUserBtn").click();
-        cy.get("#mat-input-3").type("Durant");
-        cy.get("#mat-input-4").type("durantj");
-        cy.get(
-          ".mat-mdc-dialog-actions > :nth-child(2) > .mdc-button__label"
-        ).click();
+        cy.get("#lastName-input").type("Durant");
+        cy.get("#login-input").type("durantj");
+        cy.get('#confirm').click();
 
         // Check error message
-        cy.get("#mat-mdc-error-1").should("have.text", "Un prénom est requis");
-        cy.get("#mat-mdc-error-1").should("be.visible");
+        cy.get("#firstName-mat-error").should("have.text", "Un prénom est requis");
+        cy.get("#firstName-mat-error").should("be.visible");
       });
 
       it("Create a new User lastname null", () => {
         // Create new user
         cy.get("#addUserBtn").click();
-        cy.get("#mat-input-2").type("Jean");
-        cy.get("#mat-input-4").type("durantj");
-        cy.get(
-          ".mat-mdc-dialog-actions > :nth-child(2) > .mdc-button__label"
-        ).click();
+        cy.get("#firstName-input").type("Jean");
+        cy.get("#login-input").type("durantj");
+        cy.get('#confirm').click();
 
         // Check error message
-        cy.get("#mat-mdc-error-2").should("have.text", "Un nom est requis");
-        cy.get("#mat-mdc-error-2").should("be.visible");
+        cy.get("#lastName-mat-error").should("have.text", "Un nom est requis");
+        cy.get("#lastName-mat-error").should("be.visible");
       });
     }
   );
@@ -120,32 +106,23 @@ describe("Admin Team Page tests", () => {
         }).as("apiModifyUser");
 
         // Trigger mouseenter event to display actions buttons
-        cy.get("#list-users-actions-" + database.users[1].login).trigger(
-          "mouseenter",
-          { force: true }
-        );
+        cy.get("#list-users-actions-" + database.users[1].login).trigger("mouseenter", { force: true });
 
         // Click on modify button
-        cy.get(
-          "#list-users-actions-" +
-            database.users[1].login +
-            " > :nth-child(1) > .mat-icon"
-        ).click();
+        cy.get("#modify-"+database.users[1].login).click();
 
         // Clear input of Modify user dialog
-        cy.get("#mat-input-2").clear();
-        cy.get("#mat-input-3").clear();
-        cy.get("#mat-input-4").clear();
+        cy.get("#firstName-input").clear();
+        cy.get("#lastName-input").clear();
+        cy.get("#login-input").clear();
 
         // Enter new values (test2_user...)
-        cy.get("#mat-input-2").type(database.users[1].firstName + "_test");
-        cy.get("#mat-input-3").type(database.users[1].lastName + "_test");
-        cy.get("#mat-input-4").type(database.users[2].login);
+        cy.get("#firstName-input").type(database.users[1].firstName + "_test");
+        cy.get("#lastName-input").type(database.users[1].lastName + "_test");
+        cy.get("#login-input").type(database.users[2].login);
 
         // Click on save button
-        cy.get(
-          ".mat-mdc-dialog-actions > :nth-child(2) > .mdc-button__label"
-        ).click();
+        cy.get('#confirm').click();
 
         // Check api response
         cy.wait("@apiModifyUser").then((interception) => {
@@ -157,113 +134,83 @@ describe("Admin Team Page tests", () => {
         });
 
         // Check error message
-        cy.get("#mat-mdc-error-3").should(
-          "have.text",
-          "Cet identifiant existe déjà"
-        );
-        cy.get("#mat-mdc-error-3").should("be.visible");
+        cy.get("#login-mat-error").should("have.text", "Cet identifiant existe déjà");
+        cy.get("#login-mat-error").should("be.visible");
       });
 
       it("Modify an existing User login null", () => {
         // Trigger mouseenter event to display actions buttons
-        cy.get("#list-users-actions-" + database.users[1].login).trigger(
-          "mouseenter",
-          { force: true }
-        );
+        cy.get("#list-users-actions-" + database.users[1].login).trigger("mouseenter", { force: true });
 
         // Click on modify button
-        cy.get(
-          "#list-users-actions-" +
-            database.users[1].login +
-            " > :nth-child(1) > .mat-icon"
-        ).click();
+        cy.get("#modify-"+database.users[1].login).click();
 
         // Clear input of Modify user dialog
-        cy.get("#mat-input-2").clear();
-        cy.get("#mat-input-3").clear();
-        cy.get("#mat-input-4").clear();
+        cy.get("#firstName-input").clear();
+        cy.get("#lastName-input").clear();
+        cy.get("#login-input").clear();
 
         // Enter new values (test2_user...)
-        cy.get("#mat-input-2").type(database.users[1].firstName + "_test");
-        cy.get("#mat-input-3").type(database.users[1].lastName + "_test");
+        cy.get("#firstName-input").type(database.users[1].firstName + "_test");
+        cy.get("#lastName-input").type(database.users[1].lastName + "_test");
 
         // Click on save button
-        cy.get(
-          ".mat-mdc-dialog-actions > :nth-child(2) > .mdc-button__label"
-        ).click();
+        cy.get('#confirm').click();
 
         // Check error message
-        cy.get("#mat-mdc-error-3").should(
+        cy.get("#login-mat-error").should(
           "have.text",
           "Un identifiant est requis"
         );
-        cy.get("#mat-mdc-error-3").should("be.visible");
+        cy.get("#login-mat-error").should("be.visible");
       });
 
       it("Modify an existing User firstname null", () => {
         // Trigger mouseenter event to display actions buttons
-        cy.get("#list-users-actions-" + database.users[1].login).trigger(
-          "mouseenter",
-          { force: true }
-        );
+        cy.get("#list-users-actions-" + database.users[1].login).trigger("mouseenter", { force: true });
 
         // Click on modify button
-        cy.get(
-          "#list-users-actions-" +
-            database.users[1].login +
-            " > :nth-child(1) > .mat-icon"
-        ).click();
+        cy.get("#modify-"+database.users[1].login).click();
 
         // Clear input of Modify user dialog
-        cy.get("#mat-input-2").clear();
-        cy.get("#mat-input-3").clear();
-        cy.get("#mat-input-4").clear();
+        cy.get("#firstName-input").clear();
+        cy.get("#lastName-input").clear();
+        cy.get("#login-input").clear();
 
         // Enter new values (test2_user...)
-        cy.get("#mat-input-3").type(database.users[1].lastName + "_test");
-        cy.get("#mat-input-4").type(database.users[2].login);
+        cy.get("#lastName-input").type(database.users[1].lastName + "_test");
+        cy.get("#login-input").type(database.users[2].login);
 
         // Click on save button
-        cy.get(
-          ".mat-mdc-dialog-actions > :nth-child(2) > .mdc-button__label"
-        ).click();
+        cy.get('#confirm').click();
 
         // Check error message
-        cy.get("#mat-mdc-error-1").should("have.text", "Un prénom est requis");
-        cy.get("#mat-mdc-error-1").should("be.visible");
+        cy.get("#firstName-mat-error").should("have.text", "Un prénom est requis");
+        cy.get("#firstName-mat-error").should("be.visible");
       });
 
       it("Modify an existing User lastname null", () => {
         // Trigger mouseenter event to display actions buttons
-        cy.get("#list-users-actions-" + database.users[1].login).trigger(
-          "mouseenter",
-          { force: true }
-        );
+        cy.get("#list-users-actions-" + database.users[1].login).trigger("mouseenter", { force: true });
 
         // Click on modify button
-        cy.get(
-          "#list-users-actions-" +
-            database.users[1].login +
-            " > :nth-child(1) > .mat-icon"
-        ).click();
+        cy.get("#modify-"+database.users[1].login).click();
 
         // Clear input of Modify user dialog
-        cy.get("#mat-input-2").clear();
-        cy.get("#mat-input-3").clear();
-        cy.get("#mat-input-4").clear();
+        cy.get("#firstName-input").clear();
+        cy.get("#lastName-input").clear();
+        cy.get("#login-input").clear();
 
         // Enter new values (test2_user...)
-        cy.get("#mat-input-2").type(database.users[1].firstName + "_test");
-        cy.get("#mat-input-4").type(database.users[2].login);
+        cy.get("#firstName-input").type(database.users[1].firstName + "_test");
+        cy.get("#login-input").type(database.users[2].login);
 
         // Click on save button
-        cy.get(
-          ".mat-mdc-dialog-actions > :nth-child(2) > .mdc-button__label"
-        ).click();
+        cy.get('#confirm').click();
 
         // Check error message
-        cy.get("#mat-mdc-error-2").should("have.text", "Un nom est requis");
-        cy.get("#mat-mdc-error-2").should("be.visible");
+        cy.get("#lastName-mat-error").should("have.text", "Un nom est requis");
+        cy.get("#lastName-mat-error").should("be.visible");
       });
     }
   );
@@ -273,42 +220,32 @@ describe("Admin Team Page tests", () => {
         cy.deleteExistingUser(database.users[1].login);
       });
 
+      it("Delete the admin user", () => {
+        const adminLogin = database.users[0].login;
+        cy.get('#list-users-actions-'+ adminLogin).trigger('mouseenter', {force: true});
+        cy.get('#delete-'+adminLogin).should('not.be.visible');
+      });
+
       it('Delete an existing User close dialog with "No" button', () => {
         // Trigger mouseenter event to display actions buttons
-        cy.get("#list-users-actions-" + database.users[1].login).trigger(
-          "mouseenter",
-          { force: true }
-        );
+        cy.get("#list-users-actions-" + database.users[1].login).trigger("mouseenter", { force: true });
 
         // Click on delete button
-        cy.get(
-          "#list-users-actions-" +
-            database.users[1].login +
-            " > :nth-child(2) > .mat-icon"
-        ).click();
+        cy.get('#delete-'+database.users[1].login).click();
 
         // Click on "No" button
-        cy.get('.close-button > .mdc-button__label').click();
+        cy.get('#close').click();
 
         // Check User still in list
-        cy.get("#list-users-actions-" + database.users[1].login).should(
-          "exist"
-        );
+        cy.get("#list-users-actions-" + database.users[1].login).should("exist");
       });
 
       it("Delete an existing User close dialog by clicking outside the dialog", () => {
         // Trigger mouseenter event to display actions buttons
-        cy.get("#list-users-actions-" + database.users[1].login).trigger(
-          "mouseenter",
-          { force: true }
-        );
+        cy.get("#list-users-actions-" + database.users[1].login).trigger("mouseenter", { force: true });
 
         // Click on delete button
-        cy.get(
-          "#list-users-actions-" +
-            database.users[1].login +
-            " > :nth-child(2) > .mat-icon"
-        ).click();
+        cy.get('#delete-'+database.users[1].login).click();
 
         // Click outside the dialog
         cy.get(".cdk-overlay-backdrop").click({ force: true });
@@ -317,9 +254,7 @@ describe("Admin Team Page tests", () => {
         cy.get(".cdk-overlay-backdrop").should("not.exist");
 
         // Check User still in list
-        cy.get("#list-users-actions-" + database.users[1].login).should(
-          "exist"
-        );
+        cy.get("#list-users-actions-" + database.users[1].login).should("exist");
       });
     }
   );
@@ -333,69 +268,56 @@ describe("Admin Team Page tests", () => {
       }).as("apiCreateTeam");
 
       // Click on create team button
-      cy.get(".mat-mdc-card > .mat-icon").click();
+      cy.get(".add-container > button").click();
       // Enter team name
-      cy.get("#mat-input-2").clear();
-      cy.get("#mat-input-2").type("New Team");
+      cy.get("#team-name-input").clear();
+      cy.get("#team-name-input").type("New Team");
       // Add members
-      cy.get("#user-list-actions-cardotcl > button > .mat-icon").click();
-      cy.get("#user-list-actions-duboisj > button > .mat-icon").click();
-      cy.get("#user-list-actions-dupontp > button > .mat-icon").click();
-      cy.get("#user-list-actions-durandm > button > .mat-icon").click();
+      cy.get("#user-list-actions-cardotcl > button").click();
+      cy.get("#user-list-actions-duboisj > button").click();
+      cy.get("#user-list-actions-dupontp > button").click();
+      cy.get("#user-list-actions-durandm > button").click();
       // Click on save button
-      cy.get('[ng-reflect-disabled="false"] > .mdc-button__label').click();
+      cy.get('#confirm').click();
 
       // Check api response
       cy.wait("@apiCreateTeam").then((interception) => {
         if (interception.response) {
           expect(interception.response.statusCode).to.eq(200);
+          expect(interception.response.body).to.have.all.keys('id', 'name', 'members');
+          let teamId = interception.response.body.id;
+
+          // Check success message
+          cy.get(".mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label").should("have.text", " L'équipe a été créée avec succès\n");
+
+          // Check team has been created
+          cy.get("#team-card-"+teamId+" > mat-card-header > .title-container > mat-card-title").should("have.text", "New Team");
+          // Check team members
+          cy.get("#team-card-"+teamId+" > mat-card-content > .mat-mdc-table > .mdc-data-table__content > :nth-child(1) > .firstNameCell").should("have.text", " Clément ");
+          cy.get("#team-card-"+teamId+" > mat-card-content > .mat-mdc-table > .mdc-data-table__content > :nth-child(1) > .cdk-column-lastName").should("have.text", "Cardot");
+          cy.get("#team-card-"+teamId+" > mat-card-content > .mat-mdc-table > .mdc-data-table__content > :nth-child(2) > .firstNameCell").should("have.text", " Jean ");
+          cy.get("#team-card-"+teamId+" > mat-card-content > .mat-mdc-table > .mdc-data-table__content > :nth-child(2) > .cdk-column-lastName").should("have.text", "Dubois");
+          cy.get("#team-card-"+teamId+" > mat-card-content > .mat-mdc-table > .mdc-data-table__content > :nth-child(3) > .firstNameCell").should("have.text", " Pierre ");
+          cy.get("#team-card-"+teamId+" > mat-card-content > .mat-mdc-table > .mdc-data-table__content > :nth-child(3) > .cdk-column-lastName").should("have.text", "Dupont");
+
         } else {
           throw new Error("interception.response is undefined");
         }
       });
-
-      // Check success message
-      cy.get(".mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label").should(
-        "have.text",
-        " L'équipe a été créée avec succès\n"
-      );
-      // Check team has been created
-      cy.get(
-        ":nth-child(6) > .mat-mdc-card > .mat-mdc-card-header > .mat-mdc-card-header-text > .mat-mdc-card-title"
-      ).should("have.text", "New Team");
-      // Check team members
-      cy.get(
-        ":nth-child(6) > .mat-mdc-card > .mat-mdc-card-content > .mat-mdc-table > .mdc-data-table__content > :nth-child(1) > .firstNameCell"
-      ).should("have.text", " Clément ");
-      cy.get(
-        ":nth-child(6) > .mat-mdc-card > .mat-mdc-card-content > .mat-mdc-table > .mdc-data-table__content > :nth-child(1) > .cdk-column-lastName"
-      ).should("have.text", "Cardot");
-      cy.get(
-        ":nth-child(6) > .mat-mdc-card > .mat-mdc-card-content > .mat-mdc-table > .mdc-data-table__content > :nth-child(2) > .firstNameCell"
-      ).should("have.text", " Jean ");
-      cy.get(
-        ":nth-child(6) > .mat-mdc-card > .mat-mdc-card-content > .mat-mdc-table > .mdc-data-table__content > :nth-child(2) > .cdk-column-lastName"
-      ).should("have.text", "Dubois");
-      cy.get(
-        ":nth-child(6) > .mat-mdc-card > .mat-mdc-card-content > .mat-mdc-table > .mdc-data-table__content > :nth-child(3) > .firstNameCell"
-      ).should("have.text", " Pierre ");
-      cy.get(
-        ":nth-child(6) > .mat-mdc-card > .mat-mdc-card-content > .mat-mdc-table > .mdc-data-table__content > :nth-child(3) > .cdk-column-lastName"
-      ).should("have.text", "Dupont");
     });
 
     it("Create team, name is too short", () => {
       // Click on create team button
-      cy.get(".mat-mdc-card > .mat-icon").click();
+      cy.get(".add-container > button").click();
       // Enter short team name
-      cy.get("#mat-input-2").clear();
-      cy.get("#mat-input-2").type("az");
+      cy.get("#team-name-input").clear();
+      cy.get("#team-name-input").type("az");
       // Add members
-      cy.get("#user-list-actions-duboisj > button > .mat-icon").click();
-      cy.get("#user-list-actions-durandm > button > .mat-icon").click();
-      cy.get("#user-list-actions-richardt > button > .mat-icon").click();
+      cy.get("#user-list-actions-duboisj > button").click();
+      cy.get("#user-list-actions-durandm > button").click();
+      cy.get("#user-list-actions-richardt > button").click();
       // Check error message
-      cy.get("#mat-mdc-error-1").should(
+      cy.get("#team-name-mat-error").should(
         "have.text",
         "Le nom de l'équipe doit contenir au moins 3 caractères"
       );
@@ -403,16 +325,16 @@ describe("Admin Team Page tests", () => {
 
     it("Create team, name is too long", () => {
       // Click on create team button
-      cy.get(".mat-mdc-card > .mat-icon").click();
+      cy.get(".add-container > button").click();
       // Enter long team name
-      cy.get("#mat-input-2").clear();
-      cy.get("#mat-input-2").type("azertyuiopqsdfghjklmwxcvbn");
+      cy.get("#team-name-input").clear();
+      cy.get("#team-name-input").type("azertyuiopqsdfghjklmwxcvbn");
       // Add members
-      cy.get("#user-list-actions-dupontp > button > .mat-icon").click();
-      cy.get("#user-list-actions-durandm > button > .mat-icon").click();
-      cy.get("#user-list-actions-martinj > button > .mat-icon").click();
+      cy.get("#user-list-actions-dupontp > button").click();
+      cy.get("#user-list-actions-durandm > button").click();
+      cy.get("#user-list-actions-martinj > button").click();
       // Check error message
-      cy.get("#mat-mdc-error-2").should(
+      cy.get("#team-name-mat-error").should(
         "have.text",
         "Le nom de l'équipe ne doit pas dépasser 20 caractères"
       );
@@ -420,13 +342,13 @@ describe("Admin Team Page tests", () => {
 
     it("Create team, no name", () => {
       // Click on create team button
-      cy.get(".mat-mdc-card > .mat-icon").click();
+      cy.get(".add-container > button").click();
       // Add members
       cy.get("#user-list-actions-duboisj > button > .mat-icon").click();
       cy.get("#user-list-actions-dupontp > button > .mat-icon").click();
       cy.get("#user-list-actions-durandm > button > .mat-icon").click();
       // Check error message
-      cy.get("#mat-mdc-error-1").should(
+      cy.get("#team-name-mat-error").should(
         "have.text",
         "Le nom de l'équipe est requis"
       );
@@ -440,26 +362,30 @@ describe("Admin Team Page tests", () => {
       }).as("apiCreateTeam");
 
       // Click on create team button
-      cy.get(".mat-mdc-card > .mat-icon").click();
+      cy.get(".add-container > button").click();
       // Enter team name
-      cy.get("#mat-input-2").clear();
-      cy.get("#mat-input-2").type("New Team");
+      cy.get("#team-name-input").clear();
+      cy.get("#team-name-input").type("New Team");
       // Click on save button
-      cy.get('[ng-reflect-disabled="false"] > .mdc-button__label').click();
+      cy.get('#confirm').click();
 
       // Check api response
       cy.wait("@apiCreateTeam").then((interception) => {
         if (interception.response) {
           expect(interception.response.statusCode).to.eq(200);
+          expect(interception.response.body).to.have.all.keys('id', 'name', 'members');
+          let teamId = interception.response.body.id;
+
+          // Check success message
+          cy.get(".mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label").should("have.text", " L'équipe a été créée avec succès\n");
+
+          // Check team has been created
+          cy.get("#team-card-"+teamId+" > mat-card-header > .title-container > mat-card-title").should("have.text", "New Team");
+
         } else {
           throw new Error("interception.response is undefined");
         }
       });
-
-      // Check new team has been created
-      cy.get(
-        ":nth-child(6) > .mat-mdc-card > .mat-mdc-card-header > .mat-mdc-card-header-text > .mat-mdc-card-title"
-      ).should("have.text", "New Team");
     });
 
     it("create team, name already exists", () => {
@@ -470,12 +396,12 @@ describe("Admin Team Page tests", () => {
       }).as("apiCreateTeam");
 
       // Click on create team button
-      cy.get(".mat-mdc-card > .mat-icon").click();
+      cy.get(".add-container > button").click();
       // Enter team name already exists
-      cy.get("#mat-input-2").clear();
-      cy.get("#mat-input-2").type("Team2");
+      cy.get("#team-name-input").clear();
+      cy.get("#team-name-input").type("Team2");
       // Click on save button
-      cy.get('[ng-reflect-disabled="false"] > .mdc-button__label').click();
+      cy.get('#confirm').click();
 
       // Check api response
       cy.wait("@apiCreateTeam").then((interception) => {
@@ -487,7 +413,7 @@ describe("Admin Team Page tests", () => {
       });
 
       // Check error message
-      cy.get("#mat-mdc-error-2").should(
+      cy.get("#team-name-mat-error").should(
         "have.text",
         "Ce nom d'équipe existe déjà"
       );
@@ -495,18 +421,31 @@ describe("Admin Team Page tests", () => {
   });
 
   context("US : XRLO-19 As an Admin, I must be able to delete a team", () => {
+
+    let teamId;
+
+    beforeEach(() => {
+      teamId = database.teams[1]._id;
+    })
+
     it("delete team", () => {
       // Click on delete team button
-      cy.get(
-        ":nth-child(2) > .mat-mdc-card > .mat-mdc-card-header > .icons-container > :nth-child(2)"
-      ).click();
-      cy.get(
-        ".mat-mdc-dialog-actions > :nth-child(2) > .mdc-button__label"
-      ).click();
+      cy.get("#team-card-"+teamId+" > mat-card-header > .icons-container > #delete").click();
+      cy.get('#confirm').click();
+
+      // Check team has been deleted
+      cy.get("#team-card-"+teamId).should("not.exist");
     });
   });
 
   context("US : XRLO-20 As an Admin, I must be able to modify a team", () => {
+
+    let teamId;
+
+    beforeEach(() => {
+      teamId = database.teams[1]._id;
+    })
+
     it("update team name", () => {
       // Intercept api call
       cy.intercept({
@@ -515,15 +454,14 @@ describe("Admin Team Page tests", () => {
       }).as("apiUpdateTeam");
 
       // Click on update team button
-      cy.get(
-        ":nth-child(2) > .mat-mdc-card > .mat-mdc-card-header > .icons-container > :nth-child(1)"
-      ).click();
+      cy.get("#team-card-"+teamId+" > mat-card-header > .icons-container > #modify").click();
+
       // Enter new team name
-      cy.get(".edit-name-container").click();
-      cy.get("#mat-input-2").clear();
-      cy.get("#mat-input-2").type("Team 1 BIS");
+      cy.get("#team-name-input").clear();
+      cy.get("#team-name-input").type("Team 1 BIS");
+
       // Click on save button
-      cy.get('[ng-reflect-disabled="false"] > .mdc-button__label').click();
+      cy.get('#confirm').click();
 
       // Check api response
       cy.wait("@apiUpdateTeam").then((interception) => {
@@ -535,14 +473,10 @@ describe("Admin Team Page tests", () => {
       });
 
       // Check success message
-      cy.get(".mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label").should(
-        "have.text",
-        " L'équipe a été mise à jour avec succès\n"
-      );
+      cy.get(".mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label").should("have.text", " L'équipe a été mise à jour avec succès\n");
+
       // Check team name has been updated
-      cy.get(
-        ":nth-child(2) > .mat-mdc-card > .mat-mdc-card-header > .mat-mdc-card-header-text > .mat-mdc-card-title"
-      ).should("have.text", "Team 1 BIS");
+      cy.get("#team-card-"+teamId+" > mat-card-header > .title-container > mat-card-title").should("have.text", "Team 1 BIS");
     });
 
     it("update team, remove members", () => {
@@ -553,14 +487,14 @@ describe("Admin Team Page tests", () => {
       }).as("apiUpdateTeam");
 
       // Click on update team button
-      cy.get(
-        ":nth-child(3) > .mat-mdc-card > .mat-mdc-card-header > .icons-container > :nth-child(1)"
-      ).click();
+      cy.get("#team-card-"+teamId+" > mat-card-header > .icons-container > #modify").click();
+
       // Remove members
       cy.get("#user-list-actions-martinj > button > .mat-icon").click();
       cy.get("#user-list-actions-durandm > button > .mat-icon").click();
+
       // Click on save button
-      cy.get('[ng-reflect-disabled="false"] > .mdc-button__label').click();
+      cy.get('#confirm').click();
 
       // Check api response
       cy.wait("@apiUpdateTeam").then((interception) => {
@@ -586,15 +520,15 @@ describe("Admin Team Page tests", () => {
       }).as("apiUpdateTeam");
 
       // Click on update team button
-      cy.get(
-        ":nth-child(4) > .mat-mdc-card > .mat-mdc-card-header > .icons-container > :nth-child(1)"
-      ).click();
+      cy.get("#team-card-"+teamId+" > mat-card-header > .icons-container > #modify").click();
+
       // Add members
       cy.get("#user-list-actions-dupontp > button > .mat-icon").click();
       cy.get("#user-list-actions-durandm > button > .mat-icon").click();
       cy.get("#user-list-actions-martinj > button > .mat-icon").click();
+
       // Click on save button
-      cy.get('[ng-reflect-disabled="false"] > .mdc-button__label').click();
+      cy.get('#confirm').click();
 
       // Check api response
       cy.wait("@apiUpdateTeam").then((interception) => {
@@ -620,14 +554,14 @@ describe("Admin Team Page tests", () => {
       }).as("apiUpdateTeam");
 
       // Click on update team button
-      cy.get(
-        ":nth-child(3) > .mat-mdc-card > .mat-mdc-card-header > .icons-container > :nth-child(1)"
-      ).click();
+      cy.get("#team-card-"+teamId+" > mat-card-header > .icons-container > #modify").click();
+
       // Enter team name already exists
-      cy.get("#mat-input-2").clear();
-      cy.get("#mat-input-2").type("Team1");
+      cy.get("#team-name-input").clear();
+      cy.get("#team-name-input").type("Team1");
+
       // Click on save button
-      cy.get('[ng-reflect-disabled="false"] > .mdc-button__label').click();
+      cy.get('#confirm').click();
 
       // Check api response
       cy.wait("@apiUpdateTeam").then((interception) => {
@@ -638,8 +572,11 @@ describe("Admin Team Page tests", () => {
         }
       });
 
+      // Check save button is disabled
+      cy.get('#confirm').should('be.disabled');
+
       // Check error message
-      cy.get("#mat-mdc-error-2").should(
+      cy.get("#team-name-mat-error").should(
         "have.text",
         "Ce nom d'équipe existe déjà"
       );
@@ -647,17 +584,18 @@ describe("Admin Team Page tests", () => {
 
     it("update team, name too short", () => {
       // Click on update team button
-      cy.get(
-        ":nth-child(3) > .mat-mdc-card > .mat-mdc-card-header > .icons-container > :nth-child(1)"
-      ).click();
+      cy.get("#team-card-"+teamId+" > mat-card-header > .icons-container > #modify").click();
+
       // Enter short team name
       cy.get(".edit-name-container").click();
-      cy.get("#mat-input-2").clear();
-      cy.get("#mat-input-2").type("az");
-      // Click on save button
-      cy.get("#user-list-actions-richardt > button > .mat-icon").click();
+      cy.get("#team-name-input").clear();
+      cy.get("#team-name-input").type("az");
+
+      // Check save button is disabled
+      cy.get('#confirm').should('be.disabled');
+
       // Check error message
-      cy.get("#mat-mdc-error-1").should(
+      cy.get("#team-name-mat-error").should(
         "have.text",
         "Le nom de l'équipe doit contenir au moins 3 caractères"
       );
@@ -665,17 +603,18 @@ describe("Admin Team Page tests", () => {
 
     it("update team, name too long", () => {
       // Click on update team button
-      cy.get(
-        ":nth-child(3) > .mat-mdc-card > .mat-mdc-card-header > .icons-container > :nth-child(1)"
-      ).click();
+      cy.get("#team-card-"+teamId+" > mat-card-header > .icons-container > #modify").click();
       // Enter long team name
+
       cy.get(".edit-name-container").click();
-      cy.get("#mat-input-2").clear();
-      cy.get("#mat-input-2").type("azertyuiopqsdfghjklmwxcvbn");
-      // Click on save button
-      cy.get("#user-list-actions-richardt > button > .mat-icon").click();
+      cy.get("#team-name-input").clear();
+      cy.get("#team-name-input").type("azertyuiopqsdfghjklmwxcvbn");
+
+      // Check save button is disabled
+      cy.get('#confirm').should('be.disabled');
+
       // Check error message
-      cy.get("#mat-mdc-error-2").should(
+      cy.get("#team-name-mat-error").should(
         "have.text",
         "Le nom de l'équipe ne doit pas dépasser 20 caractères"
       );

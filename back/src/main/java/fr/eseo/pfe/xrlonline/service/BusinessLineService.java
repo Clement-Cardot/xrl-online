@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BusinessLineService {
@@ -45,7 +46,7 @@ public class BusinessLineService {
   public ResponseEntity<List<BusinessLineDTO>> getAllBusinessLine() throws CustomRuntimeException {
     List<BusinessLineDTO> businessLineDTO = businessLineRepository.findAll().stream()
             .map(businessLine -> modelMapper.map(businessLine, BusinessLineDTO.class))
-            .toList();
+            .collect(Collectors.toList());
 
     if (!businessLineDTO.isEmpty()) {
       return ResponseEntity.ok(businessLineDTO);

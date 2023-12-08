@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>fr.eseo.pfe</groupId>
-	<artifactId>xrlonline</artifactId>
-	<version>0.2</version>
+	<artifactId>xrlonline-back</artifactId>
+	<version>0.3</version>
 	<packaging>war</packaging>
-	<name>xrlonline</name>
+	<name>xrlonline-back</name>
 	<description>Web App implementing Readiness Level</description>
 
 	<properties>

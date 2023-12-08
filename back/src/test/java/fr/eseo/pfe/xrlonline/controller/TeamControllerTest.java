@@ -2,6 +2,7 @@ package fr.eseo.pfe.xrlonline.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
+import fr.eseo.pfe.xrlonline.model.dto.ProjectDTO;
 import fr.eseo.pfe.xrlonline.model.dto.TeamDTO;
 import fr.eseo.pfe.xrlonline.model.entity.User;
 import fr.eseo.pfe.xrlonline.service.TeamService;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
@@ -41,6 +43,8 @@ class TeamControllerTest {
 
     private TeamDTO badTeamDTO;
 
+    private ProjectDTO projectDTO;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -49,6 +53,9 @@ class TeamControllerTest {
         teamDTO = new TeamDTO();
         teamDTO.setName("testTeam");
         teamDTO.setMembers(new ArrayList<>());
+
+        projectDTO = new ProjectDTO();
+        projectDTO.setName("testProject");
 
         TeamDTO nonexistentTeamDTO = new TeamDTO();
         nonexistentTeamDTO.setName("nonexistentTeam");
@@ -60,9 +67,11 @@ class TeamControllerTest {
         List<User> duplicatedUsers = new ArrayList<>();
         User user1 = new User();
         user1.setId("1");
+        user1.setLogin("testLogin");
         duplicatedUsers.add(user1);
         User user2 = new User();
         user2.setId("1");
+        user2.setLogin("testLogin");
         duplicatedUsers.add(user2);
         badTeamDTO.setMembers(duplicatedUsers);
     }
@@ -76,76 +85,92 @@ class TeamControllerTest {
     void testGetTeamById_TeamFound() throws Exception {
         when(teamService.getTeamById("1")).thenReturn(ResponseEntity.ok(teamDTO));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/teams/get-team-by-id?id=1"))
+        assertDoesNotThrow(() -> 
+            mockMvc.perform(MockMvcRequestBuilders.get("/teams/get-team-by-id?id=1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("testTeam"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("testTeam"))
+        );
     }
 
     @Test
     void testGetTeamById_TeamNotFound() throws Exception {
         when(teamService.getTeamById("1")).thenThrow(new CustomRuntimeException(CustomRuntimeException.TEAM_NOT_FOUND));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/team/get-team-by-id?id=1"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+        assertDoesNotThrow(() -> 
+            mockMvc.perform(MockMvcRequestBuilders.get("/teams/get-team-by-id?id=1"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+        );
     }
 
     @Test
     void testGetAllTeam_TeamFound() throws Exception {
         when(teamService.getAllTeam()).thenReturn(ResponseEntity.ok(Collections.singletonList(teamDTO)));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/teams/get-all-teams"))
+        assertDoesNotThrow(() -> 
+            mockMvc.perform(MockMvcRequestBuilders.get("/teams/get-all-teams"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("testTeam"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("testTeam"))
+        );
     }
 
     @Test
     void testGetAllTeam_TeamNotFound() throws Exception {
         when(teamService.getAllTeam()).thenThrow(new CustomRuntimeException(CustomRuntimeException.TEAM_LIST_EMPTY));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/teams/get-all-teams"))
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+        assertDoesNotThrow(() -> 
+            mockMvc.perform(MockMvcRequestBuilders.get("/teams/get-all-teams"))
+                .andExpect(MockMvcResultMatchers.status().isNoContent())
+        );
     }
 
     @Test
     void testCreateTeam_TeamCreated() throws Exception {
         when(teamService.createTeam(teamDTO)).thenReturn(ResponseEntity.ok(teamDTO));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/teams/create-team")
+        assertDoesNotThrow(() -> 
+            mockMvc.perform(MockMvcRequestBuilders.post("/teams/create-team")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(teamDTO)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("testTeam"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("testTeam"))
+        );
     }
 
     @Test
     void testCreateTeam_TeamNameAlreadyExists() throws Exception {
         when(teamService.createTeam(teamDTO)).thenThrow(new CustomRuntimeException(CustomRuntimeException.TEAM_NAME_ALREADY_EXISTS));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/teams/create-team")
+        assertDoesNotThrow(() -> 
+            mockMvc.perform(MockMvcRequestBuilders.post("/teams/create-team")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(teamDTO)))
-                .andExpect(MockMvcResultMatchers.status().isConflict());
+                .andExpect(MockMvcResultMatchers.status().isConflict())
+        );
     }
 
     @Test
     void testUpdateTeam_TeamUpdated() throws Exception {
         when(teamService.updateTeam(teamDTO)).thenReturn(ResponseEntity.ok(teamDTO));
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/teams/update-team")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(teamDTO)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("testTeam"));
+        assertDoesNotThrow(() -> 
+            mockMvc.perform(MockMvcRequestBuilders.put("/teams/update-team")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(new ObjectMapper().writeValueAsString(teamDTO)))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("testTeam"))
+        );
     }
 
     @Test
     void testUpdateTeam_TeamNotFound() throws Exception {
         when(teamService.updateTeam(teamDTO)).thenThrow(new CustomRuntimeException(CustomRuntimeException.TEAM_NOT_FOUND));
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/teams/update-team")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(teamDTO)))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+        assertDoesNotThrow(() -> 
+            mockMvc.perform(MockMvcRequestBuilders.put("/teams/update-team")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(new ObjectMapper().writeValueAsString(teamDTO)))
+                    .andExpect(MockMvcResultMatchers.status().isNotFound())
+        );
     }
 
     @Test
@@ -153,28 +178,61 @@ class TeamControllerTest {
 
         when(teamService.updateTeam(badTeamDTO)).thenThrow(new CustomRuntimeException(CustomRuntimeException.DUPLICATE_MEMBERS));
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/teams/update-team")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(badTeamDTO)))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+        assertDoesNotThrow(() -> 
+            mockMvc.perform(MockMvcRequestBuilders.put("/teams/update-team")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(new ObjectMapper().writeValueAsString(badTeamDTO)))
+                    .andExpect(MockMvcResultMatchers.status().isBadRequest())
+        );
     }
 
     @Test
     void testDeleteTeam_TeamDeleted() throws Exception {
         when(teamService.deleteTeam("1")).thenReturn(ResponseEntity.ok(teamDTO));
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/teams/delete-team?id=1"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("testTeam"));
+        assertDoesNotThrow(() -> 
+            mockMvc.perform(MockMvcRequestBuilders.delete("/teams/delete-team?id=1"))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("testTeam"))
+        );
     }
 
     @Test
     void testDeleteTeam_TeamNotFound() throws Exception {
         when(teamService.deleteTeam("1")).thenThrow(new CustomRuntimeException(CustomRuntimeException.TEAM_NOT_FOUND));
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/teams/delete-team?id=1"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+        assertDoesNotThrow(() -> 
+            mockMvc.perform(MockMvcRequestBuilders.delete("/teams/delete-team?id=1"))
+                    .andExpect(MockMvcResultMatchers.status().isNotFound())
+        );
     }
+
+    @Test
+    void testDeleteTeam_TeamLinkedToProjects() throws Exception {
+        when(teamService.deleteTeam("1")).thenThrow(new CustomRuntimeException(CustomRuntimeException.TEAM_LINKED_PROJECTS));
+
+        assertDoesNotThrow(() -> 
+            mockMvc.perform(MockMvcRequestBuilders.delete("/teams/delete-team?id=1"))
+                    .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+        );
+    }
+
+    // TODO move to projectControllerTest
+//    @Test
+//    void testGetProjectsByTeamId_TeamFound() throws Exception {
+//        when(teamService.getProjectsByTeamId("1")).thenReturn(ResponseEntity.ok(Collections.singletonList(projectDTO)));
+//
+//        mockMvc.perform(MockMvcRequestBuilders.get("/teams/get-projects-by-team-id?id=1"))
+//                .andExpect(MockMvcResultMatchers.status().isOk());
+//    }
+//
+//    @Test
+//    void testGetProjectsByTeamId_TeamNotFound() throws Exception {
+//        when(teamService.getProjectsByTeamId("1")).thenThrow(new CustomRuntimeException(CustomRuntimeException.TEAM_NOT_FOUND));
+//
+//        mockMvc.perform(MockMvcRequestBuilders.get("/teams/get-projects-by-team-id?id=1"))
+//                .andExpect(MockMvcResultMatchers.status().isNotFound());
+//    }
 
 }
 

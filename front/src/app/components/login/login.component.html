@@ -13,16 +13,16 @@
             <mat-form-field id="loginField">
 
                 <mat-label>{{ 'LOGIN.ENTER_LOGIN' | translate }}</mat-label>
-                <input matInput  type="text" placeholder="Ex. clement.cardot" [formControl]="usernameFormControl" [errorStateMatcher]="matcher" (change)="onChange()"/>
+                <input id="mat-input-login" matInput type="text" placeholder="Ex. clement.cardot" [formControl]="usernameFormControl" [errorStateMatcher]="matcher" (change)="onChange()"/>
                 <mat-icon matSuffix>person</mat-icon>
 
                 <!-- Error to display if field is empty -->
-                <mat-error *ngIf="usernameFormControl.hasError('required')">
+                <mat-error id="mat-error-empty" *ngIf="usernameFormControl.hasError('required')">
                     {{ 'LOGIN.LOGIN_REQUIRED' | translate }}
                 </mat-error>
 
                 <!-- Error to display if the login is incorrect (not registered) -->
-                <mat-error *ngIf="usernameFormControl.hasError('incorrect')">
+                <mat-error id="mat-error-wrong-login" *ngIf="usernameFormControl.hasError('incorrect')">
                     {{ 'LOGIN.LOGIN_INCORRECT' | translate }}
                 </mat-error>
 

@@ -28,10 +28,11 @@ describe('Pages Loading Tests', () => {
   
     it('Footer loading test', () => {
       // Check that the footer is loaded with correct elements
-      cy.get('#ThalesDiv').should('be.visible');
-      cy.get('#ThalesDiv').should('have.text', 'Thales2023 - Tous droits réservés');
-      cy.get('#KTHDiv').should('be.visible');
-      cy.get('#KTHDiv').should('have.text', 'Le travail de KTH est placée sous une licence Creative Commons  Attribution-NonCommercial-ShareAlike 4.0 International License.');
+      cy.get('#CreativeCommonsDescription').should('be.visible');
+      cy.get('#CreativeCommonsDescription').should('have.text', 'Copyright © 2023 KTH Innovation Readiness Level™Le travail de KTH est placée sous une licence Creative Commons  Attribution-NonCommercial-ShareAlike 4.0 International License.');
+
+      cy.get('#CreativeCommonsLogo').should('be.visible');
+      cy.get('#CreativeCommonsLogo > img').should('be.visible');
     })
   
     it('Home page test', () => {
@@ -53,12 +54,7 @@ describe('Pages Loading Tests', () => {
       
       beforeEach(() => {
         // Connect as an admin
-        cy.get('#loginBtn > .mdc-button__label').click();
-        cy.get('#loginComponent').should('be.visible');
-        cy.get('mat-label.ng-tns-c1205077789-4').click();
-        cy.get('#mat-input-0').type('admin');
-        cy.get('#loginSubmitBtn > .mdc-button__label').click();
-        cy.get('.mat-mdc-menu-trigger > .mdc-button__label').should('be.visible');
+        cy.PerformLogin('admin');
       })
   
       it('Navbar as admin test', () => {
@@ -88,32 +84,30 @@ describe('Pages Loading Tests', () => {
   
       it('Readiness levels admin page test', () => {
         // Open readiness levels admin page
-        cy.get('.mat-mdc-menu-trigger > .mdc-button__label').click();
-        cy.get('.cdk-focused > .mat-mdc-menu-item-text').click();
+        cy.GoToPage('admin-RL');
   
         // Check that the page is loaded with correct elements
-        cy.get('.ng-star-inserted > p').should('be.visible');
-        cy.get('.ng-star-inserted > p').should('have.text', 'admin-readiness-level-page works!'); // TODO: add tests when readiness levels admin page is implemented
+        cy.get('.search-add-container').should('exist');
+        cy.get('.readiness-levels-container').should('exist');
       })
   
-      it('Teams admin page test', () => {
+      it('Users/Teams admin page test', () => {
         // Open teams admin page
-        cy.get('.mat-mdc-menu-trigger > .mdc-button__label').click();
-        cy.get('.mat-mdc-menu-content > :nth-child(2)').click();
+        cy.GoToPage('admin-teams');
   
         // Check that the page is loaded with correct elements
-        cy.get('#users-management').should('be.visible');
-        cy.get('.team-container').should('be.visible');
-        cy.get('app-add-team-card > .mat-mdc-card').should('be.visible');
+        cy.get('.user-container').should('exist');
+        cy.get('.team-card-list').should('exist');
+        cy.get('.search-add-container').should('exist');
       })
   
       it('Business lines admin page test', () => {
         // Open business lines admin page
-        cy.get('.mat-mdc-menu-trigger > .mdc-button__label').click();
-        cy.get(':nth-child(3) > .mat-mdc-menu-item-text').click();
+        cy.GoToPage('admin-BL');
   
         // Check that the page is loaded with correct elements
-        // TODO: add tests when business lines admin page is implemented
+        cy.get('.search-add-container').should('exist');
+        cy.get('.business-lines-container').should('exist');
       })
   
     })
@@ -149,11 +143,11 @@ describe('Pages Loading Tests', () => {
   
     it('Footer loading test', () => {
       // Check that the footer is loaded with correct elements
-      cy.get('#ThalesDiv').should('be.visible');
-      cy.get('#ThalesDiv').should('have.text', 'Thales2023 - All rights reserved');
-      cy.get('#KTHDiv').should('be.visible');
-      cy.get('#KTHDiv > p').should('have.text', 'The KTH work is licensed under a Creative Commons  Attribution-NonCommercial-ShareAlike 4.0 International License.');
-      cy.get('#KTHDiv > img').should('be.visible');
+      cy.get('#CreativeCommonsDescription').should('be.visible');
+      cy.get('#CreativeCommonsDescription').should('have.text', 'Copyright © 2023 KTH Innovation Readiness Level™The KTH work is licensed under a Creative Commons  Attribution-NonCommercial-ShareAlike 4.0 International License.');
+
+      cy.get('#CreativeCommonsLogo').should('be.visible');
+      cy.get('#CreativeCommonsLogo > img').should('be.visible');
     })
   
     it('Home page test', () => {
@@ -163,6 +157,7 @@ describe('Pages Loading Tests', () => {
   
     it('Project page test', () => {
       cy.get(':nth-child(2) > .mdc-button__label').click();
+      
       // TODO: add tests when project page is implemented
     })
   
@@ -175,12 +170,7 @@ describe('Pages Loading Tests', () => {
       
       beforeEach(() => {
         // Connect as an admin
-        cy.get('#loginBtn > .mdc-button__label').click();
-        cy.get('#loginComponent').should('be.visible');
-        cy.get('mat-label.ng-tns-c1205077789-4').click();
-        cy.get('#mat-input-0').type('admin');
-        cy.get('#loginSubmitBtn > .mdc-button__label').click();
-        cy.get('.mat-mdc-menu-trigger > .mdc-button__label').should('be.visible');
+        cy.PerformLogin('admin', 'en');
       })
   
       it('Navbar as admin test', () => {
@@ -210,32 +200,30 @@ describe('Pages Loading Tests', () => {
   
       it('Readiness levels admin page test', () => {
         // Open readiness levels admin page
-        cy.get('.mat-mdc-menu-trigger > .mdc-button__label').click();
-        cy.get('.cdk-focused > .mat-mdc-menu-item-text').click();
+        cy.GoToPage('admin-RL');
   
         // Check that the page is loaded with correct elements
-        cy.get('.ng-star-inserted > p').should('be.visible');
-        cy.get('.ng-star-inserted > p').should('have.text', 'admin-readiness-level-page works!'); // TODO: add tests when readiness levels admin page is implemented
+        cy.get('.search-add-container').should('exist');
+        cy.get('.readiness-levels-container').should('exist');
       })
   
-      it('Teams admin page test', () => {
+      it('Users/Teams admin page test', () => {
         // Open teams admin page
-        cy.get('.mat-mdc-menu-trigger > .mdc-button__label').click();
-        cy.get('.mat-mdc-menu-content > :nth-child(2)').click();
+        cy.GoToPage('admin-teams');
   
         // Check that the page is loaded with correct elements
-        cy.get('#users-management').should('be.visible');
-        cy.get('.team-container').should('be.visible');
-        cy.get('app-add-team-card > .mat-mdc-card').should('be.visible');
+        cy.get('.user-container').should('exist');
+        cy.get('.team-card-list').should('exist');
+        cy.get('.search-add-container').should('exist');
       })
   
       it('Business lines admin page test', () => {
         // Open business lines admin page
-        cy.get('.mat-mdc-menu-trigger > .mdc-button__label').click();
-        cy.get(':nth-child(3) > .mat-mdc-menu-item-text').click();
+        cy.GoToPage('admin-BL');
   
         // Check that the page is loaded with correct elements
-        // TODO: add tests when business lines admin page is implemented
+        cy.get('.search-add-container').should('exist');
+        cy.get('.business-lines-container').should('exist');
       })
   
     })
