@@ -1,9 +1,8 @@
 package fr.eseo.pfe.xrlonline.service;
 
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
-import fr.eseo.pfe.xrlonline.model.dto.ProjectDTO;
 import fr.eseo.pfe.xrlonline.model.dto.TeamDTO;
-import fr.eseo.pfe.xrlonline.model.entity.Project;
+import fr.eseo.pfe.xrlonline.model.dto.UserDTO;
 import fr.eseo.pfe.xrlonline.model.entity.Team;
 import fr.eseo.pfe.xrlonline.model.entity.User;
 import fr.eseo.pfe.xrlonline.repository.ProjectRepository;
@@ -119,10 +118,18 @@ class TeamServiceTest {
         team.setName("testTeam");
         team.setMembers(members);
 
+        UserDTO userDTO1 = new UserDTO();
+        userDTO1.setId("1");
+        UserDTO userDTO2 = new UserDTO();
+        userDTO2.setId("2");
+
+        List<UserDTO> membersDTO = new ArrayList<>();
+        membersDTO.add(userDTO1);
+        membersDTO.add(userDTO2);
+
         TeamDTO teamDTO = new TeamDTO();
-        teamDTO.setId("1");
         teamDTO.setName("testTeam");
-        teamDTO.setMembers(members);
+        teamDTO.setMembers(membersDTO);
 
         when(modelMapper.map(teamDTO, Team.class)).thenReturn(team);
         when(teamRepository.findByName(team.getName())).thenReturn(null);
@@ -183,6 +190,7 @@ class TeamServiceTest {
         teamDTO.setName("testTeam");
         teamDTO.setMembers(new ArrayList<>());
 
+        when(modelMapper.map(teamDTO, Team.class)).thenReturn(team);
         when(teamRepository.findById(teamDTO.getId())).thenReturn(Optional.of(team));
         when(teamRepository.findByName(teamDTO.getName())).thenReturn(null);
         when(teamRepository.save(team)).thenReturn(team);
@@ -205,6 +213,7 @@ class TeamServiceTest {
         teamDTO.setName("testTeam");
         teamDTO.setMembers(new ArrayList<>());
 
+        when(modelMapper.map(teamDTO, Team.class)).thenReturn(team);
         when(teamRepository.findById(teamDTO.getId())).thenReturn(Optional.empty());
 
         try {
@@ -231,6 +240,7 @@ class TeamServiceTest {
         teamWithUpdatedName.setName("testTeam");
         teamWithUpdatedName.setMembers(new ArrayList<>());
 
+        when(modelMapper.map(teamDTO, Team.class)).thenReturn(team);
         when(teamRepository.findById(teamDTO.getId())).thenReturn(Optional.of(team));
         when(teamRepository.findByName(teamDTO.getName())).thenReturn(teamWithUpdatedName);
 
@@ -253,15 +263,16 @@ class TeamServiceTest {
         teamDTO.setName("testTeam");
         teamDTO.setMembers(new ArrayList<>());
 
-        List<User> members = new ArrayList<>();
-        User user1 = new User();
+        List<UserDTO> members = new ArrayList<>();
+        UserDTO user1 = new UserDTO();
         user1.setId("1");
         members.add(user1);
-        User user2 = new User();
+        UserDTO user2 = new UserDTO();
         user2.setId("1");
         members.add(user2);
         teamDTO.setMembers(members);
 
+        when(modelMapper.map(teamDTO, Team.class)).thenReturn(team);
         when(teamRepository.findById(teamDTO.getId())).thenReturn(Optional.of(team));
         when(teamRepository.findByName(teamDTO.getName())).thenReturn(null);
 

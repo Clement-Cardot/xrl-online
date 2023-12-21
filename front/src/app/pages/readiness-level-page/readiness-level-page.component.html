@@ -1,1 +1,58 @@
-<p>readiness-level-page works!</p>
+<div class="body-container">
+
+    <div id="readinessLevelContainer">
+        <table id="readinessLevelTable" mat-table [dataSource]="readinessLevels">
+            <caption hidden>ReadinessLevels</caption>
+
+            <!-- ReadinessLevel Column -->
+            <ng-container matColumnDef="readinessLevel">
+                <th mat-header-cell *matHeaderCellDef id="readinessLevel"> ReadinessLevel </th>
+                <td class="readinessLevelCell" mat-cell *matCellDef="let element">
+                    <button class="readinessLevelButton" (click)="setReadinessLevel(element.id)"
+                        mat-flat-button>{{element.name}}</button>
+                </td>
+            </ng-container>
+
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+
+    <div *ngIf="readinessLevelRank" id="specificReadinessLevelContainer">
+
+        <div class="dialog-head">
+            <h2>{{readinessLevelRank.readinessLevel.name}}</h2>
+            <p>{{readinessLevelRank.readinessLevel.description}}</p>
+        </div>
+
+        <div class="dialog-content">
+
+            <app-xrl-graph-gauge [readinessLevelRank]="readinessLevelRank"
+                (changeRankEvent)="updateReadinessLevelRank($event)" #gauge></app-xrl-graph-gauge>
+
+            <div class="description-container">
+
+                <div class="short">
+
+                    <h2>{{"ASSESSMENT_DIALOG.RANK" | translate}} {{readinessLevelRank.rank}}</h2>
+
+                    <div class="shortDescription">
+                        <p>{{readinessLevelRank.readinessLevel.levels[readinessLevelRank.rank -
+                            1].shortDescription}}</p>
+                    </div>
+
+                </div>
+                <div class="long">
+                    <ul
+                        *ngFor="let longDescriptionElement of readinessLevelRank.readinessLevel.levels[readinessLevelRank.rank - 1].longDescription">
+                        <li class="longDescription">{{longDescriptionElement}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!readinessLevelRank" class="spinner">
+        <mat-spinner></mat-spinner>
+    </div>
+
+</div>

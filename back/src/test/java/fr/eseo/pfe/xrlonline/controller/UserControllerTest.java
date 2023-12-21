@@ -37,28 +37,28 @@ class UserControllerTest {
     @Mock
     private LoginService loginService;
 
-        @InjectMocks
-        private UserController userController;
+    @InjectMocks
+    private UserController userController;
 
-        private UserDTO userDTO;
-        private UserDTO nonexistentUserDTO;
+    private UserDTO userDTO;
+    private UserDTO nonexistentUserDTO;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
 
-            userDTO = new UserDTO();
-            userDTO.setLogin("testUser");
+        userDTO = new UserDTO();
+        userDTO.setLogin("testUser");
 
-            nonexistentUserDTO = new UserDTO();
-            nonexistentUserDTO.setLogin("nonexistentUser");
-        }
+        nonexistentUserDTO = new UserDTO();
+        nonexistentUserDTO.setLogin("nonexistentUser");
+    }
 
-        @AfterEach
-        public void tearDown() {
-            reset(userService);
-        }
+    @AfterEach
+    public void tearDown() {
+        reset(userService);
+    }
 
     @Test
     void testLoginUserExist() throws Exception {

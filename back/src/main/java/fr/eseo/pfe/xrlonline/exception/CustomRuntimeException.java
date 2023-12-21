@@ -12,6 +12,7 @@ public class CustomRuntimeException extends Exception {
     public static final String READINESS_LEVEL_NAME_ALREADY_EXISTS = "Readiness Level Name Already Exists !";
     public static final String READINESS_LEVEL_LEVELS_SIZE = "Readiness Level Levels Size Must Be 9 !";
     public static final String READINESS_LEVEL_ID_NULL = "Readiness Level Id Cannot Be Null !";
+    public static final String READINESS_LEVEL_USED = "Readiness Level Is Used !";
     private final HttpStatusCode httpCode;
     public static final String BUSINESS_LINE_NOT_FOUND = "Business Line Not Found !";
     public static final String BUSINESS_LINE_NAME_ALREADY_EXISTS = "Business Line Name Already Exists !";
@@ -42,6 +43,7 @@ public class CustomRuntimeException extends Exception {
     public static final String USER_NOT_MEMBER_OF_TEAM_PROJECT = "User Not Member Of Team Project !";
     public static final String PROJECT_LAST_ASSESSMENT_COMMENT_NULL = "Project Last Assessment Comment Cannot Be Null !";
     public static final String PROJECT_ASSESSMENT_LIST_IS_EMPTY = "Project Assessment List Is Empty !";
+    public static final String ASSESSMENT_MUST_BE_DRAFT_TO_BE_MODIFIED = "Assessment Must Be Draft To Be Modified !";
 
     public CustomRuntimeException(String message, Throwable cause) {
         super(message, cause);
@@ -87,7 +89,7 @@ public class CustomRuntimeException extends Exception {
                     PROJECT_ASSESSMENT_LIST_IS_EMPTY:
                 return HttpStatus.NO_CONTENT;
             case TEAM_LINKED_PROJECTS,
-                    USER_ADMIN_DELETE, USER_NOT_MEMBER_OF_TEAM_PROJECT:
+                    USER_ADMIN_DELETE, USER_NOT_MEMBER_OF_TEAM_PROJECT, READINESS_LEVEL_USED:
                 return HttpStatus.UNAUTHORIZED;
             default:
                 return HttpStatus.NOT_IMPLEMENTED;

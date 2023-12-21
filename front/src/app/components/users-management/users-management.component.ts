@@ -19,7 +19,7 @@ export class UsersManagementComponent implements OnInit {
 
   users: UserModel[] = [];
   currentUsers: UserModel[] = [];
-  userControl = new FormControl('');
+  userControl!: FormControl;
 
   constructor(
     private apiUserService: ApiUserService,
@@ -46,10 +46,15 @@ export class UsersManagementComponent implements OnInit {
     });  
   }
 
-  private _updateCurrentUsers(value: string) {
+  private _updateCurrentUsers(value: string | undefined) {
+    if (value == undefined) {
+      this.currentUsers = this.users;
+      return;
+    }
     this.currentUsers = this.users.filter(user =>
       (this._filterCleanString(user.firstName) + " " + this._filterCleanString(user.lastName)).includes(this._filterCleanString(value!))
       || (this._filterCleanString(user.lastName) + " " + this._filterCleanString(user.firstName)).includes(this._filterCleanString(value!)));
+      console.log(this.currentUsers);
   }
 
   private _filterCleanString(value: string): string {
@@ -74,8 +79,8 @@ export class UsersManagementComponent implements OnInit {
             this.snackBar.open(this.translateService.instant('USERS.USER_DELETED'), this.translateService.instant('CLOSE'), {
               duration: 3000,
             });
-            this.users = this.users.filter(u => u.id !== user.id);
-            this._updateCurrentUsers(this.userControl.value!);
+            this.users = this.users.filter(u => u.id !== v.id);
+            this._updateCurrentUsers(this.userControl?.value);
           },
           error: (e) => console.error(e)
         });

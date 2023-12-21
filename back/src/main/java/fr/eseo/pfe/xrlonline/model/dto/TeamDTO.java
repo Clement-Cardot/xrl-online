@@ -1,6 +1,5 @@
 package fr.eseo.pfe.xrlonline.model.dto;
 
-import fr.eseo.pfe.xrlonline.model.entity.User;
 import lombok.Data;
 
 import java.util.List;
@@ -10,7 +9,7 @@ public class TeamDTO {
 
     private String id;
     private String name;
-    private List<User> members;
+    private List<UserDTO> members;
 
     @Override
     public String toString() {

@@ -39,9 +39,10 @@ public class Assessment {
     }
   }
 
-  enum Tag {
+  public enum Tag {
     INITIAL,
-    DRAFT,
-    FINAL
+    INTERMEDIATE,
+    FINAL,
+    DRAFT
   }
 }

@@ -141,7 +141,7 @@ release:
     - sed -i '/dos2unix/d' ./db/Dockerfile
   # Define the script to run for this job
   script:
-    - docker compose build
+    - docker compose build -q
     - echo $DOCKER_USER
     - echo $DOCKER_PASSWORD | docker login --username $DOCKER_USER --password-stdin docker.io
     - docker compose push

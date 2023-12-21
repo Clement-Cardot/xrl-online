@@ -13,11 +13,21 @@
 .projects-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-    align-content: flex-start;
+    width: calc(1280px + 4rem);
 }
+
+/* Media query for smaller screens */
+@media screen and (max-width: 1390px) {
+    .projects-container {
+        width: calc(640px + 2rem);
+    }
+  }
 
 .project-card {
     margin: 1rem;
+}
+
+.center-div {
+    display: flex;
+    justify-content: center;
 }

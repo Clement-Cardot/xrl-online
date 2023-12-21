@@ -1,0 +1,78 @@
+.body-container {
+  display: flex;
+  word-wrap: break-word;
+
+  #readinessLevelContainer {
+    height: calc(100vh - 150px - 4rem);
+    padding: 1rem 2rem;
+    margin: 1rem 2rem;
+    background-color: white;
+  }
+
+  #specificReadinessLevelContainer {
+    height: calc(100vh - 150px - 4rem);
+    width: 100%;
+    padding: 1rem 2rem;
+    margin: 1rem 2rem;
+    background-color: white;
+    overflow-y: overlay;
+  }
+
+  .spinner {
+    width: 100%;
+    height: calc(100vh - 150px - 4rem);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-y: overlay;
+  }
+}
+
+#readinessLevelTable {
+  background-color: transparent;
+
+  td {
+    text-align: center;
+
+    button {
+      background-color: transparent;
+      --mat-mdc-button-persistent-ripple-color: transparent;
+      --mat-mdc-button-ripple-color: transparent;
+      width: 100%;
+    }
+  }
+
+  tr:hover {
+    background-color: whitesmoke;
+  }
+}
+
+.dialog-head {
+  min-height: 8rem;
+}
+
+.dialog-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.description-container {
+  height: calc(70vh - 150px - 4rem);
+  width: 80%;
+  justify-content: left;
+}
+
+app-xrl-graph-gauge {
+  width: 10%;
+}
+
+.shortDescription p {
+  margin: 1rem 0;
+  font-size: 20px;
+}
+
+.longDescription li {
+  margin: 1rem 0;
+  font-size: 15px;
+}

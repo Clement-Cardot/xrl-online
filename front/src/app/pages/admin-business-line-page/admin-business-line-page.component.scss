@@ -11,14 +11,19 @@
 .business-lines-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-    align-content: flex-start;
 }
 
 .business-line-card {
-    margin: 1rem;
+    padding: 1rem;
     flex: auto;
-    max-width: 45%;
-    min-width: 30rem;
+    box-sizing: border-box;
+    min-width: 50%;
+    max-width: 50%;
 }
+
+@media screen and (max-width: 850px) {
+    .business-line-card {
+      min-width: 100%;
+      max-width: 100%;
+    }
+  }

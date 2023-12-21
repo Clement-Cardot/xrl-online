@@ -61,10 +61,10 @@ Cypress.Commands.add('PerformLogin', (login: string, lang: string = 'fr') => {
   cy.intercept({
     method: 'GET',
     url: `/api/users/login?login=${login}`,
-  }).as('apiLogin')
+  }).as('apiLogin');
 
   // Connect as an admin
-  cy.get('#mat-input-login').click({force: true});
+  cy.get('#mat-input-login').click({ force: true });
   cy.get('#mat-input-login').type(login);
   cy.get('#loginSubmitBtn > .mdc-button__label').click();
 
@@ -84,11 +84,19 @@ Cypress.Commands.add('PerformLogin', (login: string, lang: string = 'fr') => {
   });
 
   // Check SnackBar
-  cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('be.visible');
+  cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+    'be.visible'
+  );
   if (lang === 'en')
-    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('have.text', ` Welcome back ${login} !\n`);
+    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+      'have.text',
+      ` Welcome back ${login} !\n`
+    );
   else
-    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('have.text', ` Bienvenue ${login} !\n`);
+    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+      'have.text',
+      ` Bienvenue ${login} !\n`
+    );
 
   // Force Snack bar to disappear (performance)
   cy.get('.mat-mdc-snack-bar-action > .mdc-button__label').click();
@@ -129,173 +137,204 @@ Cypress.Commands.add('GoToPage', (page: string) => {
   }
 });
 
-Cypress.Commands.add('addNewUser', (login: string, firstname: string, lastname: string, lang: string = 'fr') => {
-  // Intercept api call
-  cy.intercept({
-    method: 'POST',
-    url: '/api/users/create-user',
-  }).as('apiCreateUser');
-
-  // Create new user
-  cy.get('#addUserBtn').click();
-  cy.get('#firstName-input').type(firstname);
-  cy.get('#lastName-input').type(lastname);
-  cy.get('#login-input').type(login);
-  cy.get('#confirm').click();
-
-  // Check api response
-  cy.wait('@apiCreateUser').then((interception) => {
-    if (interception.response) {
-      expect(interception.response.statusCode).to.eq(200);
-      expect(interception.response.body).to.have.all.keys(
-        'id',
-        'login',
-        'firstName',
-        'lastName'
-      );
-    } else {
-      throw new Error('interception.response is undefined');
-    }
-  });
-
-  // Check SnackBar
-  cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
-    'be.visible'
-  );
-  if (lang === 'en')
-    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
-      'have.text',
-      ` User created\n`
-    );
-  else
-    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
-      'have.text',
-      ` Utilisateur créé\n`
-    );
-
-  // Force Snack bar to disappear (performance)
-  cy.get('.mat-mdc-snack-bar-action > .mdc-button__label').click();
-}
-);
-
-Cypress.Commands.add('modifyExistingUser', (previousLogin: string, newLogin: string, newFirstname: string, newLastname: string, lang: string = 'fr') => {
-  // Intercept api call
-  cy.intercept({
-    method: 'PUT',
-    url: '/api/users/update-user',
-  }).as('apiModifyUser')
-
-  // Trigger mouseenter event to display actions buttons
-  cy.get('#list-users-actions-' + previousLogin).trigger('mouseenter', { force: true });
-
-  // Click on modify button
-  cy.get('#modify-'+previousLogin).click();
-
-  // Clear input of Modify user dialog
-  cy.get('#firstName-input').clear();
-  cy.get('#lastName-input').clear();
-  cy.get('#login-input').clear();
-
-  // Enter new values (test2_user...)
-  cy.get('#firstName-input').type(newFirstname);
-  cy.get('#lastName-input').type(newLastname);
-  cy.get('#login-input').type(newLogin);
-
-  // Click on save button
-  cy.get('#confirm').click();
-
-  // Check api response
-  cy.wait('@apiModifyUser').then((interception) => {
-    if (interception.response) {
-      expect(interception.response.statusCode).to.eq(200);
-      expect(interception.response.body).to.have.all.keys(
-        'id',
-        'login',
-        'firstName',
-        'lastName'
-      );
-
-      // Check if values have been modified
-      expect(interception.response.body).to.have.property('login', newLogin)
-      expect(interception.response.body).to.have.property('firstName', newFirstname)
-      expect(interception.response.body).to.have.property('lastName', newLastname)
-    } else {
-      throw new Error('interception.response is undefined')
-    }
-  })
-
-  // Check SnackBar
-  cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
-    'be.visible'
-  );
-  if (lang === 'en')
-    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
-      'have.text',
-      ` User updated\n`
-    );
-  else
-    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
-      'have.text',
-      ` Utilisateur mis à jour\n`
-    );
-
-  // Force Snack bar to disappear (performance)
-  cy.get('.mat-mdc-snack-bar-action > .mdc-button__label').click();
-}
-);
-
-Cypress.Commands.add('deleteExistingUser', (login: string, lang: string = 'fr') => {
-  // Intercept api call
-  cy.intercept({
-    method: 'DELETE',
-    url: '/api/users/delete-user*',
-  }).as('apiDeleteUser')
-
-  // Trigger mouseenter event to display actions buttons
-  cy.get('#list-users-actions-' + login).trigger('mouseenter', { force: true });
-
-  // Click on delete button
-  cy.get('#delete-'+login).click();
-
-  // Click on "Yes" button
-  cy.get('#confirm').click();
-
-  // Check api response
-  cy.wait('@apiDeleteUser').then((interception) => {
-    if (interception.response) {
-      expect(interception.response.statusCode).to.eq(200);
-    } else {
-      throw new Error('interception.response is undefined');
-    }
-  });
-
-  // Check SnackBar
-  cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
-    'be.visible'
-  );
-  if (lang === 'en')
-    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
-      'have.text',
-      ` User deleted\n`
-    );
-  else
-    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
-      'have.text',
-      ` Utilisateur supprimé\n`
-    );
-
-  // Force Snack bar to disappear (performance)
-  cy.get('.mat-mdc-snack-bar-action > .mdc-button__label').click();
-
-  // Check if user has been deleted from list
-  cy.get('#list-users-actions-'+login).should('not.exist');
-});
-
-Cypress.Commands.add('addNewProject', (name: string, teamName: string, businessLineName: string, description: string, lang: string = 'fr') => {
+Cypress.Commands.add(
+  'addNewUser',
+  (login: string, firstname: string, lastname: string, lang: string = 'fr') => {
     // Intercept api call
     cy.intercept({
-        method: 'POST',
-        url: '/api/projects/create-project',
+      method: 'POST',
+      url: '/api/users/create-user',
+    }).as('apiCreateUser');
+
+    // Create new user
+    cy.get('#addUserBtn').click();
+    cy.get('#firstName-input').type(firstname);
+    cy.get('#lastName-input').type(lastname);
+    cy.get('#login-input').type(login);
+    cy.get('#confirm').click();
+
+    // Check api response
+    cy.wait('@apiCreateUser').then((interception) => {
+      if (interception.response) {
+        expect(interception.response.statusCode).to.eq(200);
+        expect(interception.response.body).to.have.all.keys(
+          'id',
+          'login',
+          'firstName',
+          'lastName'
+        );
+      } else {
+        throw new Error('interception.response is undefined');
+      }
+    });
+
+    // Check SnackBar
+    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+      'be.visible'
+    );
+    if (lang === 'en')
+      cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+        'have.text',
+        ` User created\n`
+      );
+    else
+      cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+        'have.text',
+        ` Utilisateur créé\n`
+      );
+
+    // Force Snack bar to disappear (performance)
+    cy.get('.mat-mdc-snack-bar-action > .mdc-button__label').click();
+  }
+);
+
+Cypress.Commands.add(
+  'modifyExistingUser',
+  (
+    previousLogin: string,
+    newLogin: string,
+    newFirstname: string,
+    newLastname: string,
+    lang: string = 'fr'
+  ) => {
+    // Intercept api call
+    cy.intercept({
+      method: 'PUT',
+      url: '/api/users/update-user',
+    }).as('apiModifyUser');
+
+    // Trigger mouseenter event to display actions buttons
+    cy.get('#list-users-actions-' + previousLogin).trigger('mouseenter', {
+      force: true,
+    });
+
+    // Click on modify button
+    cy.get('#modify-' + previousLogin).click();
+
+    // Clear input of Modify user dialog
+    cy.get('#firstName-input').clear();
+    cy.get('#lastName-input').clear();
+    cy.get('#login-input').clear();
+
+    // Enter new values (test2_user...)
+    cy.get('#firstName-input').type(newFirstname);
+    cy.get('#lastName-input').type(newLastname);
+    cy.get('#login-input').type(newLogin);
+
+    // Click on save button
+    cy.get('#confirm').click();
+
+    // Check api response
+    cy.wait('@apiModifyUser').then((interception) => {
+      if (interception.response) {
+        expect(interception.response.statusCode).to.eq(200);
+        expect(interception.response.body).to.have.all.keys(
+          'id',
+          'login',
+          'firstName',
+          'lastName'
+        );
+
+        // Check if values have been modified
+        expect(interception.response.body).to.have.property('login', newLogin);
+        expect(interception.response.body).to.have.property(
+          'firstName',
+          newFirstname
+        );
+        expect(interception.response.body).to.have.property(
+          'lastName',
+          newLastname
+        );
+      } else {
+        throw new Error('interception.response is undefined');
+      }
+    });
+
+    // Check SnackBar
+    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+      'be.visible'
+    );
+    if (lang === 'en')
+      cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+        'have.text',
+        ` User updated\n`
+      );
+    else
+      cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+        'have.text',
+        ` Utilisateur mis à jour\n`
+      );
+
+    // Force Snack bar to disappear (performance)
+    cy.get('.mat-mdc-snack-bar-action > .mdc-button__label').click();
+  }
+);
+
+Cypress.Commands.add(
+  'deleteExistingUser',
+  (login: string, lang: string = 'fr') => {
+    // Intercept api call
+    cy.intercept({
+      method: 'DELETE',
+      url: '/api/users/delete-user*',
+    }).as('apiDeleteUser');
+
+    // Trigger mouseenter event to display actions buttons
+    cy.get('#list-users-actions-' + login).trigger('mouseenter', {
+      force: true,
+    });
+
+    // Click on delete button
+    cy.get('#delete-' + login).click();
+
+    // Click on "Yes" button
+    cy.get('#confirm').click();
+
+    // Check api response
+    cy.wait('@apiDeleteUser').then((interception) => {
+      if (interception.response) {
+        expect(interception.response.statusCode).to.eq(200);
+      } else {
+        throw new Error('interception.response is undefined');
+      }
+    });
+
+    // Check SnackBar
+    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+      'be.visible'
+    );
+    if (lang === 'en')
+      cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+        'have.text',
+        ` User deleted\n`
+      );
+    else
+      cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+        'have.text',
+        ` Utilisateur supprimé\n`
+      );
+
+    // Force Snack bar to disappear (performance)
+    cy.get('.mat-mdc-snack-bar-action > .mdc-button__label').click();
+
+    // Check if user has been deleted from list
+    cy.get('#list-users-actions-' + login).should('not.exist');
+  }
+);
+
+Cypress.Commands.add(
+  'addNewProject',
+  (
+    name: string,
+    teamName: string,
+    businessLineName: string,
+    description: string,
+    lang: string = 'fr'
+  ) => {
+    // Intercept api call
+    cy.intercept({
+      method: 'POST',
+      url: '/api/projects/create-project',
     }).as('apiCreateProject');
 
     /* Create new Project */
@@ -304,204 +343,336 @@ Cypress.Commands.add('addNewProject', (name: string, teamName: string, businessL
     cy.get('#project-name-input').type(name);
     cy.get('#team-name-input').clear();
     cy.get('#team-name-input').type(teamName);
-    cy.get('#business-line-name-input').click({force: true});
+    cy.get('#business-line-name-input').click({ force: true });
     cy.get('#business-line-name-input').clear();
     cy.get('#business-line-name-input').type(businessLineName);
-    cy.get('#description-input').click({force: true});
+    cy.get('#description-input').click({ force: true });
     cy.get('#description-input').clear();
     cy.get('#description-input').type(description);
     cy.get('#confirm').click();
 
     // Check api response
     cy.wait('@apiCreateProject').then((interception) => {
-        if (interception.response) {
-            expect(interception.response.statusCode).to.eq(200)
-            expect(interception.response.body).to.have.all.keys('id', 'name', 'team', 'businessLine', 'description', 'assessments')
-
-            // Check SnackBar
-            cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('be.visible');
-            cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('have.text', ' Le projet a été créé avec succès\n');
-
-            // Force Snack bar to disappear (performance)
-            cy.get('.mat-mdc-snack-bar-action > .mdc-button__label').click();
-
-            cy.wrap(interception.response.body.id)
-        } else {
-            throw new Error('interception.response is undefined')
-        }
-    })
-});
-
-Cypress.Commands.add('updateProject', (id: string, name: string, teamName: string, businessLineName: string, description: string, lang: string = 'fr') => {
-  // Intercept api call
-  cy.intercept({
-    method: 'PUT',
-    url: '/api/projects/update-project',
-  }).as('apiUpdateProject');
-
-  /* Update new Project */
-  cy.get('#project-card-'+id+' > .card > .front > .content > .card-header > .project-actions-buttons > #modify').click({ force: true });
-  cy.wait(100)
-  cy.get('#project-name-input').focus().clear();
-  cy.get('#project-name-input').type(name);
-  cy.get('#team-name-input').focus().clear();
-  cy.get('#team-name-input').type(teamName);
-  cy.get('#business-line-name-input').click({force: true});
-  cy.get('#business-line-name-input').focus().clear();
-  cy.get('#business-line-name-input').type(businessLineName);
-  cy.get('#description-input').click({force: true});
-  cy.get('#description-input').focus().clear();
-  cy.get('#description-input').type(description);
-  cy.get('#confirm').click();
-
-  // Check api response
-  cy.wait('@apiUpdateProject').then((interception) => {
-    if (interception.response) {
+      if (interception.response) {
         expect(interception.response.statusCode).to.eq(200);
-        expect(interception.response.body).to.have.all.keys('id', 'name', 'team', 'businessLine', 'description', 'assessments');
-    } else {
+        expect(interception.response.body).to.have.all.keys(
+          'id',
+          'name',
+          'team',
+          'businessLine',
+          'description',
+          'assessments'
+        );
+
+        // Check SnackBar
+        cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+          'be.visible'
+        );
+        cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+          'have.text',
+          ' Le projet a été créé avec succès\n'
+        );
+
+        // Force Snack bar to disappear (performance)
+        cy.get('.mat-mdc-snack-bar-action > .mdc-button__label').click();
+
+        cy.wrap(interception.response.body.id);
+      } else {
         throw new Error('interception.response is undefined');
+      }
+    });
+  }
+);
+
+Cypress.Commands.add(
+  'updateProject',
+  (
+    id: string,
+    name: string,
+    teamName: string,
+    businessLineName: string,
+    description: string,
+    lang: string = 'fr'
+  ) => {
+    // Intercept api call
+    cy.intercept({
+      method: 'PUT',
+      url: '/api/projects/update-project',
+    }).as('apiUpdateProject');
+
+    /* Update new Project */
+    cy.get(
+      '#project-card-' +
+        id +
+        ' > .card > .front > .content > .card-header > .project-actions-buttons > #modify'
+    ).click({ force: true });
+    cy.wait(100);
+    cy.get('#project-name-input').focus().clear();
+    cy.get('#project-name-input').type(name);
+
+    if (teamName !== null) {
+      cy.get('#team-name-input').focus().clear();
+      cy.get('#team-name-input').type(teamName);
+    } else {
+      cy.get('#team-name-input').should('be.disabled');
     }
-  })
 
-  // Check SnackBar
-  cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('be.visible');
-  cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('have.text', ' Le projet a été mis à jour avec succès\n');
+    cy.get('#business-line-name-input').click({ force: true });
+    cy.get('#business-line-name-input').focus().clear();
+    cy.get('#business-line-name-input').type(businessLineName);
+    cy.get('#description-input').click({ force: true });
+    cy.get('#description-input').focus().clear();
+    cy.get('#description-input').type(description);
+    cy.get('#confirm').click();
 
-  // Force Snack bar to disappear (performance)
-  cy.get('.mat-mdc-snack-bar-action > .mdc-button__label').click();
-});
+    // Check api response
+    cy.wait('@apiUpdateProject').then((interception) => {
+      if (interception.response) {
+        expect(interception.response.statusCode).to.eq(200);
+        expect(interception.response.body).to.have.all.keys(
+          'id',
+          'name',
+          'team',
+          'businessLine',
+          'description',
+          'assessments'
+        );
+      } else {
+        throw new Error('interception.response is undefined');
+      }
+    });
+
+    // Check SnackBar
+    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+      'be.visible'
+    );
+    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+      'have.text',
+      ' Le projet a été mis à jour avec succès\n'
+    );
+
+    // Force Snack bar to disappear (performance)
+    cy.get('.mat-mdc-snack-bar-action > .mdc-button__label').click();
+  }
+);
 
 Cypress.Commands.add('deleteProject', (id: string, lang: string = 'fr') => {
   // Intercept api call
   cy.intercept({
     method: 'DELETE',
-    url: '/api/projects/delete-project?id='+id,
+    url: '/api/projects/delete-project?id=' + id,
   }).as('apiDeleteProject');
 
   /* Delete a Project */
-  cy.get('#project-card-'+id + ' > .card > .front > .content > .card-header > .project-actions-buttons > #delete').click({ force: true });
+  cy.get(
+    '#project-card-' +
+      id +
+      ' > .card > .front > .content > .card-header > .project-actions-buttons > #delete'
+  ).click({ force: true });
   cy.get('#confirm').click();
 
   // Check api response
   cy.wait('@apiDeleteProject').then((interception) => {
     if (interception.response) {
-        expect(interception.response.statusCode).to.eq(200);
-    } else {
-        throw new Error('interception.response is undefined');
-    }
-  })
-
-  // Check Project has been deleted
-  cy.get('#project-card-'+id).should('not.exist');
-
-  // Check SnackBar
-  cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('be.visible');
-  cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('have.text', ' Le projet a été supprimé avec succès\n');
-
-  // Force Snack bar to disappear
-  cy.get('.mat-mdc-snack-bar-action > .mdc-button__label').click();
-});
-
-Cypress.Commands.add('addNewBusinessLine', (name: string, lang: string = 'fr') => {
-  // Intercept api call
-  cy.intercept({
-    method: 'POST',
-    url: '/api/businessLines/create-businessLine',
-  }).as('apiCreateBusinessLine')
-
-  // Create new businessline
-  cy.get('.add-container > .mdc-button > .mdc-button__label').click();
-  cy.get('#businessLineName-input').clear();
-  cy.get('#businessLineName-input').type(name);
-  cy.get('#confirm').click();
-
-  // Check api response
-  cy.wait('@apiCreateBusinessLine').then((interception) => {
-    if (interception.response) {
-      expect(interception.response.statusCode).to.eq(200)
-      expect(interception.response.body).to.have.all.keys('id', 'name')
-    } else {
-      throw new Error('interception.response is undefined')
-    }
-  })
-
-  // Check SnackBar
-  cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('be.visible');
-  if (lang === 'en')
-    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('have.text', ` Business line created\n`);
-  else
-    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('have.text', ` Secteur d'activité créé\n`);
-
-  // Force Snack bar to disappear (performance)
-  cy.get('.mat-mdc-snack-bar-action > .mdc-button__label').click();
-});
-
-Cypress.Commands.add('modifyExistingBusinessLine', (businessLineId: string, newName: string, lang: string = 'fr') => {
-  // Intercept api call
-  cy.intercept({
-    method: 'PUT',
-    url: '/api/businessLines/update-businessLine',
-  }).as('apiModifyBusinessLine')
-
-  // Update businessline
-  cy.get('#business-line-card-'+businessLineId+' > mat-card-header > .icons-container > #modify').click({ force: true });
-  cy.get('#businessLineName-input').clear();
-  cy.get('#businessLineName-input').type(newName);
-  cy.get('#confirm').click();
-
-  // Check updated Business Line name
-  cy.get('#business-line-card-'+businessLineId+' > mat-card-header > .title-container > mat-card-title').should('have.text', 'New Name');
-
-  // Check api response
-  cy.wait('@apiModifyBusinessLine').then((interception) => {
-    if (interception.response) {
-      expect(interception.response.statusCode).to.eq(200)
-      expect(interception.response.body).to.have.all.keys('id', 'name')
-
-      // Check if values have been modified
-      expect(interception.response.body).to.have.property('name', newName)
-    } else {
-      throw new Error('interception.response is undefined')
-    }
-  })
-
-  // Check SnackBar
-  cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('be.visible');
-  if (lang === 'en')
-    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('have.text', ' Business line updated\n');
-  else
-    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('have.text', ' Secteur d\'activité mis à jour\n');
-
-  // Force Snack bar to disappear (performance)
-  cy.get('.mat-mdc-snack-bar-action > .mdc-button__label').click();
-});
-
-Cypress.Commands.add('deleteExistingBusinessLine', (businessLineId: string, lang: string = 'fr') => {
-  // Intercept api call
-  cy.intercept({
-    method: 'DELETE',
-    url: '/api/businessLines/delete-businessLine?id='+businessLineId,
-  }).as('apiDeleteBusinessLine')
-
-  // Delete businessline
-  cy.get('#business-line-card-'+businessLineId+' > mat-card-header > .icons-container > #delete').click({ force: true });
-  cy.get('#confirm').click();
-
-  // Check api response
-  cy.wait('@apiDeleteBusinessLine').then((interception) => {
-    if (interception.response) {
       expect(interception.response.statusCode).to.eq(200);
     } else {
       throw new Error('interception.response is undefined');
     }
-  })
+  });
+
+  // Check Project has been deleted
+  cy.get('#project-card-' + id).should('not.exist');
 
   // Check SnackBar
-  cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('be.visible');
-  cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('have.text', ' Le secteur d\'activité a été supprimé avec succès\n');
+  cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+    'be.visible'
+  );
+  cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+    'have.text',
+    ' Le projet a été supprimé avec succès\n'
+  );
 
   // Force Snack bar to disappear
   cy.get('.mat-mdc-snack-bar-action > .mdc-button__label').click();
 });
 
+Cypress.Commands.add(
+  'addNewBusinessLine',
+  (name: string, lang: string = 'fr') => {
+    // Intercept api call
+    cy.intercept({
+      method: 'POST',
+      url: '/api/businessLines/create-businessLine',
+    }).as('apiCreateBusinessLine');
+
+    // Create new businessline
+    cy.get('.add-container > .mdc-button > .mdc-button__label').click();
+    cy.get('#businessLineName-input').clear();
+    cy.get('#businessLineName-input').type(name);
+    cy.get('#confirm').click();
+
+    // Check api response
+    cy.wait('@apiCreateBusinessLine').then((interception) => {
+      if (interception.response) {
+        expect(interception.response.statusCode).to.eq(200);
+        expect(interception.response.body).to.have.all.keys('id', 'name');
+      } else {
+        throw new Error('interception.response is undefined');
+      }
+    });
+
+    // Check SnackBar
+    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+      'be.visible'
+    );
+    if (lang === 'en')
+      cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+        'have.text',
+        ` Business line created\n`
+      );
+    else
+      cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+        'have.text',
+        ` Secteur d'activité créé\n`
+      );
+
+    // Force Snack bar to disappear (performance)
+    cy.get('.mat-mdc-snack-bar-action > .mdc-button__label').click();
+  }
+);
+
+Cypress.Commands.add(
+  'modifyExistingBusinessLine',
+  (businessLineId: string, newName: string, lang: string = 'fr') => {
+    // Intercept api call
+    cy.intercept({
+      method: 'PUT',
+      url: '/api/businessLines/update-businessLine',
+    }).as('apiModifyBusinessLine');
+
+    // Update businessline
+    cy.get(
+      '#business-line-card-' +
+        businessLineId +
+        ' > mat-card-header > .icons-container > #modify'
+    ).click({ force: true });
+    cy.get('#businessLineName-input').clear();
+    cy.get('#businessLineName-input').type(newName);
+    cy.get('#confirm').click();
+
+    // Check updated Business Line name
+    cy.get(
+      '#business-line-card-' +
+        businessLineId +
+        ' > mat-card-header > .title-container > mat-card-title'
+    ).should('have.text', 'New Name');
+
+    // Check api response
+    cy.wait('@apiModifyBusinessLine').then((interception) => {
+      if (interception.response) {
+        expect(interception.response.statusCode).to.eq(200);
+        expect(interception.response.body).to.have.all.keys('id', 'name');
+
+        // Check if values have been modified
+        expect(interception.response.body).to.have.property('name', newName);
+      } else {
+        throw new Error('interception.response is undefined');
+      }
+    });
+
+    // Check SnackBar
+    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+      'be.visible'
+    );
+    if (lang === 'en')
+      cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+        'have.text',
+        ' Business line updated\n'
+      );
+    else
+      cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+        'have.text',
+        " Secteur d'activité mis à jour\n"
+      );
+
+    // Force Snack bar to disappear (performance)
+    cy.get('.mat-mdc-snack-bar-action > .mdc-button__label').click();
+  }
+);
+
+Cypress.Commands.add(
+  'deleteExistingBusinessLine',
+  (businessLineId: string, lang: string = 'fr') => {
+    // Intercept api call
+    cy.intercept({
+      method: 'DELETE',
+      url: '/api/businessLines/delete-businessLine?id=' + businessLineId,
+    }).as('apiDeleteBusinessLine');
+
+    // Delete businessline
+    cy.get(
+      '#business-line-card-' +
+        businessLineId +
+        ' > mat-card-header > .icons-container > #delete'
+    ).click({ force: true });
+    cy.get('#confirm').click();
+
+    // Check api response
+    cy.wait('@apiDeleteBusinessLine').then((interception) => {
+      if (interception.response) {
+        expect(interception.response.statusCode).to.eq(200);
+      } else {
+        throw new Error('interception.response is undefined');
+      }
+    });
+
+    // Check SnackBar
+    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+      'be.visible'
+    );
+    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
+      'have.text',
+      " Le secteur d'activité a été supprimé avec succès\n"
+    );
+
+    // Force Snack bar to disappear
+    cy.get('.mat-mdc-snack-bar-action > .mdc-button__label').click();
+  }
+);
+
+Cypress.Commands.add('addNewReadinessLevel', () => {
+  // Create a new ReadinessLevel
+  cy.intercept({
+    method: 'POST',
+    url: '/api/readiness-levels/create-readiness-level',
+  }).as('apiCreateReadinessLevel');
+
+  cy.get('.add-container > .mdc-button > .mdc-button__label').click();
+
+  // Add a name, description,
+  cy.get('#mat-input-name').click({ force: true });
+  cy.get('#mat-input-name').type('Nouveau Niveau');
+  cy.get('#mat-input-description').click();
+  cy.get('#mat-input-description').type('Description du nouveau niveau');
+
+  // Enter short & long level's descriptions
+  for (let i = 1; i <= 9; i++) {
+    cy.get(`#mat-input-${i}-short`).click();
+    cy.get(`#mat-input-${i}-short`).type(`Description courte ${i}`);
+    cy.get(`#mat-input-${i}-long`).click();
+    cy.get(`#mat-input-${i}-long`).type(`Description Longue ${i}`);
+  }
+
+  //Click on the create button
+  cy.get('#confirm').click();
+
+  //Verify that the Api call is successful
+  cy.wait('@apiCreateReadinessLevel').then((interception) => {
+    if (interception.response) {
+      expect(interception.response.statusCode).to.equal(200);
+      cy.wrap(interception.response.body.id);
+    } else {
+      throw new Error('interception.response is undefined');
+    }
+  });
+});

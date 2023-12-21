@@ -2,9 +2,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectModel } from 'src/app/core/data/models/project.model';
-import { ProjectFormDialogComponent } from '../dialogs/project-form-dialog/project-form-dialog.component';
+import { ProjectFormDialogComponent } from '../../dialogs/project-form-dialog/project-form-dialog.component';
 import { ApiProjectService } from 'src/app/core/services/api-project.service';
-import { DeleteObjectDialogComponent } from '../dialogs/delete-object-dialog/delete-object-dialog.component';
+import { DeleteObjectDialogComponent } from '../../dialogs/delete-object-dialog/delete-object-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CurrentUserService } from 'src/app/core/services/current-user.service';
 import { UserModel } from 'src/app/core/data/models/user.model';
@@ -38,13 +38,7 @@ export class ProjectCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     this.currentUser = this.currentUserService.getCurrentUser().getValue();
-    if (!(this.currentUser && this.currentUser.isAdmin())) {
-      Array.from(document.getElementsByClassName('project-actions-buttons')).forEach((element) => {
-        element.setAttribute('style', 'display: none');
-      });
-    }
   }
 
   getDescription() : string {
@@ -55,18 +49,22 @@ export class ProjectCardComponent implements OnInit {
   }
 
   getDateTextField() : string {
-    if (this.project.getLastAssesment() == null) {
+    const lastAssesment = this.project.getLastAssesment();
+    if (lastAssesment == null) {
       return this.translateService.instant('PROJECTS.NO_ASSESSMENT');
     }
-    return this.project.formatDate(this.project.getLastAssesment().date);
+    
+    return this.project.formatDate(lastAssesment.date);
   }
 
   openUpdateDialog() {
     const dialogRef = this.dialog.open(ProjectFormDialogComponent, {
       data: {
         title: 'PROJECTS.UPDATE',
-        save: 'SAVE',
+        save: 'ACTION.SAVE',
         project: this.project,
+        currentUser: this.currentUser,
+        isCreate: false
       }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -109,5 +107,14 @@ export class ProjectCardComponent implements OnInit {
 
   toggle() {
     this.toggleProperty = !this.toggleProperty;
+  }
+
+  isUserLinkedToProject() : boolean {
+    for (const member of this.project.team.members) {
+      if (member.id === this.currentUser?.id) {
+        return true;
+      }
+    }
+    return false;
   }
 }

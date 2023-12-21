@@ -13,7 +13,9 @@ mat-divider {
     margin: 0 1rem;
 }
 
-.search-container, .add-container, .search-fields {
+.search-container,
+.add-container,
+.search-fields {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -25,7 +27,7 @@ mat-divider {
 
 @container (max-width: 630px) {
     .search-container {
-        .search-fields{
+        .search-fields {
             flex-direction: column;
         }
     }
@@ -33,4 +35,27 @@ mat-divider {
     mat-divider {
         height: 7rem;
     }
-  }
+}
+
+.filter-my-projects {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#search-field mat-icon {
+    cursor: pointer;
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    scale: .85;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+
+#search-field input {
+    width: 82%;
+}

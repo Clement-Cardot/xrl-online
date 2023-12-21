@@ -1,41 +1,38 @@
-<div class="dialog">
+<mat-dialog-content>
   <h1 mat-dialog-title>{{title | translate}}</h1>
-  <mat-dialog-content>
+  <mat-form-field id="nameField">
+    <mat-label>{{'PROJECTS.NAME' | translate}}</mat-label>
+    <input id="project-name-input" matInput [formControl]="nameFormControl">
+    <mat-error id="project-name-mat-error">{{getNameErrorMessage()}}</mat-error>
+  </mat-form-field>
+  <div id="team-business-line-form-fields">
     <mat-form-field>
-      <mat-label>{{'PROJECTS.NAME' | translate}}</mat-label>
-      <input id="project-name-input" matInput [formControl]="nameFormControl">
-      <mat-error id="project-name-mat-error">{{getNameErrorMessage()}}</mat-error>
+        <mat-label>{{'PROJECTS.TEAM' | translate}}</mat-label>
+        <input id="team-name-input" matInput [formControl]="teamFormControl" [matAutocomplete]="autoTeam">
+        <mat-error id="team-name-mat-error">{{getTeamErrorMessage()}}</mat-error>
+        <mat-autocomplete #autoTeam="matAutocomplete" [displayWith]="displayTeamFn">
+          <mat-option *ngFor="let option of filteredTeams | async" [value]="option">
+            {{option.name}}
+          </mat-option>
+        </mat-autocomplete>
     </mat-form-field>
-    <div id="team-business-line-form-fields">
-      <mat-form-field>
-          <mat-label>{{'PROJECTS.TEAM' | translate}}</mat-label>
-          <input id="team-name-input" matInput [formControl]="teamFormControl" [matAutocomplete]="autoTeam">
-          <mat-error id="team-name-mat-error">{{getTeamErrorMessage()}}</mat-error>
-          <mat-autocomplete #autoTeam="matAutocomplete" [displayWith]="displayTeamFn">
-            <mat-option *ngFor="let option of filteredTeams | async" [value]="option">
-              {{option.name}}
-            </mat-option>
-          </mat-autocomplete>
-      </mat-form-field>
-      <mat-form-field>
-          <mat-label>{{'PROJECTS.BUSINESS_LINE' | translate}}</mat-label>
-          <input id="business-line-name-input" matInput [formControl]="businessLineFormControl" [matAutocomplete]="autoBusinessLine">
-          <mat-error id="business-line-name-mat-error">{{getBusinessLineErrorMessage()}}</mat-error>
-          <mat-autocomplete #autoBusinessLine="matAutocomplete" [displayWith]="displayBusinessLineFn">
-            <mat-option *ngFor="let option of filteredBusinessLines | async" [value]="option">
-              {{option.name}}
-            </mat-option>
-          </mat-autocomplete>
-      </mat-form-field>
-    </div>
     <mat-form-field>
-      <mat-label>{{'PROJECTS.DESCRIPTION' | translate}}</mat-label>
-      <textarea id="description-input" matInput [formControl]="descriptionFormControl" cdkTextareaAutosize></textarea>
-      <!-- <mat-error>{{getLoginErrorMessage()}}</mat-error> -->
+        <mat-label>{{'PROJECTS.BUSINESS_LINE' | translate}}</mat-label>
+        <input id="business-line-name-input" matInput [formControl]="businessLineFormControl" [matAutocomplete]="autoBusinessLine">
+        <mat-error id="business-line-name-mat-error">{{getBusinessLineErrorMessage()}}</mat-error>
+        <mat-autocomplete #autoBusinessLine="matAutocomplete" [displayWith]="displayBusinessLineFn">
+          <mat-option *ngFor="let option of filteredBusinessLines | async" [value]="option">
+            {{option.name}}
+          </mat-option>
+        </mat-autocomplete>
     </mat-form-field>
-  </mat-dialog-content>
-  <mat-dialog-actions align="center">
-    <button id="close" mat-button class="close-button" [mat-dialog-close]="false">{{'CANCEL' | translate}}</button>
-    <button id="confirm" mat-button class="primary-button" cdkFocusInitial (click)="saveUser()">{{save | translate}}</button>
-  </mat-dialog-actions>
-</div>
+  </div>
+  <mat-form-field id="descriptionField">
+    <mat-label>{{'PROJECTS.DESCRIPTION' | translate}}</mat-label>
+    <textarea id="description-input" matInput [formControl]="descriptionFormControl" cdkTextareaAutosize></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <button id="close" mat-raised-button color="warn" [mat-dialog-close]="false">{{'ACTION.CANCEL' | translate}}</button>
+  <button id="confirm" mat-raised-button color="primary" cdkFocusInitial (click)="saveUser()">{{save | translate}}</button>
+</mat-dialog-actions>

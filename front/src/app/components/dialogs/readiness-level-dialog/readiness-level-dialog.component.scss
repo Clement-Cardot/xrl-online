@@ -1,6 +1,27 @@
+.rl-dialog-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  h1 {
+    margin: 0;
+  }
+}
+
+#delete-rl-icon {
+  color: red;
+  cursor: pointer;
+  margin-top: 1em;
+  margin-right: 1em;
+}
+
 mat-dialog-content {
   display: flex;
   flex-direction: column;
+}
+
+.mdc-dialog__content {
+  padding-top: 0;
 }
 
 .edit-name-container,
@@ -37,19 +58,7 @@ table mat-form-field {
 
 mat-dialog-actions {
   display: flex;
+  gap: 2rem;
+  margin: 0 1rem 0 1rem;
   justify-content: center;
-}
-mat-dialog-actions button:nth-child(1):hover {
-  background-color: white;
-  color: red;
-  transform: scale(1.1);
-}
-mat-dialog-actions button:nth-child(2):hover {
-  background-color: white;
-  color: blue;
-  transform: scale(1.1);
-}
-
-mat-dialog-actions button {
-  margin: 0.5em 1em;
 }

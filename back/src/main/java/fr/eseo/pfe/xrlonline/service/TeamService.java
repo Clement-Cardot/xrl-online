@@ -6,6 +6,7 @@ import fr.eseo.pfe.xrlonline.model.entity.Team;
 import fr.eseo.pfe.xrlonline.model.entity.User;
 import fr.eseo.pfe.xrlonline.repository.TeamRepository;
 
+import fr.eseo.pfe.xrlonline.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,13 @@ import java.util.stream.Collectors;
 public class TeamService {
 
     private final TeamRepository teamRepository;
+    private final UserRepository userRepository;
 
     private final ModelMapper modelMapper;
 
-    public TeamService(TeamRepository teamRepository, ModelMapper modelMapper) {
+    public TeamService(TeamRepository teamRepository, UserRepository userRepository, ModelMapper modelMapper) {
         this.teamRepository = teamRepository;
+        this.userRepository = userRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -80,33 +83,32 @@ public class TeamService {
     }
 
     public ResponseEntity<TeamDTO> updateTeam(TeamDTO updatedTeamDTO) throws CustomRuntimeException {
+        Team updatedTeam = modelMapper.map(updatedTeamDTO, Team.class);
+
         // Check if the ID corresponds to an existing team
-        Team existingTeam = teamRepository.findById(updatedTeamDTO.getId()).orElse(null);
+        Team existingTeam = teamRepository.findById(updatedTeam.getId()).orElse(null);
         if (existingTeam == null) {
             throw new CustomRuntimeException(CustomRuntimeException.TEAM_NOT_FOUND);
         }
 
         // Check if the updated team's name matches an existing team's name
-        Team teamWithUpdatedName = teamRepository.findByName(updatedTeamDTO.getName());
-        if (teamWithUpdatedName != null && !teamWithUpdatedName.getId().equals(updatedTeamDTO.getId())) {
+        Team teamWithUpdatedName = teamRepository.findByName(updatedTeam.getName());
+        if (teamWithUpdatedName != null && !teamWithUpdatedName.getId().equals(updatedTeam.getId())) {
             throw new CustomRuntimeException(CustomRuntimeException.TEAM_NAME_ALREADY_EXISTS);
         }
 
         // Check if there are duplicate users in the members
-        List<User> updatedMembers = updatedTeamDTO.getMembers();
+        List<User> updatedMembers = updatedTeam.getMembers();
         if (hasDuplicateMembers(updatedMembers)) {
             throw new CustomRuntimeException(CustomRuntimeException.DUPLICATE_MEMBERS);
         }
 
         // Update the team if all conditions are met
-        existingTeam.setName(updatedTeamDTO.getName());
+        existingTeam.setName(updatedTeam.getName());
         existingTeam.setMembers(updatedMembers);
-        teamRepository.save(existingTeam);
+        updatedTeam = teamRepository.save(existingTeam);
 
-        Team updatedTeam = teamRepository.findById(updatedTeamDTO.getId()).orElseThrow(
-                () -> new CustomRuntimeException(CustomRuntimeException.TEAM_NOT_UPDATED)
-        );
-                // Update and return the DTO
+        // Update and return the DTO
         updatedTeamDTO = modelMapper.map(updatedTeam, TeamDTO.class);
         return ResponseEntity.ok(updatedTeamDTO);
     }
@@ -118,5 +120,16 @@ public class TeamService {
         }
         teamRepository.delete(teamToDelete);
         return ResponseEntity.ok(modelMapper.map(teamToDelete, TeamDTO.class));
+    }
+
+    public ResponseEntity<List<TeamDTO>> getTeamsByUserId(String id) throws CustomRuntimeException {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            throw new CustomRuntimeException(CustomRuntimeException.USER_NOT_FOUND);
+        }
+        List<TeamDTO> teamsDTO = teamRepository.findByMembers(user).stream()
+                .map(team -> modelMapper.map(team, TeamDTO.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(teamsDTO);
     }
 }

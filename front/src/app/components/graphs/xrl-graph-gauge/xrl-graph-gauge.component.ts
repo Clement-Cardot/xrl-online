@@ -67,6 +67,9 @@ export class XrlGraphGaugeComponent implements OnInit, OnChanges {
           this.changeRank(e, chart, options);
         },
       },
+      animations: {
+        enabled: false,
+      },
     },
     plotOptions: {
       bar: {
@@ -173,6 +176,9 @@ export class XrlGraphGaugeComponent implements OnInit, OnChanges {
         },
         toolbar: {
           show: false,
+        },
+        animations: {
+          enabled: false,
         },
       },
       plotOptions: {

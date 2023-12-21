@@ -9,7 +9,9 @@
     "DELETE": "Supprimer",
     "ADD": "Ajouter",
     "NEW": "Nouveau",
+    "MODIFY": "Modifier",
     "COMPARE": "Comparer",
+    "DOWNLOAD": "Télécharger",
     "NEXT": "Suivant",
     "BACK": "Retour",
     "CONFIRM": "Confirmer",
@@ -19,10 +21,13 @@
 
   "OBJECT": {
     "PROJECT": "Projet",
+    "TEAM": "Equipe",
     "ASSESSMENT": "Evaluation",
     "READINESS_LEVEL": "Niveau de Maturité",
+    "BUSINESS_LINE": "Secteur d'activité",
     "COMMENT": "Commentaire",
-    "TAG": "Tag"
+    "TAG": "Tag",
+    "NONE": "Aucun"
   },
 
   "MENU": {
@@ -96,6 +101,7 @@
     "NAME_ALREADY_EXISTS": "Ce nom de projet existe déjà",
     "TEAM_REQUIRED": "Une équipe est requise",
     "TEAM_NOT_EXISTS": "Cette équipe n'existe pas",
+    "TEAM_NOT_ALLOWED": "Équipe non autorisée",
     "BUSINESS_LINE_REQUIRED": "Un secteur d'activité est requis",
     "BUSINESS_LINE_NOT_EXISTS": "Ce secteur d'activité n'existe pas",
     "DETAILS": "Détails",
@@ -106,6 +112,7 @@
     "SEARCH_NAME": "Nom",
     "SEARCH_TEAM": "Equipe",
     "SEARCH_BUSINESS_LINE": "Secteur d'activité",
+    "MY_PROJECTS": "Uniquement mes projets",
     "SEARCH": "Rechercher",
     "CREATE": "Créer un projet",
     "CREATE_SUCCESS": "Le projet a été créé avec succès",
@@ -114,7 +121,20 @@
     "NAME_MAX_LENGTH": "Le nom du projet ne doit pas dépasser 20 caractères",
     "NAME_MIN_LENGTH": "Le nom du projet doit contenir au moins 3 caractères",
     "RADAR_CHART_EMPTY": "Aucune donnée pour ce projet",
-    "ASSESSMENT_COMMENT_CHANGED": "Le commentaire a été mis à jour"
+    "ASSESSMENT_COMMENT_CHANGED": "Le commentaire a été mis à jour",
+    "INFORMATION_TAB": "Information",
+    "ASSESSMENT_TAB": "Evaluation",
+    "READINESS_LEVEL_TAB": "Niveaux de maturité détaillés",
+    "HISTORY_TAB": "Historique",
+    "CANT_CREATE_NEW_ASSESSMENT": "Une évaluation est déjà en cours !",
+    "CANT_MODIFY_ASSESSMENT": "Aucune évalution en cours !",
+    "ASSESSMENT_ADDED": "L'évaluation a été ajoutée !",
+    "COMPARE": {
+      "SELECT_FIRST": "Première évaluation",
+      "SELECT_SECOND": "Seconde évaluation",
+      "OVERLAY": "Superposition",
+      "SIDE_BY_SIDE": "Côte à côte"
+    }
   },
 
   "ASSESSMENT_DIALOG": {
@@ -149,7 +169,9 @@
     "CREATE_BUSINESSLINE": "Créer un secteur d'activité",
     "DELETE": "Êtes-vous sûr de vouloir supprimer le secteur d'activité ?",
     "DELETE_SUCCESS": "Le secteur d'activité a été supprimé avec succès",
-    "SEARCH_NAME": "Nom"
+    "SEARCH_NAME": "Nom",
+    "LINKED_PROJECTS": "projet(s) lié(s)",
+    "NO_LINKED_PROJECTS": "Aucun projet lié"
   },
 
   "READINESS_LEVEL": {

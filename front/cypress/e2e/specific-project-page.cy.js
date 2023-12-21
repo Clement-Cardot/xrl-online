@@ -18,6 +18,7 @@ describe("Specific Project page tests", () => {
             cy.GoToPage("projects");
 
             cy.get('#project-card-'+database.projects[0]._id+' > .card > .front > .content > .card-header > h2').click();
+            cy.get('#mat-tab-label-0-1').click();
             cy.get('.tab-content > #commentDiv > div > mat-form-field').click();
             cy.get('.tab-content > #commentDiv > div > mat-form-field').type('{selectall}{backspace}').type('New comment');
             cy.get('.tab-content > #commentDiv > div > button').click();
@@ -30,6 +31,7 @@ describe("Specific Project page tests", () => {
             cy.PerformLogin("admin");
             cy.GoToPage("projects");
             cy.get('#project-card-'+database.projects[0]._id+' > .card > .front > .content > .card-header > h2').click();
+            cy.get('#mat-tab-label-0-1').click();
             cy.get('.mat-mdc-paginator-navigation-previous > .mat-mdc-button-touch-target').click();
 
             cy.get('#commentDiv > .ng-star-inserted').should('be.visible');
@@ -41,6 +43,7 @@ describe("Specific Project page tests", () => {
             cy.PerformLogin("duboisj");
             cy.GoToPage("projects");
             cy.get('#project-card-'+database.projects[0]._id+' > .card > .front > .content > .card-header > h2').click();
+            cy.get('#mat-tab-label-0-1').click();
 
             cy.get('#commentDiv > p').should('be.visible');
             cy.get('#commentDiv > p').should('have.text', 'First assessment');

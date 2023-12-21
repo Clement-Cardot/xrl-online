@@ -1,8 +1,7 @@
-<h1 mat-dialog-title>
-  {{ getDialogTitle() }}
-</h1>
 <mat-dialog-content>
+  
   <div class="edit-name-container">
+    <h1 mat-dialog-title>{{ getDialogTitle()}} :</h1>
     <mat-form-field>
       <mat-label>{{ "TEAM.NAME" | translate }}</mat-label>
       <input id="team-name-input"
@@ -16,8 +15,9 @@
       }}</mat-error>
     </mat-form-field>
   </div>
+
   <div class="edit-members-container">
-    <div class="users-without-members-list">
+    <div class="users-without-members-container">
       <div class="search-user-container">
         <mat-form-field class="usernameField" subscriptSizing="dynamic">
           <mat-label>{{ "USERS.SEARCH_USER" | translate }}</mat-label>
@@ -28,7 +28,6 @@
             autocomplete="off"
           />
         </mat-form-field>
-        <mat-icon class="upscale-on-hover">search</mat-icon>
       </div>
 
       <div class="users-list">
@@ -146,11 +145,13 @@
       </div>
     </div>
   </div>
+
 </mat-dialog-content>
-<mat-dialog-actions>
-  <button id="close" mat-button [mat-dialog-close]>Cancel</button>
+<mat-dialog-actions align="center">
+  <button id="close" mat-raised-button color="warn" [mat-dialog-close]>{{'ACTION.CANCEL' | translate}}</button>
   <button id="confirm"
-    mat-button
+    mat-raised-button 
+    color="primary"
     (click)="saveTeam()"
     [disabled]="formControlTeamName.valid === false"
   >

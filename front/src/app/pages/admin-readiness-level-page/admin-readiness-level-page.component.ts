@@ -15,6 +15,8 @@ export class AdminReadinessLevelPageComponent implements OnInit {
   readinessLevels: ReadinessLevelModel[] = [];
   readinessLevelsToDisplay: ReadinessLevelModel[] = [];
 
+  displayOptions: any = { filterValue: '', searchType: 'name' };
+
   searchTypes: { typeValue: string; typeTranslation: string }[] = [
     { typeValue: 'name', typeTranslation: 'READINESS_LEVEL.SEARCH_NAME' },
   ];
@@ -37,7 +39,7 @@ export class AdminReadinessLevelPageComponent implements OnInit {
   }
 
   addReadinessLevel(readinessLevel: ReadinessLevelModel) {
-    this.readinessLevels.push(readinessLevel);
+    this.readinessLevelsToDisplay.push(readinessLevel);
   }
 
   updateReadinessLevel(readinessLevel: ReadinessLevelModel) {
@@ -47,16 +49,40 @@ export class AdminReadinessLevelPageComponent implements OnInit {
     this.readinessLevels[index] = readinessLevel;
   }
 
-  openReadinessLevelDialog() {
+  deleteReadinessLevel(readinessLevel: ReadinessLevelModel) {
+    this.readinessLevelsToDisplay = this.readinessLevelsToDisplay.filter(
+      (t) => t.id != readinessLevel.id
+    );
+  }
+
+  addReadinessLevelDialog() {
     const dialogRef = this.dialog.open(ReadinessLevelDialogComponent, {
       autoFocus: false,
       disableClose: true,
     });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result != null) {
-        this.readinessLevels.push(result);
-      }
+    dialogRef
+      .afterClosed()
+      .subscribe(({ action: action, result: readinessLevel }) => {
+        if (action == 'add') {
+          this.addReadinessLevel(readinessLevel);
+        }
+      });
+  }
+
+  updateReadinessLevelDialog(readinessLevel: ReadinessLevelModel) {
+    const dialogRef = this.dialog.open(ReadinessLevelDialogComponent, {
+      data: readinessLevel,
+      autoFocus: false,
     });
+    dialogRef
+      .afterClosed()
+      .subscribe(({ action: action, result: readinessLevel }) => {
+        if (action == 'update') {
+          this.updateReadinessLevel(readinessLevel);
+        } else if (action == 'delete') {
+          this.deleteReadinessLevel(readinessLevel);
+        }
+      });
   }
 
   updateReadinessLevelToDisplay(options: any) {

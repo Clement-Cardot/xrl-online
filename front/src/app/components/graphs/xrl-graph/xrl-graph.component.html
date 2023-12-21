@@ -1,0 +1,11 @@
+<div style="height: 90%; position: relative;">
+  <canvas *ngIf="assesment != null && assesment != undefined"
+    baseChart
+    #chart
+    [data]="radarChartData"
+    [options]="radarChartOptions"
+    [plugins]="[radarChartPlugins]"
+    [type]="radarChartType">
+  </canvas>
+  <p class="no-data-text" *ngIf="assesment == null || assesment == undefined">{{"PROJECTS.RADAR_CHART_EMPTY" | translate}}</p>
+</div>

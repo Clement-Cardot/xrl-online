@@ -34,7 +34,7 @@ describe("Create Assessment dialog tests", () => {
             }).as('apiGetAllReadinessLevels');
 
             // Open create assessment dialog
-            cy.get('.radar-tools > #create').click();
+            cy.get('.left-toolbar > div > #create').click();
 
             
             // Check api response to get ReadinessLevelIds
@@ -109,7 +109,7 @@ describe("Create Assessment dialog tests", () => {
             }).as('apiGetAllReadinessLevels');
 
             // Open create assessment dialog
-            cy.get('.radar-tools > #create').click();
+            cy.get('.left-toolbar > div > #create').click();
 
             
             // Check api response to get ReadinessLevelIds
@@ -155,7 +155,7 @@ describe("Create Assessment dialog tests", () => {
 
         it("Create new xRL", () => {
             // Open project page
-            cy.get(`#project-card-${database.projects[0]._id} > .card > .front > .content > .card-header > h2`).click();
+            cy.get(`#project-card-${database.projects[1]._id} > .card > .front > .content > .card-header > h2`).click();
 
             // Intercept api call
             cy.intercept({
@@ -164,7 +164,7 @@ describe("Create Assessment dialog tests", () => {
             }).as('apiGetAllReadinessLevels');
 
             // Open create assessment dialog
-            cy.get('.radar-tools > #create').click();
+            cy.get('.left-toolbar > div > #create').click();
 
             
             // Check api response to get ReadinessLevelIds
@@ -220,7 +220,7 @@ describe("Create Assessment dialog tests", () => {
                 if (interception.response) {
                     expect(interception.response.statusCode).to.eq(200);
                     expect(interception.response.body).to.have.all.keys('id', 'name', 'team', 'businessLine', 'description', 'assessments');
-                    expect(interception.response.body.assessments).to.have.length(4);
+                    expect(interception.response.body.assessments).to.have.length(2);
                 } else {
                     throw new Error('interception.response is undefined');
                 }

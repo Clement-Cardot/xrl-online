@@ -1,57 +1,74 @@
-<h1 mat-dialog-title>{{ getDialogTitle() }}</h1>
+<div class="rl-dialog-header">
+  <h1 mat-dialog-title>{{ getDialogTitle() }}</h1>
+  <mat-icon id="delete-rl-icon" (click)="deleteReadinessLevel()"
+    >delete</mat-icon
+  >
+</div>
 <mat-dialog-content>
   <div class="edit-name-container">
     <mat-form-field>
       <mat-label>{{ "READINESS_LEVEL.NAME" | translate }}</mat-label>
-      <input id="mat-input-name"
+      <input
+        id="mat-input-name"
         matInput
         [formControl]="formControlReadinessLevelName"
         autocomplete="off"
         [(ngModel)]="readinessLevel.name"
       />
-      <mat-error id="mat-error-name" *ngIf="formControlReadinessLevelName.invalid">{{
-        getNameErrorMessage()
-      }}</mat-error>
+      <mat-error
+        id="mat-error-name"
+        *ngIf="formControlReadinessLevelName.invalid"
+        >{{ getNameErrorMessage() }}</mat-error
+      >
     </mat-form-field>
   </div>
   <div class="edit-description-container">
     <mat-form-field>
       <mat-label>{{ "READINESS_LEVEL.DESCRIPTION" | translate }}</mat-label>
-      <textarea id="mat-input-description"
+      <textarea
+        id="mat-input-description"
         matInput
         cdkTextareaAutosize
         [formControl]="formControlReadinessLevelDescription"
         autocomplete="off"
         [(ngModel)]="readinessLevel.description"
       ></textarea>
-      <mat-error id="mat-error-description" *ngIf="formControlReadinessLevelDescription.invalid">{{
-        getDescriptionErrorMessage()
-      }}</mat-error>
+      <mat-error
+        id="mat-error-description"
+        *ngIf="formControlReadinessLevelDescription.invalid"
+        >{{ getDescriptionErrorMessage() }}</mat-error
+      >
     </mat-form-field>
   </div>
   <div class="readiness-level-levels">
     <table mat-table [dataSource]="readinessLevel.levels">
+      <caption hidden>
+        List of readiness level inputs
+      </caption>
+
       <ng-container matColumnDef="level">
-        <th mat-header-cell *matHeaderCellDef>
+        <th mat-header-cell *matHeaderCellDef id="level">
           {{ "READINESS_LEVEL.LEVEL" | translate }}
         </th>
         <td mat-cell *matCellDef="let element">{{ element.level }}</td>
       </ng-container>
 
       <ng-container matColumnDef="shortDescription">
-        <th mat-header-cell *matHeaderCellDef>
+        <th mat-header-cell *matHeaderCellDef id="shortDescription">
           {{ "READINESS_LEVEL.RESUME" | translate }}
         </th>
         <td mat-cell *matCellDef="let element">
           <mat-form-field>
-            <textarea id="{{'mat-input-' + element.level + '-short'}}"
+            <textarea
+              id="{{ 'mat-input-' + element.level + '-short' }}"
               matInput
               cdkTextareaAutosize
               [formControl]="formControlLevelsShortDesc[element.level - 1]"
               autocomplete="off"
               [(ngModel)]="element.shortDescription"
             ></textarea>
-            <mat-error id="{{'mat-error-' + element.level + '-short'}}"
+            <mat-error
+              id="{{ 'mat-error-' + element.level + '-short' }}"
               *ngIf="formControlLevelsShortDesc[element.level - 1].invalid"
               >{{
                 getShortDescriptionErrorMessage(element.level - 1)
@@ -62,18 +79,20 @@
       </ng-container>
 
       <ng-container matColumnDef="longDescription">
-        <th mat-header-cell *matHeaderCellDef>
+        <th mat-header-cell *matHeaderCellDef id="longDescription">
           {{ "READINESS_LEVEL.DETAILS" | translate }}
         </th>
         <td mat-cell *matCellDef="let element">
           <mat-form-field>
-            <textarea id="{{'mat-input-' + element.level + '-long'}}"
+            <textarea
+              id="{{ 'mat-input-' + element.level + '-long' }}"
               matInput
               cdkTextareaAutosize
               [formControl]="formControlLevelsLongDesc[element.level - 1]"
               autocomplete="off"
             ></textarea>
-            <mat-error id="{{'mat-error-' + element.level + '-long'}}"
+            <mat-error
+              id="{{ 'mat-error-' + element.level + '-long' }}"
               *ngIf="formControlLevelsLongDesc[element.level - 1].invalid"
               >{{
                 getLongDescriptionErrorMessage(element.level - 1)
@@ -89,13 +108,22 @@
   </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button [mat-dialog-close] id="close">
+  <button
+    mat-button
+    [mat-dialog-close]
+    id="close"
+    mat-raised-button
+    color="warn"
+  >
     {{ "ACTION.CANCEL" | translate }}
   </button>
-  <button id="confirm"
+  <button
+    id="confirm"
     mat-button
     (click)="saveReadinessLevel()"
     [disabled]="createReadinessLevelForm.valid === false"
+    mat-raised-button
+    color="primary"
   >
     {{ getDialogButton() }}
   </button>

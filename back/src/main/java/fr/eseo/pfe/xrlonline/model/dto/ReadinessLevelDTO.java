@@ -13,6 +13,15 @@ public class ReadinessLevelDTO {
   private String name;
   private String description;
   private List<LevelDTO> levels;
+  private Boolean isUsed;
+
+  @Override
+  public String toString() {
+    return "ReadinessLevelDTO{" +
+        "id='" + id + '\'' +
+        ", name='" + name + '\'' +
+        '}';
+  }
 
   @Data
   public static class LevelDTO {

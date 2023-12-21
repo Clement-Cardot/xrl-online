@@ -7,13 +7,14 @@ import { AssessmentModel, Tag } from 'src/app/core/data/models/assessment.model'
 import { ReadinessLevelRankModel } from 'src/app/core/data/models/readiness-level-rank.model';
 import { ReadinessLevelModel } from 'src/app/core/data/models/readiness-level.model';
 import { ApiReadinessLevelService } from 'src/app/core/services/api-readiness-level.service';
+import { XrlGraphOptions } from '../../graphs/xrl-graph/xrl-graph.component';
 
 @Component({
-  selector: 'app-create-assessment-dialog',
-  templateUrl: './create-assessment-dialog.component.html',
-  styleUrls: ['./create-assessment-dialog.component.scss']
+  selector: 'app-create-modify-assessment-dialog',
+  templateUrl: './create-modify-assessment-dialog.component.html',
+  styleUrls: ['./create-modify-assessment-dialog.component.scss']
 })
-export class CreateAssessmentDialogComponent implements OnInit {
+export class CreateModifyAssessmentDialogComponent implements OnInit {
 
   @ViewChild('matTableReadinessLevel') RLTable!: MatTable<ReadinessLevelModel>;
   @ViewChild('matTableSelectReadinessLevel') selectTable!: MatTable<ReadinessLevelModel>;
@@ -28,7 +29,7 @@ export class CreateAssessmentDialogComponent implements OnInit {
 
   commentAndTagFormControl = this._formBuilder.group({
     commentControl: ['', Validators.required],
-    tagControl: [''],
+    tagControl: ['', Validators.required],
   });
 
   rankCommentFormControls: FormGroup[] = [];
@@ -37,19 +38,24 @@ export class CreateAssessmentDialogComponent implements OnInit {
   displayedColumns: string[] = ['readinessLevel', 'actions'];
   public isEditable: boolean = false;
 
+  graphOptions: XrlGraphOptions = {
+    legend: true,
+  }
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public lastAssessment: AssessmentModel,
-    public dialogRef: MatDialogRef<CreateAssessmentDialogComponent>,
+    public dialogRef: MatDialogRef<CreateModifyAssessmentDialogComponent>,
     private changeDetectorRef: ChangeDetectorRef, // Inject ChangeDetectorRef
     private _formBuilder: FormBuilder,
     private apiReadinessLevelService: ApiReadinessLevelService,
-  ) { 
+  ) {
   }
 
   ngOnInit(): void {
     if (this.lastAssessment != null) {
       this.selectedReadinessLevels = this.lastAssessment.readinessLevelRanks.map((r: ReadinessLevelRankModel) => r.readinessLevel);
       this.commentAndTagFormControl.controls.commentControl.setValue(this.lastAssessment.comment);
+      this.commentAndTagFormControl.controls.tagControl.setValue(this.lastAssessment.tag);
     }
     else {
       this.commentAndTagFormControl.controls.tagControl.setValue('INITIAL');
@@ -132,10 +138,10 @@ export class CreateAssessmentDialogComponent implements OnInit {
   }
 
   createNewAssessment() {
-    const tagControlValue = this.commentAndTagFormControl.value.tagControl ?? '';
-    const commentControlValue = this.commentAndTagFormControl.value.commentControl ?? '';
+    const tagControlValue = this.commentAndTagFormControl.controls.tagControl.value ?? '';
+    const commentControlValue = this.commentAndTagFormControl.controls.commentControl.value ?? '';
 
-    let tagValue: Tag | undefined = Tag[tagControlValue as keyof typeof Tag];
+    let tagValue: Tag = Tag[tagControlValue as keyof typeof Tag];
 
     this.newAssessment = new AssessmentModel(
       new Date(),

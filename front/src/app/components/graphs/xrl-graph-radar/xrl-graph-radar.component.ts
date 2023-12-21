@@ -9,7 +9,8 @@ import {
   ChartComponent,
   ApexPlotOptions,
   ApexYAxis,
-  ApexNoData
+  ApexNoData,
+  ApexFill
 } from "ng-apexcharts";
 
 
@@ -26,6 +27,7 @@ export type ChartOptions = {
   plotOptions: ApexPlotOptions;
   // 
   noData: ApexNoData;
+  fill: ApexFill;
 };
 
 @Component({
@@ -88,6 +90,13 @@ export class XrlGraphRadarComponent implements OnInit, OnChanges {
       enabled: this.switchLabel, // enable to show the value of each point
     },
     series: [],
+    fill: {
+      type: 'gradient',
+      gradient: {
+        gradientToColors: ['#ff0000', '#ffff00', '#00ffff'],
+        stops: [0, 90, 100],
+      }
+    },
     xaxis: {
       categories: [],
       labels: {
@@ -254,6 +263,13 @@ export class XrlGraphRadarComponent implements OnInit, OnChanges {
         enabled: this.switchLabel, // enable to show the value of each point
       },
       series: this.getData().chartData,
+      fill: {
+        type: 'gradient',
+        gradient: {
+          gradientToColors: ['#ff0000', '#ffff00', '#00ffff'],
+          stops: [0, 90, 100],
+        }
+      },
       xaxis: {
         categories: this.getData().chartLabels,
         labels: {

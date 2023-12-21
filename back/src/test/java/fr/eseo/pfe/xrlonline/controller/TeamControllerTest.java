@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
 import fr.eseo.pfe.xrlonline.model.dto.ProjectDTO;
 import fr.eseo.pfe.xrlonline.model.dto.TeamDTO;
-import fr.eseo.pfe.xrlonline.model.entity.User;
+import fr.eseo.pfe.xrlonline.model.dto.UserDTO;
 import fr.eseo.pfe.xrlonline.service.TeamService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,12 +64,12 @@ class TeamControllerTest {
         badTeamDTO.setName("badTeam");
 
 
-        List<User> duplicatedUsers = new ArrayList<>();
-        User user1 = new User();
+        List<UserDTO> duplicatedUsers = new ArrayList<>();
+        UserDTO user1 = new UserDTO();
         user1.setId("1");
         user1.setLogin("testLogin");
         duplicatedUsers.add(user1);
-        User user2 = new User();
+        UserDTO user2 = new UserDTO();
         user2.setId("1");
         user2.setLogin("testLogin");
         duplicatedUsers.add(user2);

@@ -2,9 +2,7 @@ package fr.eseo.pfe.xrlonline.service;
 
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
 import fr.eseo.pfe.xrlonline.model.dto.BusinessLineDTO;
-import fr.eseo.pfe.xrlonline.model.dto.UserDTO;
 import fr.eseo.pfe.xrlonline.model.entity.BusinessLine;
-import fr.eseo.pfe.xrlonline.model.entity.User;
 import fr.eseo.pfe.xrlonline.repository.BusinessLineRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

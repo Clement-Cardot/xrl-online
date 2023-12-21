@@ -2,11 +2,15 @@ package fr.eseo.pfe.xrlonline.service;
 
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
 import fr.eseo.pfe.xrlonline.model.dto.AssessmentDTO;
+import fr.eseo.pfe.xrlonline.model.dto.BusinessLineDTO;
 import fr.eseo.pfe.xrlonline.model.dto.ProjectDTO;
+import fr.eseo.pfe.xrlonline.model.dto.TeamDTO;
+import fr.eseo.pfe.xrlonline.model.dto.AssessmentDTO.TagDTO;
 import fr.eseo.pfe.xrlonline.model.entity.Assessment;
 import fr.eseo.pfe.xrlonline.model.entity.BusinessLine;
 import fr.eseo.pfe.xrlonline.model.entity.Project;
 import fr.eseo.pfe.xrlonline.model.entity.Team;
+import fr.eseo.pfe.xrlonline.model.entity.Assessment.Tag;
 import fr.eseo.pfe.xrlonline.repository.BusinessLineRepository;
 import fr.eseo.pfe.xrlonline.repository.ProjectRepository;
 import fr.eseo.pfe.xrlonline.repository.TeamRepository;
@@ -19,6 +23,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,7 +68,6 @@ class ProjectServiceTest {
 
     // Act
     List<ProjectDTO> result = projectService.getAllProjects();
-    System.out.println(result);
 
     // Assert
     assertEquals(2, result.size());
@@ -95,24 +99,20 @@ class ProjectServiceTest {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setName("Test Project");
-    BusinessLine businessLine = new BusinessLine();
+    BusinessLineDTO businessLine = new BusinessLineDTO();
     businessLine.setId("1");
     projectDTO.setBusinessLine(businessLine);
-    Team team = new Team();
+    TeamDTO team = new TeamDTO();
     team.setId("1");
     projectDTO.setTeam(team);
 
-    Project projectToCreate = new Project();
-    projectToCreate.setName("Test Project");
-    projectToCreate.setBusinessLine(businessLine);
-    projectToCreate.setTeam(team);
-    projectToCreate.setDescription("");
-    projectToCreate.setAssessments(List.of());
+    BusinessLine businessLineToCreate = modelMapper.map(businessLine, BusinessLine.class);
+    Team teamToCreate = modelMapper.map(team, Team.class);
 
     when(projectRepository.findByName("Test Project")).thenReturn(null);
-    when(businessLineRepository.findById("1")).thenReturn(Optional.of(businessLine));
-    when(teamRepository.findById("1")).thenReturn(Optional.of(team));
-    when(projectRepository.save(projectToCreate)).thenReturn(projectToCreate);
+    when(businessLineRepository.findById("1")).thenReturn(Optional.of(businessLineToCreate));
+    when(teamRepository.findById("1")).thenReturn(Optional.of(teamToCreate));
+    when(projectRepository.save(any(Project.class))).thenAnswer(i -> i.getArguments()[0]);
 
     // Act
     ProjectDTO result = null;
@@ -123,21 +123,21 @@ class ProjectServiceTest {
     }
 
     // Assert
+    assertNotNull(result);
     assertEquals(result.getName(), projectDTO.getName());
     assertEquals(result.getBusinessLine(), projectDTO.getBusinessLine());
     assertEquals(result.getTeam(), projectDTO.getTeam());
     assertEquals("", result.getDescription());
     assertEquals(result.getAssessments(), List.of());
-    verify(projectRepository).save(projectToCreate);
   }
 
   @Test
   void testCreateProjectWithProjectNameNull() {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
-    projectDTO.setBusinessLine(new BusinessLine());
+    projectDTO.setBusinessLine(new BusinessLineDTO());
     projectDTO.getBusinessLine().setId("1");
-    projectDTO.setTeam(new Team());
+    projectDTO.setTeam(new TeamDTO());
     projectDTO.getTeam().setId("1");
 
     // Act & Assert
@@ -151,7 +151,7 @@ class ProjectServiceTest {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setName("Test Project");
-    projectDTO.setTeam(new Team());
+    projectDTO.setTeam(new TeamDTO());
 
     // Act & Assert
     assertThrows(CustomRuntimeException.class,
@@ -164,7 +164,7 @@ class ProjectServiceTest {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setName("Test Project");
-    projectDTO.setBusinessLine(new BusinessLine());
+    projectDTO.setBusinessLine(new BusinessLineDTO());
 
     // Act & Assert
     assertThrows(CustomRuntimeException.class,
@@ -177,19 +177,14 @@ class ProjectServiceTest {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setName("Test Project");
-    BusinessLine businessLine = new BusinessLine();
+    BusinessLineDTO businessLine = new BusinessLineDTO();
     businessLine.setId("1");
     projectDTO.setBusinessLine(businessLine);
-    Team team = new Team();
+    TeamDTO team = new TeamDTO();
     team.setId("1");
     projectDTO.setTeam(team);
 
-    Project projectToCreate = new Project();
-    projectToCreate.setName("Test Project");
-    projectToCreate.setBusinessLine(businessLine);
-    projectToCreate.setTeam(team);
-    projectToCreate.setDescription("");
-    projectToCreate.setAssessments(List.of());
+    Project projectToCreate = modelMapper.map(projectDTO, Project.class);
 
     when(projectRepository.findByName("Test Project")).thenReturn(projectToCreate);
 
@@ -204,10 +199,10 @@ class ProjectServiceTest {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setName("Test Project");
-    BusinessLine businessLine = new BusinessLine();
+    BusinessLineDTO businessLine = new BusinessLineDTO();
     businessLine.setId("1");
     projectDTO.setBusinessLine(businessLine);
-    Team team = new Team();
+    TeamDTO team = new TeamDTO();
     team.setId("1");
     projectDTO.setTeam(team);
 
@@ -225,15 +220,17 @@ class ProjectServiceTest {
     // Arrange
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setName("Test Project");
-    BusinessLine businessLine = new BusinessLine();
+    BusinessLineDTO businessLine = new BusinessLineDTO();
     businessLine.setId("1");
     projectDTO.setBusinessLine(businessLine);
-    Team team = new Team();
+    TeamDTO team = new TeamDTO();
     team.setId("1");
     projectDTO.setTeam(team);
 
+    BusinessLine businessLineToCreate = modelMapper.map(businessLine, BusinessLine.class);
+
     when(projectRepository.findByName("Test Project")).thenReturn(null);
-    when(businessLineRepository.findById("1")).thenReturn(Optional.of(businessLine));
+    when(businessLineRepository.findById("1")).thenReturn(Optional.of(businessLineToCreate));
     when(teamRepository.findById("1")).thenReturn(Optional.empty());
 
     // Act and Assert
@@ -298,11 +295,11 @@ class ProjectServiceTest {
     projectDTO.setId("1");
     projectDTO.setName("New Name");
     projectDTO.setDescription("New Description");
-    BusinessLine businessLine = new BusinessLine();
+    BusinessLineDTO businessLine = new BusinessLineDTO();
     businessLine.setId("1");
     businessLine.setName("New Business Line");
     projectDTO.setBusinessLine(businessLine);
-    Team team = new Team();
+    TeamDTO team = new TeamDTO();
     team.setId("1");
     team.setName("New Team");
     projectDTO.setTeam(team);
@@ -334,8 +331,8 @@ class ProjectServiceTest {
 
     when(projectRepository.findById("1")).thenReturn(Optional.of(existingProject));
     when(projectRepository.findByName("New Name")).thenReturn(null);
-    when(businessLineRepository.findById("1")).thenReturn(Optional.of(businessLine));
-    when(teamRepository.findById("1")).thenReturn(Optional.of(team));
+    when(businessLineRepository.findById("1")).thenReturn(Optional.of(oldBusinessLine));
+    when(teamRepository.findById("1")).thenReturn(Optional.of(oldTeam));
     when(projectRepository.save(saveProject)).thenReturn(saveProject);
 
     // Act
@@ -347,6 +344,7 @@ class ProjectServiceTest {
     }
 
     // Assert
+    assertNotNull(updatedProject);
     assertEquals("New Name", updatedProject.getName());
     assertEquals("New Description", updatedProject.getDescription());
     assertEquals("New Business Line", updatedProject.getBusinessLine().getName());
@@ -418,7 +416,7 @@ class ProjectServiceTest {
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setId("1");
     projectDTO.setName("New Name");
-    BusinessLine businessLine = new BusinessLine();
+    BusinessLineDTO businessLine = new BusinessLineDTO();
     businessLine.setId("1");
     projectDTO.setBusinessLine(businessLine);
 
@@ -447,7 +445,7 @@ class ProjectServiceTest {
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setId("1");
     projectDTO.setName("New Name");
-    Team team = new Team();
+    TeamDTO team = new TeamDTO();
     team.setId("1");
     projectDTO.setTeam(team);
 
@@ -602,6 +600,79 @@ class ProjectServiceTest {
     assertEquals(CustomRuntimeException.PROJECT_ASSESSMENT_LIST_IS_EMPTY, customRuntimeException.getMessage());
 
     verify(projectRepository).findById(projectId);
+  }
+
+  @Test
+  void testModifyLastAssessment() {
+    // Arrange
+    String projectId = "1";
+    AssessmentDTO assessmentDTO = new AssessmentDTO();
+    assessmentDTO.setTag(TagDTO.DRAFT);
+    assessmentDTO.setComment("Modified comment");
+
+    Project existingProject = new Project();
+    existingProject.setId(projectId);
+    Assessment lastAssessment = new Assessment();
+    lastAssessment.setTag(Tag.DRAFT);
+    lastAssessment.setComment("Old comment");
+    existingProject.setAssessments(Collections.singletonList(lastAssessment));
+
+    when(projectRepository.findById(projectId)).thenReturn(Optional.of(existingProject));
+
+    // Act
+    ProjectDTO modifiedProject = null;
+    try {
+      modifiedProject = projectService.modifyLastAssessment(projectId, assessmentDTO);
+    } catch (CustomRuntimeException e) {
+      fail("Should not throw exception", e);
+    }
+
+    // Assert
+    verify(projectRepository).findById(projectId);
+    assertEquals(assessmentDTO.getComment(), existingProject.getLastAssessment().getComment());
+    assertNotNull(modifiedProject);
+    assertEquals(existingProject.getId(), modifiedProject.getId());
+    assertEquals(1, modifiedProject.getAssessments().size());
+    assertEquals(assessmentDTO.getComment(), modifiedProject.getAssessments().get(0).getComment());
+  }
+
+  @Test
+  void testModifyLastAssessmentWithNonexistentProject() {
+    // Arrange
+    String projectId = "nonexistentId";
+    AssessmentDTO assessmentDTO = new AssessmentDTO();
+    assessmentDTO.setTag(TagDTO.DRAFT);
+    assessmentDTO.setComment("Modified comment");
+
+    when(projectRepository.findById(projectId)).thenReturn(Optional.empty());
+
+    // Act and Assert
+    assertThrows(CustomRuntimeException.class,
+        () -> projectService.modifyLastAssessment(projectId, assessmentDTO),
+        CustomRuntimeException.PROJECT_NOT_FOUND);
+  }
+
+  @Test
+  void testModifyLastAssessmentWithNonDraftAssessment() {
+    // Arrange
+    String projectId = "1";
+    AssessmentDTO assessmentDTO = new AssessmentDTO();
+    assessmentDTO.setTag(TagDTO.FINAL);
+    assessmentDTO.setComment("Modified comment");
+
+    Project existingProject = new Project();
+    existingProject.setId(projectId);
+    Assessment lastAssessment = new Assessment();
+    lastAssessment.setTag(Tag.FINAL);
+    lastAssessment.setComment("Old comment");
+    existingProject.setAssessments(Collections.singletonList(lastAssessment));
+
+    when(projectRepository.findById(projectId)).thenReturn(Optional.of(existingProject));
+
+    // Act and Assert
+    assertThrows(CustomRuntimeException.class,
+        () -> projectService.modifyLastAssessment(projectId, assessmentDTO),
+        CustomRuntimeException.ASSESSMENT_MUST_BE_DRAFT_TO_BE_MODIFIED);
   }
 
 }

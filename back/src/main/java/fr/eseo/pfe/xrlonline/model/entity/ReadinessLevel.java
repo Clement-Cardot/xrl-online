@@ -16,6 +16,14 @@ public class ReadinessLevel {
   private String description;
   private List<Level> levels;
 
+  @Override
+  public String toString() {
+    return "ReadinessLevel{" +
+        "id='" + id + '\'' +
+        ", name='" + name + '\'' +
+        '}';
+  }
+
   @Data
   public static class Level {
     private List<String> longDescription;

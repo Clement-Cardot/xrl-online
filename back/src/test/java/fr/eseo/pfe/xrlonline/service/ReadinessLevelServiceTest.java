@@ -3,6 +3,7 @@ package fr.eseo.pfe.xrlonline.service;
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
 import fr.eseo.pfe.xrlonline.model.dto.ReadinessLevelDTO;
 import fr.eseo.pfe.xrlonline.model.entity.ReadinessLevel;
+import fr.eseo.pfe.xrlonline.repository.CustomRequestRepository;
 import fr.eseo.pfe.xrlonline.repository.ReadinessLevelRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
@@ -29,6 +31,9 @@ class ReadinessLevelServiceTest {
 
     @Mock
     private ReadinessLevelRepository readinessLevelRepository;
+
+    @Mock
+    private CustomRequestRepository customRequestRepository;
 
     @Mock
     private ModelMapper modelMapper;
@@ -73,11 +78,15 @@ class ReadinessLevelServiceTest {
         when(readinessLevelRepository.findById("id")).thenReturn(Optional.of(new ReadinessLevel()));
         when(modelMapper.map(readinessLevelRepository.findById("id").orElse(null), ReadinessLevelDTO.class))
                 .thenReturn(readinessLevelDTO);
+
         ResponseEntity<ReadinessLevelDTO> responseEntity = readinessLevelService.getReadinessLevelById("id");
-        assertEquals(responseEntity.getBody().getId(), readinessLevelDTO.getId());
-        assertEquals(responseEntity.getBody().getName(), readinessLevelDTO.getName());
-        assertEquals(responseEntity.getBody().getDescription(), readinessLevelDTO.getDescription());
-        assertEquals(responseEntity.getBody().getLevels(), readinessLevelDTO.getLevels());
+        ReadinessLevelDTO responseBody = responseEntity.getBody();
+        
+        assertNotNull(responseBody);
+        assertEquals(responseBody.getId(), readinessLevelDTO.getId());
+        assertEquals(responseBody.getName(), readinessLevelDTO.getName());
+        assertEquals(responseBody.getDescription(), readinessLevelDTO.getDescription());
+        assertEquals(responseBody.getLevels(), readinessLevelDTO.getLevels());
     }
 
     @Test
@@ -99,11 +108,16 @@ class ReadinessLevelServiceTest {
         when(readinessLevelRepository.findAll()).thenReturn(List.of(new ReadinessLevel()));
         when(modelMapper.map(readinessLevelRepository.findAll().get(0), ReadinessLevelDTO.class))
                 .thenReturn(readinessLevelDTO);
+        when(customRequestRepository.isReadinessLevelUsed(readinessLevelDTO.getId())).thenReturn(false);
+
         ResponseEntity<List<ReadinessLevelDTO>> responseEntity = readinessLevelService.getAllReadinessLevel();
-        assertEquals(responseEntity.getBody().get(0).getId(), readinessLevelDTOList.get(0).getId());
-        assertEquals(responseEntity.getBody().get(0).getName(), readinessLevelDTOList.get(0).getName());
-        assertEquals(responseEntity.getBody().get(0).getDescription(), readinessLevelDTOList.get(0).getDescription());
-        assertEquals(responseEntity.getBody().get(0).getLevels(), readinessLevelDTOList.get(0).getLevels());
+        List<ReadinessLevelDTO> responseBody = responseEntity.getBody();
+
+        assertNotNull(responseBody);
+        assertEquals(responseBody.get(0).getId(), readinessLevelDTOList.get(0).getId());
+        assertEquals(responseBody.get(0).getName(), readinessLevelDTOList.get(0).getName());
+        assertEquals(responseBody.get(0).getDescription(), readinessLevelDTOList.get(0).getDescription());
+        assertEquals(responseBody.get(0).getLevels(), readinessLevelDTOList.get(0).getLevels());
     }
 
     @Test
@@ -124,12 +138,15 @@ class ReadinessLevelServiceTest {
         when(modelMapper.map(readinessLevelDTO, ReadinessLevel.class)).thenReturn(readinessLevel);
         when(readinessLevelRepository.save(readinessLevel)).thenReturn(readinessLevel);
         when(modelMapper.map(readinessLevel, ReadinessLevelDTO.class)).thenReturn(readinessLevelDTO);
-        ResponseEntity<ReadinessLevelDTO> responseEntity = readinessLevelService
-                .createReadinessLevel(readinessLevelDTO);
-        assertEquals(responseEntity.getBody().getId(), readinessLevelDTO.getId());
-        assertEquals(responseEntity.getBody().getName(), readinessLevelDTO.getName());
-        assertEquals(responseEntity.getBody().getDescription(), readinessLevelDTO.getDescription());
-        assertEquals(responseEntity.getBody().getLevels(), readinessLevelDTO.getLevels());
+
+        ResponseEntity<ReadinessLevelDTO> responseEntity = readinessLevelService.createReadinessLevel(readinessLevelDTO);
+        ReadinessLevelDTO responseBody = responseEntity.getBody();
+
+        assertNotNull(responseBody);
+        assertEquals(responseBody.getId(), readinessLevelDTO.getId());
+        assertEquals(responseBody.getName(), readinessLevelDTO.getName());
+        assertEquals(responseBody.getDescription(), readinessLevelDTO.getDescription());
+        assertEquals(responseBody.getLevels(), readinessLevelDTO.getLevels());
     }
 
     @Test
@@ -182,12 +199,15 @@ class ReadinessLevelServiceTest {
         when(modelMapper.map(readinessLevelDTO, ReadinessLevel.class)).thenReturn(readinessLevel);
         when(readinessLevelRepository.save(readinessLevel)).thenReturn(readinessLevel);
         when(modelMapper.map(readinessLevel, ReadinessLevelDTO.class)).thenReturn(readinessLevelDTO);
-        ResponseEntity<ReadinessLevelDTO> responseEntity = readinessLevelService
-                .updateReadinessLevel(readinessLevelDTO);
-        assertEquals(responseEntity.getBody().getId(), readinessLevelDTO.getId());
-        assertEquals(responseEntity.getBody().getName(), readinessLevelDTO.getName());
-        assertEquals(responseEntity.getBody().getDescription(), readinessLevelDTO.getDescription());
-        assertEquals(responseEntity.getBody().getLevels(), readinessLevelDTO.getLevels());
+
+        ResponseEntity<ReadinessLevelDTO> responseEntity = readinessLevelService.updateReadinessLevel(readinessLevelDTO);
+        ReadinessLevelDTO responseBody = responseEntity.getBody();
+
+        assertNotNull(responseBody);
+        assertEquals(responseBody.getId(), readinessLevelDTO.getId());
+        assertEquals(responseBody.getName(), readinessLevelDTO.getName());
+        assertEquals(responseBody.getDescription(), readinessLevelDTO.getDescription());
+        assertEquals(responseBody.getLevels(), readinessLevelDTO.getLevels());
     }
 
     @Test
@@ -255,6 +275,37 @@ class ReadinessLevelServiceTest {
             fail("Expected CustomRuntimeException");
         } catch (CustomRuntimeException e) {
             assertEquals(CustomRuntimeException.READINESS_LEVEL_NAME_ALREADY_EXISTS, e.getMessage());
+        }
+    }
+
+    @Test
+    void testDeleteReadinessLevel_Success() throws CustomRuntimeException {
+        when(readinessLevelRepository.findById("id")).thenReturn(Optional.of(new ReadinessLevel()));
+        when(customRequestRepository.isReadinessLevelUsed("id")).thenReturn(false);
+        ResponseEntity<ReadinessLevelDTO> responseEntity = readinessLevelService.deleteReadinessLevel("id");
+        assertEquals(responseEntity.getStatusCode(), ResponseEntity.ok().build().getStatusCode());
+    }
+
+    @Test
+    void testDeleteReadinessLevel_RLNotFound() throws CustomRuntimeException {
+        when(readinessLevelRepository.findById("id")).thenReturn(Optional.empty());
+        try {
+            readinessLevelService.deleteReadinessLevel("id");
+            fail("Expected CustomRuntimeException");
+        } catch (CustomRuntimeException e) {
+            assertEquals(CustomRuntimeException.READINESS_LEVEL_NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @Test
+    void testDeleteReadinessLevel_RLUsed() throws CustomRuntimeException {
+        when(readinessLevelRepository.findById("id")).thenReturn(Optional.of(new ReadinessLevel()));
+        when(customRequestRepository.isReadinessLevelUsed("id")).thenReturn(true);
+        try {
+            readinessLevelService.deleteReadinessLevel("id");
+            fail("Expected CustomRuntimeException");
+        } catch (CustomRuntimeException e) {
+            assertEquals(CustomRuntimeException.READINESS_LEVEL_USED, e.getMessage());
         }
     }
 

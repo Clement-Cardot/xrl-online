@@ -15,7 +15,7 @@ export class ProjectModel {
         public assessments: AssessmentModel[],
     ) {}
 
-    getLastAssesment(): any {
+    getLastAssesment(): AssessmentModel | null {
         if (this.assessments.length === 0) return null;
         let lastAssesment = this.assessments[0];
         for (const assesment of this.assessments) {
@@ -37,7 +37,7 @@ export class ProjectModel {
         }
     }
 
-    formatDate(date: Date): string {
+    formatDate(date: Date | undefined): string {
         if (date === null || date === undefined) return "";
         return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
     }

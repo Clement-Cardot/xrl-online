@@ -1,6 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { AssessmentAdapter } from 'src/app/core/data/models/assessment.model';
-import { ReadinessLevelRankModel } from 'src/app/core/data/models/readiness-level-rank.model';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-home-page',
@@ -9,13 +7,4 @@ import { ReadinessLevelRankModel } from 'src/app/core/data/models/readiness-leve
 })
 export class HomePageComponent {
 
-  readinessLevelRank!: ReadinessLevelRankModel;
-
-  constructor(
-    private assessmentAdapter: AssessmentAdapter,
-    private changeDetectorRef: ChangeDetectorRef // Inject ChangeDetectorRef
-    ) { }
-
-  ngOnInit(): void {
-  }
 }

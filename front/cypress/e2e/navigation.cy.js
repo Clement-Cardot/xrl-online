@@ -29,10 +29,7 @@ describe('Pages Loading Tests', () => {
     it('Footer loading test', () => {
       // Check that the footer is loaded with correct elements
       cy.get('#CreativeCommonsDescription').should('be.visible');
-      cy.get('#CreativeCommonsDescription').should('have.text', 'Copyright © 2023 KTH Innovation Readiness Level™Le travail de KTH est placée sous une licence Creative Commons  Attribution-NonCommercial-ShareAlike 4.0 International License.');
-
-      cy.get('#CreativeCommonsLogo').should('be.visible');
-      cy.get('#CreativeCommonsLogo > img').should('be.visible');
+      cy.get('#CreativeCommonsDescription').should('have.text', 'Copyright © 2023 KTH Innovation Readiness Level™Attribution-NonCommercial-ShareAlike 4.0 International License.');
     })
   
     it('Home page test', () => {
@@ -144,10 +141,7 @@ describe('Pages Loading Tests', () => {
     it('Footer loading test', () => {
       // Check that the footer is loaded with correct elements
       cy.get('#CreativeCommonsDescription').should('be.visible');
-      cy.get('#CreativeCommonsDescription').should('have.text', 'Copyright © 2023 KTH Innovation Readiness Level™The KTH work is licensed under a Creative Commons  Attribution-NonCommercial-ShareAlike 4.0 International License.');
-
-      cy.get('#CreativeCommonsLogo').should('be.visible');
-      cy.get('#CreativeCommonsLogo > img').should('be.visible');
+      cy.get('#CreativeCommonsDescription').should('have.text', 'Copyright © 2023 KTH Innovation Readiness Level™Attribution-NonCommercial-ShareAlike 4.0 International License.');
     })
   
     it('Home page test', () => {

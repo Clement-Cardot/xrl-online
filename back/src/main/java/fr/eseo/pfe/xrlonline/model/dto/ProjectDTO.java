@@ -1,7 +1,5 @@
 package fr.eseo.pfe.xrlonline.model.dto;
 
-import fr.eseo.pfe.xrlonline.model.entity.BusinessLine;
-import fr.eseo.pfe.xrlonline.model.entity.Team;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 
@@ -14,7 +12,18 @@ public class ProjectDTO {
   private String id;
   private String name;
   private String description;
-  private Team team;
-  private BusinessLine businessLine;
+  private TeamDTO team;
+  private BusinessLineDTO businessLine;
   private List<AssessmentDTO> assessments;
+
+  @Override
+  public String toString() {
+    return "ProjectDTO{" +
+        "id='" + id + '\'' +
+        ", name='" + name + '\'' +
+        ", teamDTO=" + team.getName() +
+        ", businessLineDTO=" + businessLine.getName() +
+        ", assessmentsDTO=" + assessments.toString() +
+        '}';
+  }
 }

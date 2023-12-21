@@ -7,3 +7,4 @@ db/mongo-init.js
 **.log
 logs
 target
+back/src/main/resources/application-locals.properties

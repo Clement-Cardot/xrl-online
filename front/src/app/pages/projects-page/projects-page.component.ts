@@ -4,7 +4,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { ProjectFormDialogComponent } from 'src/app/components/dialogs/project-form-dialog/project-form-dialog.component';
 import { ProjectModel } from 'src/app/core/data/models/project.model';
+import { UserModel } from 'src/app/core/data/models/user.model';
 import { ApiProjectService } from 'src/app/core/services/api-project.service';
+import { CurrentUserService } from 'src/app/core/services/current-user.service';
 
 @Component({
   selector: 'app-projects-page',
@@ -15,21 +17,24 @@ export class ProjectsPageComponent implements OnInit {
 
   projects: ProjectModel[] = [];
   projectsToDisplay: ProjectModel[] = [];
+  currentUser: UserModel | undefined;
 
   searchTypes: {typeValue: string, typeTranslation: string}[] = [
     {typeValue: 'name', typeTranslation: 'PROJECTS.SEARCH_NAME'},
     {typeValue: 'team', typeTranslation: 'PROJECTS.SEARCH_TEAM'},
-    {typeValue: 'business-line', typeTranslation: 'PROJECTS.SEARCH_BUSINESS_LINE'},
+    {typeValue: 'business-line', typeTranslation: 'PROJECTS.SEARCH_BUSINESS_LINE'}
   ];
 
   constructor(
     private projectService: ApiProjectService,
     private dialog: MatDialog,
     private translateService: TranslateService,
+    private currentUserService: CurrentUserService,
     private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit(): void {
+    this.currentUser = this.currentUserService.getCurrentUser().getValue();
     this.projectService.getAllProjects().subscribe({
       next: (v) => {
         this.projects = v;
@@ -45,22 +50,33 @@ export class ProjectsPageComponent implements OnInit {
   }
 
   updateProjectsToDisplay(options: any) {
+
+    let projectsCheckboxed = this.projects;
+
+    console.log(options.checkbox);
+
+    if (options.checkbox) {
+      console.log('checkbox');
+      projectsCheckboxed = this.projects.filter((p) => p.team.members.some((m) => m.id === this.currentUser?.id));
+    }
+
     if (options.filterValue == null || options.filterValue == '') {
-      this.projectsToDisplay = this.projects;
+      this.projectsToDisplay = projectsCheckboxed;
       return;
     }
+
     switch (options.searchType) {
       case 'name':
-        this.projectsToDisplay = this.projects.filter((p) => this._fcs(p.name).includes(this._fcs(options.filterValue ?? '')));
+        this.projectsToDisplay = projectsCheckboxed.filter((p) => this._fcs(p.name).includes(this._fcs(options.filterValue ?? '')));
         break;
       case 'team':
-        this.projectsToDisplay = this.projects.filter((p) => this._fcs(p.team.name).includes(this._fcs(options.filterValue ?? '')));
+        this.projectsToDisplay = projectsCheckboxed.filter((p) => this._fcs(p.team.name).includes(this._fcs(options.filterValue ?? '')));
         break;
       case 'business-line':
-        this.projectsToDisplay = this.projects.filter((p) => this._fcs(p.businessLine.name).includes(this._fcs(options.filterValue ?? '')));
+        this.projectsToDisplay = projectsCheckboxed.filter((p) => this._fcs(p.businessLine.name).includes(this._fcs(options.filterValue ?? '')));
         break;
       default:
-        this.projectsToDisplay = this.projects;
+        this.projectsToDisplay = projectsCheckboxed;
         break;
     }
   }
@@ -76,7 +92,9 @@ export class ProjectsPageComponent implements OnInit {
     const dialogRef = this.dialog.open(ProjectFormDialogComponent, {
       data: {
         title: 'PROJECTS.CREATE',
-        save: 'CREATE',
+        save: 'ACTION.CREATE',
+        currentUser: this.currentUser,
+        isCreate: true
       }
     });
     dialogRef.afterClosed().subscribe(result => {

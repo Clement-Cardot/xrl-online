@@ -21,12 +21,18 @@ public class Project {
   private BusinessLine businessLine;
   private List<Assessment> assessments;
 
+  public Assessment getLastAssessment() {
+    // Return the last assessment depending on the date attribut
+    return assessments.stream()
+        .max((a1, a2) -> a1.getDate().compareTo(a2.getDate()))
+        .orElse(null);
+  }
+
   @Override
   public String toString() {
     return "Project{" +
         "id='" + id + '\'' +
         ", name='" + name + '\'' +
-        ", description='" + description + '\'' +
         ", team=" + team.getName() +
         ", businessLine=" + businessLine.getName() +
         ", assessments=" + assessments.toString() +
