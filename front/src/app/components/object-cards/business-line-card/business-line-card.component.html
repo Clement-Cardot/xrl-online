@@ -16,7 +16,7 @@
     <mat-expansion-panel *ngIf="getProjectCount() != 0">
       <mat-expansion-panel-header>
         <mat-panel-title>
-          {{ getProjectCount() }} linked projects
+          {{ getProjectCount() }} {{ "BUSINESSLINE.LINKED_PROJECTS" | translate }}
         </mat-panel-title>
       </mat-expansion-panel-header>
 
@@ -25,7 +25,7 @@
 
         <!-- ProjectName Column -->
         <ng-container matColumnDef="projectName">
-          <th mat-header-cell *matHeaderCellDef>projectName</th>
+          <th mat-header-cell *matHeaderCellDef id="projectName">projectName</th>
           <td class="projectNameCell" mat-cell *matCellDef="let element">
             {{ element.name }}
           </td>
@@ -33,7 +33,7 @@
 
         <!-- ProjectTeamName Column -->
         <ng-container matColumnDef="projectTeamName">
-          <th mat-header-cell *matHeaderCellDef>projectTeamName</th>
+          <th mat-header-cell *matHeaderCellDef id="projectTeamName">projectTeamName</th>
           <td class="projectNameCell" mat-cell *matCellDef="let element">
             {{ element.team.name }}
           </td>
@@ -47,7 +47,7 @@
     <mat-expansion-panel *ngIf="getProjectCount() == 0" disabled>
       <mat-expansion-panel-header>
         <mat-panel-title>
-          No linked projects
+          {{ "BUSINESSLINE.NO_LINKED_PROJECTS" | translate}}
         </mat-panel-title>
       </mat-expansion-panel-header>
     </mat-expansion-panel>

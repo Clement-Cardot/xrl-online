@@ -1,11 +1,13 @@
 <div class="body-container">
 
     <div class="search-add-container">
-        <app-filter-add-toolbox (updateDisplayEvent)="updateProjectsToDisplay($event)" [searchTypes]="searchTypes" (openAddDialogEvent)="openAddProjectDialog()"></app-filter-add-toolbox>
+        <app-filter-add-toolbox id="add-Project-Filter" (updateDisplayEvent)="updateProjectsToDisplay($event)" [searchTypes]="searchTypes" [projectAdd]="true" (openAddDialogEvent)="openAddProjectDialog()"></app-filter-add-toolbox>
     </div>
 
-    <div class="projects-container">
-        <app-project-card class="project-card" *ngFor="let project of projectsToDisplay" [project]="project" (deleteProjectEvent)="deleteProject($event)"></app-project-card>
+    <div class="center-div">
+        <div class="projects-container">
+            <app-project-card class="project-card" *ngFor="let project of projectsToDisplay" [project]="project" (deleteProjectEvent)="deleteProject($event)"></app-project-card>
+        </div>
     </div>
 
 </div>

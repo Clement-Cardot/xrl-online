@@ -18,6 +18,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialModule } from './material.module';
 import { CurrentUserService } from './core/services/current-user.service';
+import { NgChartsModule } from 'ng2-charts';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -44,6 +45,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       },
       defaultLanguage: 'fr',
     }),
+    NgChartsModule,
   ],
   providers: [
     ApiBusinessLineService,

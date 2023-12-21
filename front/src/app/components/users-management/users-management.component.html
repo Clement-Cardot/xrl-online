@@ -1,10 +1,10 @@
 <mat-card id="users-management">
     <div id="search-user-container">
         <mat-form-field class="usernameField" subscriptSizing="dynamic">
-            <input type="text" matInput [formControl]="userControl" [attr.placeholder]="'USERS.SEARCH_USER' | translate">
+            <mat-label>{{ "USERS.SEARCH_USER" | translate }}</mat-label>
+            <input type="text" matInput [formControl]="userControl">
         </mat-form-field>
-        <mat-icon class="upscale-on-hover">search</mat-icon>
-        <mat-icon class="upscale-on-hover" id="addUserBtn" style="cursor: pointer;" (click)="openAddUserDialog()">add</mat-icon>
+        <mat-icon class="upscale-on-hover" id="addUserBtn" (click)="openAddUserDialog()">add</mat-icon>
     </div>
 
     <div id="list-users">

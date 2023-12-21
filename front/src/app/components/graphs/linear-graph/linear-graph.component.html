@@ -1,0 +1,11 @@
+<div style="width: 100%; height: 100%; position: relative;">
+    <canvas *ngIf="assesments.length > 0"
+      baseChart
+      #chart
+      [type]="radarChartType"
+      [options]="radarChartOptions"
+      [data]="radarChartData"
+      [plugins]="[zoomPlugin]">
+    </canvas>
+    <p class="no-data-text" *ngIf="assesments.length == 0">{{"PROJECTS.RADAR_CHART_EMPTY" | translate}}</p>
+  </div>

@@ -4,10 +4,12 @@ import { FormGroup, FormControl, FormBuilder, Validators, ValidationErrors } fro
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { all, is } from 'cypress/types/bluebird';
 import { Observable, map, startWith } from 'rxjs';
 import { BusinessLineModel } from 'src/app/core/data/models/business-line';
 import { ProjectModel } from 'src/app/core/data/models/project.model';
 import { TeamModel } from 'src/app/core/data/models/team.model';
+import { UserModel } from 'src/app/core/data/models/user.model';
 import { ApiBusinessLineService } from 'src/app/core/services/api-business-line.service';
 import { ApiProjectService } from 'src/app/core/services/api-project.service';
 import { ApiTeamService } from 'src/app/core/services/api-team.service';
@@ -22,6 +24,8 @@ export class ProjectFormDialogComponent implements OnInit {
   @Input() project?: ProjectModel
   @Input() title!: string;
   @Input() save!: string;
+  @Input() currentUser!: UserModel;
+  @Input() isCreate!: boolean;
 
   editProjectForm!: FormGroup;
   nameFormControl!: FormControl;
@@ -32,11 +36,14 @@ export class ProjectFormDialogComponent implements OnInit {
   teams: TeamModel[] = [];
   businessLines: BusinessLineModel[] = [];
 
+  // Only used in case of a Project Creation by a non-admin user
+  allTeams: TeamModel[] = [];
+
   filteredTeams!: Observable<TeamModel[]>;
   filteredBusinessLines!: Observable<BusinessLineModel[]>;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { title: string, save: string, project?: ProjectModel },
+    @Inject(MAT_DIALOG_DATA) public data: { title: string, save: string, project?: ProjectModel, currentUser: UserModel, isCreate: boolean },
     private dialogRef: MatDialogRef<ProjectFormDialogComponent>,
     private formBuilder: FormBuilder,
     private teamService: ApiTeamService,
@@ -48,6 +55,8 @@ export class ProjectFormDialogComponent implements OnInit {
     this.project = data.project;
     this.title = data.title;
     this.save = data.save;
+    this.currentUser = data.currentUser;
+    this.isCreate = data.isCreate;
   }
 
   ngOnInit(): void {
@@ -55,23 +64,56 @@ export class ProjectFormDialogComponent implements OnInit {
     this.descriptionFormControl = new FormControl(this.project?.description);
     this.teamFormControl = new FormControl(this.project?.team, [Validators.required]);
     this.businessLineFormControl = new FormControl(this.project?.businessLine, [Validators.required]);
-    this.editProjectForm  =  this.formBuilder.group({
+
+    this.editProjectForm = this.formBuilder.group({
       nameFormControl: this.nameFormControl,
       descriptionFormControl: this.descriptionFormControl,
       teamFormControl: this.teamFormControl,
       businnessLineFormControl: this.businessLineFormControl,
     });
 
-    this.teamService.getAllTeams().subscribe({
-      next: (v) => {
-        this.teams = v;
-        this.filteredTeams = this.teamFormControl.valueChanges.pipe(
-          startWith(''),
-          map(value => this._filterTeam(value))
-        );
-      },
-      error: (err) => console.log(err),
-    });
+    if (this.currentUser.isAdmin()) {
+      this.teamService.getAllTeams().subscribe({
+        next: (v) => {
+          this.teams = v;
+          this.filteredTeams = this.teamFormControl.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filterTeam(value))
+          );
+        },
+        error: (err) => console.log(err),
+      });
+    }
+    else {
+      if (this.isCreate) {
+        this.teamService.getAllTeams().subscribe({
+          next: (v) => {
+            this.allTeams = v;
+            this.filteredTeams = this.teamFormControl.valueChanges.pipe(
+              startWith(''),
+              map(value => this._filterTeam(value))
+            );
+          },
+          error: (err) => console.log(err),
+        });
+      }
+
+      this.teamService.getTeamsByUserId(this.currentUser.id).subscribe({
+        next: (v) => {
+          this.teams = v;
+          this.filteredTeams = this.teamFormControl.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filterTeam(value))
+          );
+        },
+        error: (err) => console.log(err),
+      });
+
+      if (!this.isCreate) {
+        this.teamFormControl.disable();
+      }
+
+    }
 
     this.businessLineService.getAllBusinessLines().subscribe({
       next: (v) => {
@@ -105,14 +147,29 @@ export class ProjectFormDialogComponent implements OnInit {
 
   saveUser() {
     this.editProjectForm.markAllAsTouched();
-    if (!(this.teamFormControl.value instanceof TeamModel) 
-    && this.teamFormControl.value != "" && this.teamFormControl.value != null
-    && !(this.teams.some(team => team.name === this.teamFormControl.value))) {
-      this.teamFormControl.setErrors({ teamNotExists: true });
+    if (!(this.teamFormControl.value instanceof TeamModel)
+      && this.teamFormControl.value != "" && this.teamFormControl.value != null) {
+
+      if (this.currentUser.isAdmin()) {
+        if (!(this.teams.some(team => team.name === this.teamFormControl.value))) {
+          this.teamFormControl.setErrors({ teamNotExists: true });
+        }
+      }
+      else {
+        if (!(this.allTeams.some(team => team.name === this.teamFormControl.value))) {
+          this.teamFormControl.setErrors({ teamNotExists: true });
+        }
+        else {
+          if (!(this.teams.some(team => team.name === this.teamFormControl.value))) {
+            this.teamFormControl.setErrors({ teamNotAllowed: true });
+          }
+        }
+      }
+
     }
-    if (!(this.businessLineFormControl.value instanceof Object) 
-        && this.businessLineFormControl.value != "" && this.businessLineFormControl.value != null
-        && !(this.businessLines.some(businessLine => businessLine.name === this.businessLineFormControl.value))) {
+    if (!(this.businessLineFormControl.value instanceof Object)
+      && this.businessLineFormControl.value != "" && this.businessLineFormControl.value != null
+      && !(this.businessLines.some(businessLine => businessLine.name === this.businessLineFormControl.value))) {
       this.businessLineFormControl.setErrors({ businessLineNotExists: true });
     }
     if (!this.editProjectForm.invalid) {
@@ -138,11 +195,11 @@ export class ProjectFormDialogComponent implements OnInit {
             this.snackBar.open(this.translateService.instant('PROJECTS.UPDATE_SUCCESS'), 'OK', {
               duration: 3000,
             });
-            this.dialogRef.close(v);         
+            this.dialogRef.close(v);
           },
           error: (e) => {
             if (e.status == 409) {
-              this.nameFormControl.setErrors({projectNameAlreadyExists: true});
+              this.nameFormControl.setErrors({ projectNameAlreadyExists: true });
               this.nameFormControl.markAsTouched();
             } else {
               console.error(e);
@@ -156,11 +213,11 @@ export class ProjectFormDialogComponent implements OnInit {
             this.snackBar.open(this.translateService.instant('PROJECTS.CREATE_SUCCESS'), 'OK', {
               duration: 3000,
             });
-            this.dialogRef.close(v);         
+            this.dialogRef.close(v);
           },
           error: (e) => {
             if (e.status == 409) {
-              this.nameFormControl.setErrors({projectNameAlreadyExists: true});
+              this.nameFormControl.setErrors({ projectNameAlreadyExists: true });
               this.nameFormControl.markAsTouched();
             } else {
               console.error(e);
@@ -168,7 +225,7 @@ export class ProjectFormDialogComponent implements OnInit {
           }
         });
       }
-      
+
     }
   }
 
@@ -194,6 +251,9 @@ export class ProjectFormDialogComponent implements OnInit {
     }
     if (this.teamFormControl.hasError('teamNotExists')) {
       return this.translateService.instant('PROJECTS.TEAM_NOT_EXISTS');
+    }
+    if (this.teamFormControl.hasError('teamNotAllowed')) {
+      return this.translateService.instant('PROJECTS.TEAM_NOT_ALLOWED');
     }
     return '';
   }

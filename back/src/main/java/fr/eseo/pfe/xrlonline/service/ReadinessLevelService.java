@@ -3,25 +3,29 @@ package fr.eseo.pfe.xrlonline.service;
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
 import fr.eseo.pfe.xrlonline.model.dto.ReadinessLevelDTO;
 import fr.eseo.pfe.xrlonline.model.entity.ReadinessLevel;
+import fr.eseo.pfe.xrlonline.repository.CustomRequestRepository;
 import fr.eseo.pfe.xrlonline.repository.ReadinessLevelRepository;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReadinessLevelService {
 
     private final ReadinessLevelRepository readinessLevelRepository;
 
+    private final CustomRequestRepository customRequestRepository;
+
     private final ModelMapper modelMapper;
 
-    public ReadinessLevelService(ReadinessLevelRepository readinessLevelRepository, ModelMapper modelMapper) {
+    public ReadinessLevelService(ReadinessLevelRepository readinessLevelRepository, ModelMapper modelMapper, CustomRequestRepository customRequestRepository) {
         this.readinessLevelRepository = readinessLevelRepository;
         this.modelMapper = modelMapper;
+        this.customRequestRepository = customRequestRepository;
     }
 
     public ResponseEntity<ReadinessLevelDTO> getReadinessLevelById(String id) throws CustomRuntimeException {
@@ -36,7 +40,13 @@ public class ReadinessLevelService {
     public ResponseEntity<List<ReadinessLevelDTO>> getAllReadinessLevel() throws CustomRuntimeException {
         List<ReadinessLevelDTO> readinessLevelsDTO = readinessLevelRepository.findAll().stream()
                 .map(readinessLevel -> modelMapper.map(readinessLevel, ReadinessLevelDTO.class))
-                .toList();
+                .collect(Collectors.toList());
+        
+        // Call isReadinessLevelUsed() for each readiness level and map the result to the DTO
+        for (ReadinessLevelDTO readinessLevelDTO : readinessLevelsDTO) {
+            readinessLevelDTO.setIsUsed(customRequestRepository.isReadinessLevelUsed(readinessLevelDTO.getId()));
+        }
+
         if (readinessLevelsDTO.isEmpty()) {
             throw new CustomRuntimeException(CustomRuntimeException.READINESS_LEVEL_LIST_EMPTY);
         }
@@ -96,4 +106,19 @@ public class ReadinessLevelService {
         ReadinessLevelDTO updatedReadinessLevelDTO = modelMapper.map(updatedReadinessLevel, ReadinessLevelDTO.class);
         return ResponseEntity.ok(updatedReadinessLevelDTO);
     }
+
+    public ResponseEntity<ReadinessLevelDTO> deleteReadinessLevel(String id) throws CustomRuntimeException {
+        ReadinessLevel readinessLevel = readinessLevelRepository.findById(id).orElse(null);
+        if (readinessLevel != null) {
+            // Check if the readiness level is used by a project
+            if (Boolean.FALSE.equals(customRequestRepository.isReadinessLevelUsed(id))) {
+                readinessLevelRepository.deleteById(id);
+                ReadinessLevelDTO readinessLevelDTO = modelMapper.map(readinessLevel, ReadinessLevelDTO.class);
+                return ResponseEntity.ok(readinessLevelDTO);
+            }
+            throw new CustomRuntimeException(CustomRuntimeException.READINESS_LEVEL_USED);
+        }
+        throw new CustomRuntimeException(CustomRuntimeException.READINESS_LEVEL_NOT_FOUND);
+    }
+
 }

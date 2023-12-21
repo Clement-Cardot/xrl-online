@@ -5,7 +5,6 @@ import fr.eseo.pfe.xrlonline.logger.UserLogger;
 import fr.eseo.pfe.xrlonline.logger.UserLoggerFactory;
 import fr.eseo.pfe.xrlonline.model.dto.AssessmentDTO;
 import fr.eseo.pfe.xrlonline.model.dto.ProjectDTO;
-import fr.eseo.pfe.xrlonline.model.entity.User;
 import fr.eseo.pfe.xrlonline.service.ProjectService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -36,12 +35,12 @@ public class ProjectController {
 
   @GetMapping("/get-project-by-id")
   public ResponseEntity<ProjectDTO> getProjectById(@RequestParam String id) {
-    logger.logInfo("REQUEST: Get project with id : {}", id);
+    logger.logInfo("REQUEST: Get project with id : %s", id);
 
     try {
       return ResponseEntity.ok(projectService.getProjectById(id));
     } catch (CustomRuntimeException e) {
-      logger.logError("Error while trying to get project with this id : {}, Error Details : {}", id, e.getMessage());
+      logger.logError("Error while trying to get project with this id : %s, Error Details : %s", id, e.getMessage());
       return new ResponseEntity<>(e.getHttpCode());
     }
   }
@@ -53,7 +52,7 @@ public class ProjectController {
     try {
       return ResponseEntity.ok(projectService.createProject(projectDTO));
     } catch (CustomRuntimeException e) {
-      logger.logError("Error while trying to create project with this name : {}, Error Details : {}", projectDTO.getName(), e.getMessage());
+      logger.logError("Error while trying to create project with this name : %s, Error Details : %s", projectDTO.getName(), e.getMessage());
       return new ResponseEntity<>(e.getHttpCode());
     }
   }
@@ -65,7 +64,7 @@ public class ProjectController {
     try {
       return ResponseEntity.ok(projectService.deleteProject(id));
     } catch (CustomRuntimeException e) {
-      logger.logError("Error while trying to delete project with this id : {}, Error Details : {}", id, e.getMessage());
+      logger.logError("Error while trying to delete project with this id : %s, Error Details : %s", id, e.getMessage());
       return new ResponseEntity<>(e.getHttpCode());
     }
   }
@@ -77,17 +76,17 @@ public class ProjectController {
     try {
       return ResponseEntity.ok(projectService.updateProject(projectDTO));
     } catch (CustomRuntimeException e) {
-      logger.logError("Error while trying to update project with this id : {}, Error Details : {}", projectDTO.getId(), e.getMessage());
+      logger.logError("Error while trying to update project with this id : %s, Error Details : %s", projectDTO.getId(), e.getMessage());
       return new ResponseEntity<>(e.getHttpCode());
     }
   }
 
   @PostMapping("/add-new-assessment")
   public ResponseEntity<ProjectDTO> addNewAssessment(@RequestParam String projectId, @RequestBody AssessmentDTO assessmentDTO) {
-    logger.logInfo("REQUEST: Add new assessment to project with id : {} and assessment : {}", projectId, assessmentDTO);
+    logger.logInfo("REQUEST: Add new assessment to project with id : %s and assessment : %s", projectId, assessmentDTO);
 
     try {
-      if (this.isMemberOfProjectTeam(projectId)) {
+      if (projectService.isMemberOfProjectTeam(projectId)) {
         return ResponseEntity.ok(projectService.addNewAssessment(projectId, assessmentDTO));
       }
       else {
@@ -95,17 +94,35 @@ public class ProjectController {
       }
 
     } catch (CustomRuntimeException e) {
-      logger.logError("Error while trying to add new assessment to project with this id : {}, Error Details : {}", projectId, e.getMessage());
+      logger.logError("Error while trying to add new assessment to project with this id : %s, Error Details : %s", projectId, e.getMessage());
       return new ResponseEntity<>(e.getHttpCode());
     }
   }
 
-  @PostMapping("/modify-last-assessment-comment")
-  public ResponseEntity<ProjectDTO> modifyLastAssessmentComment(@RequestParam String projectId, @RequestBody String comment) {
-    logger.logInfo("REQUEST: Modify last assessment comment in project with id : {}, comment : {}", projectId, comment);
+  @PutMapping("/modify-last-assessment")
+  public ResponseEntity<ProjectDTO> modifyLastAssessment(@RequestParam String projectId, @RequestBody AssessmentDTO assessmentDTO) {
+    logger.logInfo("REQUEST: Modify last assessment of project with id : %s and assessment : %s", projectId, assessmentDTO);
 
     try {
-      if (this.isMemberOfProjectTeam(projectId)) {
+      if (projectService.isMemberOfProjectTeam(projectId)) {
+        return ResponseEntity.ok(projectService.modifyLastAssessment(projectId, assessmentDTO));
+      }
+      else {
+        throw new CustomRuntimeException(CustomRuntimeException.USER_NOT_MEMBER_OF_TEAM_PROJECT);
+      }
+
+    } catch (CustomRuntimeException e) {
+      logger.logError("Error while trying to modify last assessment of project with this id : %s, Error Details : %s", projectId, e.getMessage());
+      return new ResponseEntity<>(e.getHttpCode());
+    }
+  }
+
+  @PutMapping("/modify-last-assessment-comment")
+  public ResponseEntity<ProjectDTO> modifyLastAssessmentComment(@RequestParam String projectId, @RequestBody String comment) {
+    logger.logInfo("REQUEST: Modify last assessment comment in project with id : %s, comment : %s", projectId, comment);
+
+    try {
+      if (projectService.isMemberOfProjectTeam(projectId)) {
         return ResponseEntity.ok(projectService.modifyLastAssessmentComment(projectId, comment));
       }
       else {
@@ -113,47 +130,31 @@ public class ProjectController {
       }
 
     } catch (CustomRuntimeException e) {
-      logger.logError("Error while trying to modify last assessment comment in project with this id : {}, Error Details : {}", projectId, e.getMessage());
+      logger.logError("Error while trying to modify last assessment comment in project with this id : %s, Error Details : %s", projectId, e.getMessage());
       return new ResponseEntity<>(e.getHttpCode());
     }
   }
   
   @GetMapping("/get-projects-by-team-id")
   public ResponseEntity<List<ProjectDTO>> getProjectsByTeamId(@RequestParam String id) {
-    logger.logInfo("REQUEST: Get projects by team id with : {}", id);
+    logger.logInfo("REQUEST: Get projects by team id with : %s", id);
     try {
       return projectService.getProjectsByTeamId(id);
     } catch (CustomRuntimeException e) {
-      logger.logError("Error while trying to get projects by team id : {}, Error Details : {}", id, e.getMessage());
+      logger.logError("Error while trying to get projects by team id : %s, Error Details : %s", id, e.getMessage());
       return new ResponseEntity<>(e.getHttpCode());
     }
   }
 
   @GetMapping("/get-projects-by-business-line-id")
   public ResponseEntity<List<ProjectDTO>> getProjectsByBusinessLineId(@RequestParam String id) {
-    logger.logInfo("REQUEST: Get projects by business line id with : {}", id);
+    logger.logInfo("REQUEST: Get projects by business line id with : %s", id);
     try {
       return projectService.getProjectsByBusinessLineId(id);
     } catch (CustomRuntimeException e) {
-      logger.logError("Error while trying to get projects by business line id : {}, Error Details : {}", id, e.getMessage());
+      logger.logError("Error while trying to get projects by business line id : %s, Error Details : %s", id, e.getMessage());
       return new ResponseEntity<>(e.getHttpCode());
     }
-  }
-
-  private boolean isMemberOfProjectTeam(String projectId) {
-
-    boolean isMember = false;
-    try {
-      ProjectDTO projectDTO = projectService.getProjectById(projectId);
-      for (User users : projectDTO.getTeam().getMembers()) {
-        if (users.getLogin().equals(logger.getUsername())) {
-          isMember = true;
-        }
-      }
-    } catch (CustomRuntimeException e) {
-      logger.logError("Error while trying to modify last assessment comment in project with this id : {}, Error Details : {}", projectId, e.getMessage());
-    }
-    return isMember;
   }
 
 }

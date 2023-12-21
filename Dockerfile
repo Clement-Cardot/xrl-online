@@ -42,7 +42,7 @@ COPY .tomcat/context.xml /usr/local/tomcat/webapps/host-manager/META-INF/context
 COPY .tomcat/context.xml /usr/local/tomcat/webapps/manager/META-INF/context.xml
 
 # Deploy Back End
-COPY --from=back-build /back/target/xrlonline-back-0.3.war /usr/local/tomcat/webapps/api.war
+COPY --from=back-build /back/target/xrlonline-back-*.war /usr/local/tomcat/webapps/api.war
 
 # Deploy Front End
 COPY --from=front-build /front/dist/xrl /usr/local/tomcat/webapps/ROOT

@@ -1,5 +1,6 @@
 package fr.eseo.pfe.xrlonline;
 
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.boot.SpringApplication;
@@ -19,6 +20,7 @@ public class XrlOnlineApplication {
 	public ModelMapper modelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
 		return modelMapper;
 	}
 }

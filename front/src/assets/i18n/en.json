@@ -9,7 +9,9 @@
     "DELETE": "Delete",
     "ADD": "Add",
     "NEW": "New",
+    "MODIFY": "Modify",
     "COMPARE": "Compare",
+    "DOWNLOAD": "Download",
     "NEXT": "Next",
     "BACK": "Back",
     "CONFIRM": "Confirm",
@@ -19,10 +21,13 @@
 
   "OBJECT": {
     "PROJECT": "Project",
+    "TEAM": "Team",
     "ASSESSMENT": "Assessment",
     "READINESS_LEVEL": "Readiness Level",
+    "BUSINESS_LINE": "Business Line",
     "COMMENT": "Comment",
-    "TAG": "Tag"
+    "TAG": "Tag",
+    "NONE": "None"
   },
 
   "MENU": {
@@ -96,6 +101,7 @@
     "NAME_ALREADY_EXISTS": "Project's name already exists",
     "TEAM_REQUIRED": "A team is required",
     "TEAM_NOT_EXISTS": "This team doesn't exist",
+    "TEAM_NOT_ALLOWED": "Team not allowed",
     "BUSINESS_LINE_REQUIRED": "A business line is required",
     "BUSINESS_LINE_NOT_EXISTS": "This business line doesn't exist",
     "DETAILS": "Details",
@@ -106,15 +112,29 @@
     "SEARCH_NAME": "Name",
     "SEARCH_TEAM": "Team",
     "SEARCH_BUSINESS_LINE": "Business Line",
+    "MY_PROJECTS": "Only my projects",
     "SEARCH": "Search",
     "CREATE": "Create a new Project",
     "CREATE_SUCCESS": "The project has been created successfully",
     "NO_DESCRIPTION": "No description",
     "NO_ASSESSMENT": "No assessment",
-    "NAME_MAX_LENGTH": "Business line's name must be at most 20 characters long",
-    "NAME_MIN_LENGTH": "Business line's name must be at least 3 characters long",
+    "NAME_MAX_LENGTH": "Project's name must be at most 20 characters long",
+    "NAME_MIN_LENGTH": "Project's name must be at least 3 characters long",
     "RADAR_CHART_EMPTY": "No data to display",
-    "ASSESSMENT_COMMENT_CHANGED": "Assessment comment changed"
+    "ASSESSMENT_COMMENT_CHANGED": "Assessment comment changed",
+    "INFORMATION_TAB": "Information",
+    "ASSESSMENT_TAB": "Assessment",
+    "READINESS_LEVEL_TAB": "Readiness Level Details",
+    "HISTORY_TAB": "History",
+    "CANT_CREATE_NEW_ASSESSMENT": "An assessment is already in progress !",
+    "CANT_MODIFY_ASSESSMENT": "No assessment in progress !",
+    "ASSESSMENT_ADDED": "New assessment submitted !",
+    "COMPARE": {
+      "SELECT_FIRST": "First assessment",
+      "SELECT_SECOND": "Second assessment",
+      "OVERLAY": "Overlay",
+      "SIDE_BY_SIDE": "Side by side"
+    }
   },
 
   "ASSESSMENT_DIALOG": {
@@ -149,7 +169,9 @@
     "CREATE_BUSINESSLINE": "Create Business line",
     "DELETE": "Are you sure you want to delete this business line?",
     "DELETE_SUCCESS": "The business line has been deleted successfully",
-    "SEARCH_NAME": "Name"
+    "SEARCH_NAME": "Name",
+    "LINKED_PROJECTS": "linked project(s)",
+    "NO_LINKED_PROJECTS": "No linked project"
   },
 
   "READINESS_LEVEL": {

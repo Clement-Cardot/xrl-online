@@ -35,7 +35,7 @@ export class ApiReadinessLevelService extends BaseService {
   }
 
   public getReadinessLevelById(id: string): Observable<ReadinessLevelModel> {
-    const url = `${this.baseUrl}/get-readiness-level-by-id/${id}`;
+    const url = `${this.baseUrl}/get-readiness-level-by-id?id=${id}`;
     return this.http
       .get<any>(url)
       .pipe(map((response: any) => this.readinessLevelAdapter.adapt(response)))
@@ -63,7 +63,7 @@ export class ApiReadinessLevelService extends BaseService {
   }
 
   public deleteReadinessLevel(id: string): Observable<ReadinessLevelModel> {
-    const url = `${this.baseUrl}/delete-readiness-level/${id}`;
+    const url = `${this.baseUrl}/delete-readiness-level?id=${id}`;
     return this.http
       .delete<any>(url)
       .pipe(map((response: any) => this.readinessLevelAdapter.adapt(response)))

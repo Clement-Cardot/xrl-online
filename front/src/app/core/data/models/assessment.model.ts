@@ -5,14 +5,15 @@ import { ReadinessLevelRankAdapter, ReadinessLevelRankModel } from "./readiness-
 
 export enum Tag {
   INITIAL = "INITIAL",
-  DRAFT = "DRAFT",
+  INTERMEDIATE = "INTERMEDIATE",
   FINAL = "FINAL",
+  DRAFT = "DRAFT"
 }
 
 export class AssessmentModel {
     constructor(
         public date: Date,
-        public tag: Tag | undefined,
+        public tag: Tag,
         public comment: string,
         public readinessLevelRanks: ReadinessLevelRankModel[]
     ) {}

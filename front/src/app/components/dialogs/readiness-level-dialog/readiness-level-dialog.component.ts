@@ -1,11 +1,22 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Inject,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTable } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
@@ -14,6 +25,7 @@ import {
   ReadinessLevelModel,
 } from 'src/app/core/data/models/readiness-level.model';
 import { ApiReadinessLevelService } from 'src/app/core/services/api-readiness-level.service';
+import { DeleteObjectDialogComponent } from '../delete-object-dialog/delete-object-dialog.component';
 
 @Component({
   selector: 'app-readiness-level-dialog',
@@ -35,6 +47,7 @@ export class ReadinessLevelDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<ReadinessLevelDialogComponent>,
+    public dialog: MatDialog,
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
     private translateService: TranslateService,
@@ -44,13 +57,21 @@ export class ReadinessLevelDialogComponent implements OnInit {
       const level = new Level(i.toString(), '', []);
       this.levels.push(level);
     }
-    this.readinessLevel = new ReadinessLevelModel('', '', '', this.levels);
+    this.readinessLevel = new ReadinessLevelModel(
+      '',
+      '',
+      '',
+      this.levels,
+      false
+    );
   }
 
   ngOnInit() {
     this.dialogRef.updateSize('100%');
 
     if (this.data != null) this.readinessLevel = this.data;
+
+    if (this.readinessLevel.isUsed) this.hideDeleteButton();
 
     this.formControlReadinessLevelName = new FormControl('', [
       Validators.required,
@@ -187,20 +208,23 @@ export class ReadinessLevelDialogComponent implements OnInit {
       );
       levels.push(level);
     }
-    console.log(levels);
 
     const readinessLevel: ReadinessLevelModel = new ReadinessLevelModel(
       this.readinessLevel.id,
       this.formControlReadinessLevelName.value,
       this.formControlReadinessLevelDescription.value,
-      levels
+      levels,
+      this.readinessLevel.isUsed
     );
     if (this.readinessLevel.id == '') {
       this.apiReadinessLevelService
         .createReadinessLevel(readinessLevel)
         .subscribe({
           next: (readinessLevelResult) => {
-            this.dialogRef.close(readinessLevelResult);
+            this.dialogRef.close({
+              action: 'add',
+              result: readinessLevelResult,
+            });
             this.snackBar.open(
               this.translateService.instant('READINESS_LEVEL.CREATE_SUCCESS'),
               this.translateService.instant('CLOSE'),
@@ -218,7 +242,10 @@ export class ReadinessLevelDialogComponent implements OnInit {
         .updateReadinessLevel(readinessLevel)
         .subscribe({
           next: (readinessLevelResult) => {
-            this.dialogRef.close(readinessLevelResult);
+            this.dialogRef.close({
+              action: 'update',
+              result: readinessLevelResult,
+            });
             this.snackBar.open(
               this.translateService.instant('READINESS_LEVEL.UPDATE_SUCCESS'),
               this.translateService.instant('CLOSE'),
@@ -247,5 +274,49 @@ export class ReadinessLevelDialogComponent implements OnInit {
         console.log('This error is not handled: ' + e);
         break;
     }
+  }
+
+  hideDeleteButton() {
+    const deleteButton = document.querySelector(
+      '#delete-rl-icon'
+    ) as HTMLElement;
+    if (deleteButton) {
+      deleteButton.style.color = 'grey';
+      deleteButton.style.pointerEvents = 'none';
+    }
+  }
+
+  deleteReadinessLevel() {
+    const dialogRef = this.dialog.open(DeleteObjectDialogComponent, {
+      data: {
+        title: 'READINESS_LEVEL.DELETE',
+        content: this.readinessLevel.name,
+      },
+      autoFocus: false,
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.apiReadinessLevelService
+          .deleteReadinessLevel(this.readinessLevel.id)
+          .subscribe({
+            next: (readinessLevelResult) => {
+              this.dialogRef.close({
+                action: 'delete',
+                result: readinessLevelResult,
+              });
+              this.snackBar.open(
+                this.translateService.instant('READINESS_LEVEL.DELETE_SUCCESS'),
+                this.translateService.instant('CLOSE'),
+                {
+                  duration: 3000,
+                }
+              );
+            },
+            error: (e) => {
+              console.log(e);
+            },
+          });
+      }
+    });
   }
 }

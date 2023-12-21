@@ -31,51 +31,51 @@ public class BusinessLineController {
     try {
       return businessLineService.getAllBusinessLine();
     } catch (CustomRuntimeException e) {
-      logger.logError("Error while trying to get all businesslines, Error Details : {}", e.getMessage());
+      logger.logError("Error while trying to get all businesslines, Error Details : %s", e.getMessage());
       return new ResponseEntity<>(e.getHttpCode());
     }
   }
 
   @GetMapping("/get-businessLine-by-id")
   public ResponseEntity<BusinessLineDTO> getBusinessLineById(@RequestParam String id) {
-    logger.logInfo("REQUEST: Get businessline by id with : {}", id);
+    logger.logInfo("REQUEST: Get businessline by id with : %s", id);
     try {
       return businessLineService.getBusinessLineById(id);
     } catch (CustomRuntimeException e) {
-      logger.logError("Error while trying to get businnesline by id with : {}, Error Details : {}", id, e.getMessage());
+      logger.logError("Error while trying to get businnesline by id with : %s, Error Details : %s", id, e.getMessage());
       return new ResponseEntity<>(e.getHttpCode());
     }
   }
 
   @PostMapping("/create-businessLine")
   public ResponseEntity<BusinessLineDTO> createBusinessLine(@RequestBody BusinessLineDTO businessLineDTO) {
-    logger.logInfo("REQUEST: Create businessline with {}", businessLineDTO.toString());
+    logger.logInfo("REQUEST: Create businessline with %s", businessLineDTO.toString());
     try {
       return businessLineService.createBusinessLine(businessLineDTO);
     } catch (CustomRuntimeException e) {
-      logger.logError("Error while trying to create businessline with : {}, Error Details : {}", businessLineDTO, e.getMessage());
+      logger.logError("Error while trying to create businessline with : %s, Error Details : %s", businessLineDTO, e.getMessage());
       return new ResponseEntity<>(e.getHttpCode());
     }
   }
 
   @PutMapping("/update-businessLine")
   public ResponseEntity<BusinessLineDTO> updateBusinessLine(@RequestBody BusinessLineDTO businessLineDTO) {
-    logger.logInfo("REQUEST: Update businessline with {}", businessLineDTO.toString());
+    logger.logInfo("REQUEST: Update businessline with %s", businessLineDTO.toString());
     try {
       return businessLineService.updateBusinessLine(businessLineDTO);
     } catch (CustomRuntimeException e) {
-      logger.logError("Error while trying to update businessline with : {}, Error Details : {}", businessLineDTO, e.getMessage());
+      logger.logError("Error while trying to update businessline with : %s, Error Details : %s", businessLineDTO, e.getMessage());
       return new ResponseEntity<>(e.getHttpCode());
     }
   }
 
   @DeleteMapping("/delete-businessLine")
   public ResponseEntity<BusinessLineDTO> deleteBusinessLine(@RequestParam String id) {
-    logger.logInfo("REQUEST: Delete businessline with id : {}", id);
+    logger.logInfo("REQUEST: Delete businessline with id : %s", id);
     try {
       return businessLineService.deleteBusinessLine(id);
     } catch (CustomRuntimeException e) {
-      logger.logError("Error while trying to delete businessline with : {}, Error Details : {}", id, e.getMessage());
+      logger.logError("Error while trying to delete businessline with : %s, Error Details : %s", id, e.getMessage());
       return new ResponseEntity<>(e.getHttpCode());
     }
   }

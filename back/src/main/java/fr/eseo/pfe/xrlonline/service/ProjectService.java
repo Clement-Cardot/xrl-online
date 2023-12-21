@@ -1,15 +1,22 @@
 package fr.eseo.pfe.xrlonline.service;
 
+import fr.eseo.pfe.xrlonline.controller.ProjectController;
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
+import fr.eseo.pfe.xrlonline.logger.UserLogger;
+import fr.eseo.pfe.xrlonline.logger.UserLoggerFactory;
 import fr.eseo.pfe.xrlonline.model.dto.AssessmentDTO;
 import fr.eseo.pfe.xrlonline.model.dto.ProjectDTO;
 import fr.eseo.pfe.xrlonline.model.entity.Assessment;
 import fr.eseo.pfe.xrlonline.model.entity.BusinessLine;
 import fr.eseo.pfe.xrlonline.model.entity.Project;
 import fr.eseo.pfe.xrlonline.model.entity.Team;
+import fr.eseo.pfe.xrlonline.model.entity.User;
+import fr.eseo.pfe.xrlonline.model.entity.Assessment.Tag;
 import fr.eseo.pfe.xrlonline.repository.BusinessLineRepository;
 import fr.eseo.pfe.xrlonline.repository.ProjectRepository;
 import fr.eseo.pfe.xrlonline.repository.TeamRepository;
+import lombok.extern.log4j.Log4j2;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 public class ProjectService {
 
@@ -28,6 +36,8 @@ public class ProjectService {
   private final TeamRepository teamRepository;
 
   private final ModelMapper modelMapper;
+
+  UserLogger logger = UserLoggerFactory.getLogger(ProjectController.class, log);
 
   public ProjectService(ProjectRepository projectRepository, BusinessLineRepository businessLineRepository, TeamRepository teamRepository, ModelMapper modelMapper) {
     this.projectRepository = projectRepository;
@@ -102,10 +112,7 @@ public class ProjectService {
       throw new CustomRuntimeException(CustomRuntimeException.TEAM_NOT_FOUND);
     }
 
-    existingProject.setName(projectDTO.getName() != null ? projectDTO.getName() : existingProject.getName());
-    existingProject.setDescription(projectDTO.getDescription() != null ? projectDTO.getDescription() : existingProject.getDescription());
-    existingProject.setBusinessLine(projectDTO.getBusinessLine() != null ? projectDTO.getBusinessLine() : existingProject.getBusinessLine());
-    existingProject.setTeam(projectDTO.getTeam() != null ? projectDTO.getTeam() : existingProject.getTeam());
+    modelMapper.map(projectDTO, existingProject);
 
     if (projectDTO.getAssessments() != null) {
       List<Assessment> assessments = new ArrayList<>();
@@ -125,6 +132,25 @@ public class ProjectService {
     existingProject.getAssessments().add(modelMapper.map(assessmentDTO, Assessment.class));
     Project projectUpdated = projectRepository.save(existingProject);
     return modelMapper.map(projectUpdated, ProjectDTO.class);
+  }
+
+  public ProjectDTO modifyLastAssessment(String projectId, AssessmentDTO assessmentDTO) throws CustomRuntimeException {
+    Project existingProject = projectRepository.findById(projectId)
+      .orElseThrow(() -> new CustomRuntimeException(CustomRuntimeException.PROJECT_NOT_FOUND));
+
+    // Check if last assessment is draft
+    Assessment assessmentToModify = existingProject.getLastAssessment();
+    if (!assessmentToModify.getTag().equals(Tag.DRAFT)) {
+      throw new CustomRuntimeException(CustomRuntimeException.ASSESSMENT_MUST_BE_DRAFT_TO_BE_MODIFIED);
+    }
+
+    // Map modifications
+    modelMapper.map(assessmentDTO, assessmentToModify);
+
+    // Save modifications
+    projectRepository.save(existingProject);
+
+    return modelMapper.map(existingProject, ProjectDTO.class);
   }
 
   public ProjectDTO modifyLastAssessmentComment(String projectId, String comment) throws CustomRuntimeException {
@@ -155,14 +181,29 @@ public class ProjectService {
     return ResponseEntity.ok(projectsDTO);
   }
 
-    public ResponseEntity<List<ProjectDTO>> getProjectsByBusinessLineId(String id) throws CustomRuntimeException {
-      BusinessLine businessLine = businessLineRepository.findById(id).orElse(null);
-      if (businessLine == null) {
-          throw new CustomRuntimeException(CustomRuntimeException.BUSINESS_LINE_NOT_FOUND);
-      }
-      List<ProjectDTO> projectsDTO = projectRepository.findByBusinessLine(businessLine).stream()
-              .map(project -> modelMapper.map(project, ProjectDTO.class))
-              .collect(Collectors.toList());
-        return ResponseEntity.ok(projectsDTO);
+  public ResponseEntity<List<ProjectDTO>> getProjectsByBusinessLineId(String id) throws CustomRuntimeException {
+    BusinessLine businessLine = businessLineRepository.findById(id).orElse(null);
+    if (businessLine == null) {
+        throw new CustomRuntimeException(CustomRuntimeException.BUSINESS_LINE_NOT_FOUND);
     }
+    List<ProjectDTO> projectsDTO = projectRepository.findByBusinessLine(businessLine).stream()
+            .map(project -> modelMapper.map(project, ProjectDTO.class))
+            .collect(Collectors.toList());
+      return ResponseEntity.ok(projectsDTO);
+  }
+
+  public boolean isMemberOfProjectTeam(String projectId) throws CustomRuntimeException {
+    boolean isMember = false;
+
+    Project project = projectRepository.findById(projectId)
+      .orElseThrow(() -> new CustomRuntimeException(CustomRuntimeException.PROJECT_NOT_FOUND));
+
+    for (User users : project.getTeam().getMembers()) {
+      if (users.getLogin().equals(logger.getUsername())) {
+        isMember = true;
+      }
+    }
+
+    return isMember;
+  }
 }

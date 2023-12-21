@@ -89,4 +89,16 @@ export class ApiTeamService extends BaseService{
       .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
   }
 
+  getTeamsByUserId(id: string) {
+    const url = `${this.baseUrl}/get-teams-by-user-id?id=${id}`;
+    return this.http
+      .get(url)
+      .pipe(
+        map((response: any) =>
+          response.map((item: any) => this.teamAdapter.adapt(item))
+        )
+      )
+      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+  }
+
 }

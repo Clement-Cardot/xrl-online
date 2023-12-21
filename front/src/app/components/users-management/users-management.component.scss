@@ -1,8 +1,6 @@
 #users-management {
   padding: 20px;
-  width: 100%;
-  min-width: 25rem;
-  max-width: 25rem;
+  width: 28rem;
   height: 100%;
 }
 
@@ -12,8 +10,8 @@
 
 .usernameField {
   min-width: 14rem;
-  max-width: 18rem;
-  width: 75%;
+  max-width: 23rem;
+  width: 100%;
 }
 
 .list-users-actions {
@@ -42,4 +40,28 @@ table {
 
 .invisible {
   visibility: hidden;
+}
+
+#addUserBtn {
+  margin-left: 10px;
+}
+
+.mat-column-firstName, .mat-column-lastName {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  flex: 0 0 35% !important;
+  min-width: 7rem !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  word-break: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.mat-column-actions {
+  width: 7rem !important;
 }

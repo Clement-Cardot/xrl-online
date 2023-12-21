@@ -48,11 +48,17 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  p {
+    word-wrap: break-word;
+    width: 90%;
+  }
 }
 
 .dialog-content {
   display: flex;
   flex-direction: row;
+  max-height: 30em;
 }
 
 .description-container {
@@ -61,7 +67,7 @@
 }
 
 .mat-mdc-dialog-content {
-  max-height: none!important;
+  max-height: 45em;
 }
 
 .no-level {

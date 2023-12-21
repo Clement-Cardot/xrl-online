@@ -227,17 +227,20 @@ describe('Admin BusinessLine Page tests', () => {
     let businessLineId;
 
     it('Check Projects for a linked BusinessLine', () => {
-      cy.get('#mat-expansion-panel-header-4 > .mat-content > .mat-expansion-panel-header-title').should('have.text', ' 1 linked projects ');
+      cy.get('#mat-expansion-panel-header-4 > .mat-content > .mat-expansion-panel-header-title').should('have.text', ' 2 projet(s) lié(s) ');
       cy.get('#mat-expansion-panel-header-4 > .mat-content > .mat-expansion-panel-header-title').should('be.visible');
       cy.get('#mat-expansion-panel-header-4').click();
       cy.get('.cdk-column-projectName').should('be.visible');
-      cy.get('.cdk-column-projectName').should('have.text', ' Project 1 ');
       cy.get('.cdk-column-projectTeamName').should('be.visible');
-      cy.get('.cdk-column-projectTeamName').should('have.text', ' Team1 ');
+
+      cy.get(':nth-child(1) > .cdk-column-projectName').should('have.text', ' Project 1 ');
+      cy.get(':nth-child(2) > .cdk-column-projectName').should('have.text', ' Project 2 ');
+      cy.get(':nth-child(1) > .cdk-column-projectTeamName').should('have.text', ' Team1 ');
+      cy.get(':nth-child(2) > .cdk-column-projectTeamName').should('have.text', ' Team1 ');
     })
 
     it('Check Projects for an un-linked BusinessLine', () => {
-      cy.get('#mat-expansion-panel-header-1 > .mat-content > .mat-expansion-panel-header-title').should('have.text', ' No linked projects ');
+      cy.get('#mat-expansion-panel-header-1 > .mat-content > .mat-expansion-panel-header-title').should('have.text', ' Aucun projet lié ');
       cy.get('#mat-expansion-panel-header-1 > .mat-content > .mat-expansion-panel-header-title').should('be.visible');
     })
 

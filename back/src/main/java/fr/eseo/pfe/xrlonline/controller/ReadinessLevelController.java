@@ -32,18 +32,18 @@ public class ReadinessLevelController {
         try {
             return readinessLevelService.getAllReadinessLevel();
         } catch (CustomRuntimeException e) {
-            logger.logError("Error while trying to get all readiness levels, Error Details : {}", e.getMessage());
+            logger.logError("Error while trying to get all readiness levels, Error Details : %s", e.getMessage());
             return new ResponseEntity<>(e.getHttpCode());
         }
     }
 
     @GetMapping("/get-readiness-level-by-id")
     public ResponseEntity<ReadinessLevelDTO> getReadinessLevelById(@RequestParam String id) {
-        logger.logInfo("REQUEST: Get readiness level by id with : {}", id);
+        logger.logInfo("REQUEST: Get readiness level by id with : %s", id);
         try {
             return readinessLevelService.getReadinessLevelById(id);
         } catch (CustomRuntimeException e) {
-            logger.logError("Error while trying to get readiness level with this ID : {}, Error Details : {}", id,
+            logger.logError("Error while trying to get readiness level with this ID : %s, Error Details : %s", id,
                     e.getMessage());
             return new ResponseEntity<>(e.getHttpCode());
         }
@@ -51,11 +51,11 @@ public class ReadinessLevelController {
 
     @PostMapping("/create-readiness-level")
     public ResponseEntity<ReadinessLevelDTO> createReadinessLevel(@RequestBody ReadinessLevelDTO readinessLevelDTO) {
-        logger.logInfo("REQUEST: Create readiness level with : {}", readinessLevelDTO.toString());
+        logger.logInfo("REQUEST: Create readiness level with : %s", readinessLevelDTO.toString());
         try {
             return readinessLevelService.createReadinessLevel(readinessLevelDTO);
         } catch (CustomRuntimeException e) {
-            logger.logError("Error while trying to create readiness level with this name : {}, Error Details : {}",
+            logger.logError("Error while trying to create readiness level with this name : %s, Error Details : %s",
                     readinessLevelDTO.getName(), e.getMessage());
             return new ResponseEntity<>(e.getHttpCode());
         }
@@ -63,12 +63,24 @@ public class ReadinessLevelController {
 
     @PutMapping("/update-readiness-level")
     public ResponseEntity<ReadinessLevelDTO> updateReadinessLevel(@RequestBody ReadinessLevelDTO readinessLevelDTO) {
-        logger.logInfo("REQUEST: Update readiness level with : {}", readinessLevelDTO.toString());
+        logger.logInfo("REQUEST: Update readiness level with : %s", readinessLevelDTO.toString());
         try {
             return readinessLevelService.updateReadinessLevel(readinessLevelDTO);
         } catch (CustomRuntimeException e) {
-            logger.logError("Error while trying to update readiness level with this ID : {}, Error Details : {}",
+            logger.logError("Error while trying to update readiness level with this ID : %s, Error Details : %s",
                     readinessLevelDTO.getId(), e.getMessage());
+            return new ResponseEntity<>(e.getHttpCode());
+        }
+    }
+
+    @DeleteMapping("/delete-readiness-level")
+    public ResponseEntity<ReadinessLevelDTO> deleteReadinessLevel(@RequestParam String id) {
+        logger.logInfo("REQUEST: Delete readiness level with : {}", id);
+        try {
+            return readinessLevelService.deleteReadinessLevel(id);
+        } catch (CustomRuntimeException e) {
+            logger.logError("Error while trying to delete readiness level with this ID : {}, Error Details : {}", id,
+                    e.getMessage());
             return new ResponseEntity<>(e.getHttpCode());
         }
     }

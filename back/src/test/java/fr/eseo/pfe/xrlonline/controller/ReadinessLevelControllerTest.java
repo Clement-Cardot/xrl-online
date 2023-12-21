@@ -205,4 +205,32 @@ class ReadinessLevelControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
+    @Test
+    void testDeleteReadinessLevel_RLDeleted() throws Exception {
+        when(readinessLevelService.deleteReadinessLevel("id")).thenReturn(ResponseEntity.ok(readinessLevelDTO));
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/readiness-levels/delete-readiness-level?id=id"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(
+                        MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(readinessLevelDTO)));
+    }
+
+    @Test
+    void testDeleteReadinessLevel_RLNotFound() throws Exception {
+        when(readinessLevelService.deleteReadinessLevel("id"))
+                .thenThrow(new CustomRuntimeException(CustomRuntimeException.READINESS_LEVEL_NOT_FOUND));
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/readiness-levels/delete-readiness-level?id=id"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    void testDeleteReadinessLevel_IsUsed() throws Exception {
+        when(readinessLevelService.deleteReadinessLevel("id"))
+                .thenThrow(new CustomRuntimeException(CustomRuntimeException.READINESS_LEVEL_USED));
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/readiness-levels/delete-readiness-level?id=id"))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
+
 }

@@ -3,7 +3,7 @@
     
     <groupId>fr.eseo.pfe</groupId>
     <artifactId>xrlonline</artifactId>
-    <version>1</version>
+    <version>0.4</version>
     <packaging>pom</packaging>
 
     <properties>

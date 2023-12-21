@@ -3,16 +3,24 @@
     <app-filter-add-toolbox
       (updateDisplayEvent)="updateReadinessLevelToDisplay($event)"
       [searchTypes]="searchTypes"
-      (openAddDialogEvent)="openReadinessLevelDialog()"
+      (openAddDialogEvent)="addReadinessLevelDialog()"
     ></app-filter-add-toolbox>
   </div>
 
   <div class="readiness-levels-container">
-    <app-readiness-level-card
+    <div
       class="readiness-level-card"
       *ngFor="let readinessLevel of readinessLevelsToDisplay"
-      [readinessLevel]="readinessLevel"
-      (updateReadinessLevelEvent)="updateReadinessLevel($event)"
-    ></app-readiness-level-card>
+      (click)="updateReadinessLevelDialog(readinessLevel)"
+    >
+      <mat-card id="{{ 'readiness-level-card-' + readinessLevel.id }}">
+        <mat-card-header>
+          <mat-card-title>{{ readinessLevel.name }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-actions>
+          <mat-icon class="icon-display">keyboard_arrow_right</mat-icon>
+        </mat-card-actions>
+      </mat-card>
+    </div>
   </div>
 </div>

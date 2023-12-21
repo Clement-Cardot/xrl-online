@@ -1,0 +1,35 @@
+<mat-dialog-content>
+    <form [formGroup]="compareFormControl">
+        <mat-form-field>
+            <mat-label>{{ "PROJECTS.COMPARE.SELECT_FIRST" | translate }}</mat-label>
+            <mat-select formControlName="firstAssessmentControl" (valueChange)="defineFirstAssessment($event)">
+                <mat-option *ngFor="let assessment of data.assessments" value="{{assessment.date.toLocaleDateString()}}" [disabled]="isAlreadySelected(1, assessment.date)">{{assessment.date.toLocaleDateString()}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>{{ "PROJECTS.COMPARE.SELECT_SECOND" | translate }}</mat-label>
+            <mat-select formControlName="secondAssessmentControl" (valueChange)="defineSecondAssessment($event)">
+                <mat-option>{{ "OBJECT.NONE" | translate }}</mat-option>
+                <mat-option *ngFor="let assessment of data.assessments" value="{{assessment.date.toLocaleDateString()}}" [disabled]="isAlreadySelected(2, assessment.date)">{{assessment.date.toLocaleDateString()}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-radio-group formControlName="comparisonModeControl">
+            <mat-radio-button id="select-overlay" value="overlay">{{ "PROJECTS.COMPARE.OVERLAY" | translate }}</mat-radio-button>
+            <mat-radio-button id="select-side-to-side" value="side-to-side">{{ "PROJECTS.COMPARE.SIDE_BY_SIDE" | translate }}</mat-radio-button>
+        </mat-radio-group>
+    </form>
+
+    <div class="graphDiv" *ngIf="compareFormControl.controls.comparisonModeControl.value == 'overlay'">
+        <app-xrl-graph [assesment]="firstAssessment" [compareAssesment]="secondAssessment" [options]="{legend: true}" [isCompare]="true"></app-xrl-graph>
+    </div>
+
+    <div class="side-to-side" *ngIf="compareFormControl.controls.comparisonModeControl.value == 'side-to-side'">
+        <div class="graphDiv">
+            <app-xrl-graph [assesment]="firstAssessment" [options]="{legend: true}" [isCompare]="true"></app-xrl-graph>
+        </div>
+        <div class="graphDiv">
+            <app-xrl-graph [assesment]="secondAssessment" [options]="{legend: true}" [isCompare]="true"></app-xrl-graph>
+        </div>
+    </div>
+    
+</mat-dialog-content>

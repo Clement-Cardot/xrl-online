@@ -9,4 +9,12 @@
 
 mat-dialog-content {
     text-align: center;
+    padding-bottom: 0;
+}
+
+mat-dialog-actions {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  padding-bottom: 2rem;
 }

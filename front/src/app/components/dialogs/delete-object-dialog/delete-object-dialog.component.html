@@ -1,12 +1,10 @@
-<div class="dialog">
+<mat-dialog-content>
   <h2 mat-dialog-title>{{data.title | translate}}</h2>
-  <mat-dialog-content>
-    <div class="delete-content">
-      <p>{{data.content}}</p>
-    </div>
-  </mat-dialog-content>
-  <mat-dialog-actions align="center">
-    <button id="close" class="close-button" mat-button [mat-dialog-close]="false">{{'CANCEL' | translate}}</button>
-    <button id="confirm" class="primary-button" mat-button [mat-dialog-close]="true">{{'DELETE' | translate}}</button>
-  </mat-dialog-actions>
-</div>
+  <div class="delete-content">
+    <p>{{data.content}}</p>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <button id="close" mat-raised-button color="warn" [mat-dialog-close]="false">{{'ACTION.CANCEL' | translate}}</button>
+  <button id="confirm" mat-raised-button color="primary" [mat-dialog-close]="true">{{'ACTION.DELETE' | translate}}</button>
+</mat-dialog-actions>

@@ -3,15 +3,37 @@
   <div mat-dialog-content>
     <mat-form-field>
       <mat-label>{{ "BUSINESSLINE.NAME" | translate }}</mat-label>
-      <input id="businessLineName-input" matInput [formControl]="formControlBusinessLineName" autocomplete="off" />
-      <mat-error id="businessLineName-mat-error" *ngIf="formControlBusinessLineName.invalid">{{
-        getNameErrorMessage()
-        }}</mat-error>
+      <input
+        id="businessLineName-input"
+        matInput
+        [formControl]="formControlBusinessLineName"
+        autocomplete="off"
+      />
+      <mat-error
+        id="businessLineName-mat-error"
+        *ngIf="formControlBusinessLineName.invalid"
+        >{{ getNameErrorMessage() }}</mat-error
+      >
     </mat-form-field>
   </div>
   <div mat-dialog-actions>
-    <button id="close" mat-button [mat-dialog-close]>{{ "BUSINESSLINE.CANCEL" | translate }}</button>
-    <button id="confirm" mat-button (click)="saveBusinessLine()" [disabled]="formControlBusinessLineName.invalid">
+    <button
+      id="close"
+      mat-button
+      [mat-dialog-close]
+      mat-raised-button
+      color="warn"
+    >
+      {{ "BUSINESSLINE.CANCEL" | translate }}
+    </button>
+    <button
+      id="confirm"
+      mat-button
+      (click)="saveBusinessLine()"
+      [disabled]="formControlBusinessLineName.invalid"
+      mat-raised-button
+      color="primary"
+    >
       {{ "BUSINESSLINE.SAVE" | translate }}
     </button>
   </div>

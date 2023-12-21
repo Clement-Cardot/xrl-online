@@ -44,7 +44,6 @@ export class ApiProjectService extends BaseService {
   }
 
   createProject(project: ProjectModel): Observable<ProjectModel> {
-    console.log("create project");
     const url = `${this.baseUrl}/create-project`;
     return this.http.post<any>(url, project)
     .pipe(
@@ -122,9 +121,20 @@ export class ApiProjectService extends BaseService {
     );
   }
 
+  modifyLastAssessment(projectId: string, assessment: AssessmentModel): Observable<ProjectModel> {
+    const url = `${this.baseUrl}/modify-last-assessment?projectId=${projectId}`;
+    return this.http.put<any>(url, assessment)
+    .pipe(
+      map((response: any) => this.projectAdapter.adapt(response))
+    )
+    .pipe(
+      catchError((error: HttpErrorResponse) => this.handleError(error))
+    );
+  }
+
   modifyLastAssesmentComment(projectId: string, comment: string): Observable<ProjectModel> {
     const url = `${this.baseUrl}/modify-last-assessment-comment?projectId=${projectId}`;
-    return this.http.post<any>(url, comment)
+    return this.http.put<any>(url, comment)
     .pipe(
       map((response: any) => this.projectAdapter.adapt(response))
     )

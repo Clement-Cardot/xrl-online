@@ -1,0 +1,85 @@
+<div class="container" id="{{'project-card-'+project.id}}">
+    <div [ngClass]="toggleProperty ? 'flipped' : ''" class="card">
+      <div class="front">
+        <div class="content">
+            <div class="card-header">
+
+                <div class="project-hover-buttons">
+                    <button mat-raised-button (click)="toggle()">{{"PROJECTS.DETAILS" | translate}}</button>
+                </div>
+    
+                <h2 (click)="this.router.navigateByUrl('/project/' + project.id)">{{project.name}}</h2>
+    
+                <div class="project-actions-buttons project-hover-buttons" *ngIf="this.currentUser && this.currentUser.isAdmin()">
+                    <mat-icon id="modify" class="upscale-on-hover" (click)="openUpdateDialog()">edit</mat-icon>
+                    <mat-icon id="delete" class="upscale-on-hover" (click)="openDeleteDialog()">delete</mat-icon>
+                </div>
+
+                <div class="project-actions-buttons project-hover-buttons" *ngIf="this.currentUser && !this.currentUser.isAdmin() && this.isUserLinkedToProject()">
+                    <mat-icon id="modify" class="upscale-on-hover" (click)="openUpdateDialog()">edit</mat-icon>
+                    <mat-icon id="delete" class="upscale-on-hover" style="visibility: hidden;" (click)="openDeleteDialog()">delete</mat-icon>
+                </div>
+
+                <!-- Invisible button to center title project name -->
+                <div style="visibility: hidden;" *ngIf="this.currentUser && !this.currentUser.isAdmin() && !this.isUserLinkedToProject()">
+                    <button mat-raised-button>{{"PROJECTS.DETAILS" | translate}}</button>
+                </div>
+    
+            </div>
+    
+            <div class="project-item-content" (click)="this.router.navigateByUrl('/project/' + project.id)">
+    
+                <!-- Team & BL Names -->
+                <div>
+                    <p>{{project.team.name}}</p>
+                    <p>{{project.businessLine.name}}</p>
+                </div>
+    
+                <!-- last xRL Graph -->
+                <div style="flex: 1; height: 100%;">
+                    <app-xrl-graph [assesment]="project.getLastAssesment()"></app-xrl-graph>
+                </div>
+    
+                <!-- last xRL Tag & Date -->
+                <div>
+                    <p>{{project.getLastAssesment()?.tag ?? ""}}</p>
+                    <p>{{getDateTextField()}}</p>
+                </div>
+    
+            </div> 
+        </div>     
+      </div>
+      <div class="back">
+        <div class="content">
+            <div class="card-header">
+
+                <div class="project-hover-buttons">
+                    <button mat-raised-button (click)="toggle()">{{"PROJECTS.BACK" | translate}}</button>
+                </div>
+    
+                <h2 (click)="this.router.navigateByUrl('/project/' + project.id)">{{project.name}}</h2>
+    
+                <div class="project-actions-buttons project-hover-buttons" *ngIf="this.currentUser && this.currentUser.isAdmin()">
+                    <mat-icon id="modify" class="upscale-on-hover" (click)="openUpdateDialog()">edit</mat-icon>
+                    <mat-icon id="delete" class="upscale-on-hover" (click)="openDeleteDialog()">delete</mat-icon>
+                </div>
+
+                <div class="project-actions-buttons project-hover-buttons" *ngIf="this.currentUser && !this.currentUser.isAdmin() && this.isUserLinkedToProject()">
+                    <mat-icon id="modify" class="upscale-on-hover" (click)="openUpdateDialog()">edit</mat-icon>
+                    <mat-icon id="delete" class="upscale-on-hover" style="visibility: hidden;" (click)="openDeleteDialog()">delete</mat-icon>
+                </div>
+
+                <!-- Invisible button to center title project name -->
+                <div style="visibility: hidden;" *ngIf="this.currentUser && !this.currentUser.isAdmin() && !this.isUserLinkedToProject()">
+                    <button mat-raised-button>{{"PROJECTS.DETAILS" | translate}}</button>
+                </div>
+    
+            </div>
+            
+            <div class="project-description">
+                <p>{{getDescription()}}</p>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

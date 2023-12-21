@@ -4,8 +4,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { BusinessLineModel } from 'src/app/core/data/models/business-line.model';
 import { ApiBusinessLineService } from 'src/app/core/services/api-business-line.service';
-import { AddUpdateBusinesslineDialogComponent } from '../dialogs/add-update-businessline-dialog/add-update-businessline-dialog.component';
-import { DeleteObjectDialogComponent } from '../dialogs/delete-object-dialog/delete-object-dialog.component';
+import { AddUpdateBusinesslineDialogComponent } from '../../dialogs/add-update-businessline-dialog/add-update-businessline-dialog.component';
+import { DeleteObjectDialogComponent } from '../../dialogs/delete-object-dialog/delete-object-dialog.component';
 import { ApiProjectService } from 'src/app/core/services/api-project.service';
 import { ProjectModel } from 'src/app/core/data/models/project.model';
 

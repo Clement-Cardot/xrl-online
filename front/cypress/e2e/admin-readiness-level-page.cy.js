@@ -447,4 +447,63 @@ describe("Admin ReadinessLevel Page tests", () => {
       });
     }
   );
+
+  context(
+    "US : XRLO-24 As an Admin, I must be able to delete an existing ReadinessLevel",
+    () => {
+      let readinessLevelId;
+
+      beforeEach(() => {
+        //Create a new ReadinessLevel to delete
+        cy.addNewReadinessLevel().then((result) => {
+          readinessLevelId = result;
+        });
+      });
+
+      it("Delete a ReadinessLevel Delete Success", () => {
+        cy.intercept({
+          method: "DELETE",
+          url:
+            "/api/readiness-levels/delete-readiness-level?id=" + readinessLevelId,
+        }).as("apiDeleteReadinessLevel");
+
+        //Click on the first ReadinessLevel to open the edit dialog
+        cy.get("#readiness-level-card-" + readinessLevelId).click();
+
+        //Click on the delete button
+        cy.get("#delete-rl-icon").click();
+
+        //Click on the confirm button
+        cy.get(
+          "#mat-mdc-dialog-3 > .mdc-dialog__container > .mat-mdc-dialog-surface > .ng-star-inserted > .mat-mdc-dialog-actions > #confirm > .mdc-button__label"
+        ).click();
+
+        //Verify that the Api call is successful
+        cy.wait("@apiDeleteReadinessLevel").then((interception) => {
+          expect(interception.response.statusCode).to.equal(200);
+        });
+
+        //Verify that the success message is displayed
+        cy.get(".mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label").should(
+          "have.text",
+          " Le niveau de maturité a été supprimé avec succès\n"
+        );
+
+        //Verify that the deleted ReadinessLevel is not displayed
+        cy.get("#readiness-level-card-" + readinessLevelId).should("not.exist");
+      });
+
+      it("Delete a ReadinessLevel Readiness Level is linked to projects", () => {
+
+        readinessLevelId = database.readiness_levels[0]._id;
+
+        //Click on the first ReadinessLevel to open the edit dialog
+        cy.get("#readiness-level-card-" + readinessLevelId).click();
+
+        //Check that the delete button is disabled
+        cy.get("#delete-rl-icon").should("have.css", "color", "rgb(128, 128, 128)");
+        cy.get("#delete-rl-icon").should("have.css", "pointer-events", "none");
+      });
+    }
+  );
 });

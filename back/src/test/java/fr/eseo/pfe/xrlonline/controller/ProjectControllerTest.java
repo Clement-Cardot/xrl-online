@@ -3,11 +3,11 @@ package fr.eseo.pfe.xrlonline.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
 import fr.eseo.pfe.xrlonline.model.dto.AssessmentDTO;
-import fr.eseo.pfe.xrlonline.model.dto.AssessmentDTO.Tag;
+import fr.eseo.pfe.xrlonline.model.dto.AssessmentDTO.TagDTO;
 import fr.eseo.pfe.xrlonline.model.dto.ProjectDTO;
+import fr.eseo.pfe.xrlonline.model.dto.TeamDTO;
+import fr.eseo.pfe.xrlonline.model.dto.UserDTO;
 import fr.eseo.pfe.xrlonline.model.entity.Project;
-import fr.eseo.pfe.xrlonline.model.entity.Team;
-import fr.eseo.pfe.xrlonline.model.entity.User;
 import fr.eseo.pfe.xrlonline.service.ProjectService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -224,7 +224,7 @@ class ProjectControllerTest {
     AssessmentDTO assessmentDTO = new AssessmentDTO();
     assessmentDTO.setDate(new Date());
     assessmentDTO.setComment("Comment 1");
-    assessmentDTO.setTag(Tag.INITIAL);
+    assessmentDTO.setTag(TagDTO.INITIAL);
 
     ProjectDTO projectDTO = new ProjectDTO();
     projectDTO.setId(projectId);
@@ -232,9 +232,9 @@ class ProjectControllerTest {
     projectDTO.setAssessments(new ArrayList<>());
     projectDTO.getAssessments().add(assessmentDTO);
 
-    Team team = new Team();
-    ArrayList<User> members = new ArrayList<>();
-    User user = new User();
+    TeamDTO team = new TeamDTO();
+    ArrayList<UserDTO> members = new ArrayList<>();
+    UserDTO user = new UserDTO();
 
     user.setLogin("cardotcl");
     members.add(user);
@@ -242,7 +242,7 @@ class ProjectControllerTest {
 
     projectDTO.setTeam(team);
 
-    when(projectService.getProjectById(projectId)).thenReturn(projectDTO);
+    when(projectService.isMemberOfProjectTeam(projectId)).thenReturn(true);
     when(projectService.addNewAssessment(projectId, assessmentDTO)).thenReturn(projectDTO);
 
     // Act
@@ -258,8 +258,8 @@ class ProjectControllerTest {
     ProjectDTO actualProject = objectMapper.readValue(actualResponseBody, ProjectDTO.class);
     assertEquals(projectDTO, actualProject);
 
+    verify(projectService).isMemberOfProjectTeam(projectId);
     verify(projectService).addNewAssessment(projectId, assessmentDTO);
-    verify(projectService).getProjectById(projectId);
     verifyNoMoreInteractions(projectService);
   }
 
@@ -276,9 +276,9 @@ class ProjectControllerTest {
     projectDTO.setAssessments(new ArrayList<>());
     projectDTO.getAssessments().add(assessmentDTO);
 
-    Team team = new Team();
-    ArrayList<User> members = new ArrayList<>();
-    User user = new User();
+    TeamDTO team = new TeamDTO();
+    ArrayList<UserDTO> members = new ArrayList<>();
+    UserDTO user = new UserDTO();
 
     user.setLogin("cardotcl");
     members.add(user);
@@ -286,7 +286,7 @@ class ProjectControllerTest {
 
     projectDTO.setTeam(team);
 
-    when(projectService.getProjectById(projectId)).thenReturn(projectDTO);
+    when(projectService.isMemberOfProjectTeam(projectId)).thenReturn(true);
 
     when(projectService.addNewAssessment(projectId, assessmentDTO)).thenThrow(new CustomRuntimeException(CustomRuntimeException.PROJECT_NOT_FOUND));
 
@@ -299,9 +299,8 @@ class ProjectControllerTest {
         .andReturn();
 
     // Assert
-    doThrow(new CustomRuntimeException(CustomRuntimeException.PROJECT_NOT_FOUND)).when(projectService).addNewAssessment(projectId, assessmentDTO);
+    verify(projectService).isMemberOfProjectTeam(projectId);
     verify(projectService).addNewAssessment(projectId, assessmentDTO);
-    verify(projectService).getProjectById(projectId);
     verifyNoMoreInteractions(projectService);
   }
 
@@ -318,9 +317,9 @@ class ProjectControllerTest {
     projectDTO.setAssessments(new ArrayList<>());
     projectDTO.getAssessments().add(assessmentDTO);
 
-    Team team = new Team();
-    ArrayList<User> members = new ArrayList<>();
-    User user = new User();
+    TeamDTO team = new TeamDTO();
+    ArrayList<UserDTO> members = new ArrayList<>();
+    UserDTO user = new UserDTO();
 
     user.setLogin("ledumaxe");
     members.add(user);
@@ -328,9 +327,7 @@ class ProjectControllerTest {
 
     projectDTO.setTeam(team);
 
-    when(projectService.getProjectById(projectId)).thenReturn(projectDTO);
-
-    when(projectService.addNewAssessment(projectId, assessmentDTO)).thenThrow(new CustomRuntimeException(CustomRuntimeException.USER_NOT_MEMBER_OF_TEAM_PROJECT));
+    when(projectService.isMemberOfProjectTeam(projectId)).thenReturn(false);
 
     // Act
     mockMvc.perform(post("/projects/add-new-assessment")
@@ -341,8 +338,7 @@ class ProjectControllerTest {
             .andReturn();
 
     // Assert
-    doThrow(new CustomRuntimeException(CustomRuntimeException.USER_NOT_MEMBER_OF_TEAM_PROJECT)).when(projectService).addNewAssessment(projectId, assessmentDTO);
-    verify(projectService).getProjectById(projectId);
+    verify(projectService).isMemberOfProjectTeam(projectId);
     verifyNoMoreInteractions(projectService);
   }
 
@@ -388,7 +384,6 @@ class ProjectControllerTest {
         .andReturn();
 
     // Assert
-    String actualResponseBody = result.getResponse().getContentAsString();
     assertEquals(exception.getHttpCode().value(), result.getResponse().getStatus());
 
     verify(projectService).getProjectById(id);
@@ -410,9 +405,9 @@ class ProjectControllerTest {
     projectDTO.setAssessments(new ArrayList<>());
     projectDTO.getAssessments().add(assessmentDTO);
 
-    Team team = new Team();
-    ArrayList<User> members = new ArrayList<>();
-    User user = new User();
+    TeamDTO team = new TeamDTO();
+    ArrayList<UserDTO> members = new ArrayList<>();
+    UserDTO user = new UserDTO();
 
     user.setLogin("cardotcl");
     members.add(user);
@@ -420,11 +415,11 @@ class ProjectControllerTest {
 
     projectDTO.setTeam(team);
 
-    when(projectService.getProjectById(projectId)).thenReturn(projectDTO);
+    when(projectService.isMemberOfProjectTeam(projectId)).thenReturn(true);
     when(projectService.modifyLastAssessmentComment(projectId, comment)).thenReturn(projectDTO);
 
     // Act
-    mockMvc.perform(post("/projects/modify-last-assessment-comment")
+    mockMvc.perform(put("/projects/modify-last-assessment-comment")
                     .param("projectId", projectId)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(comment))
@@ -432,8 +427,8 @@ class ProjectControllerTest {
             .andReturn();
 
     // Assert
+    verify(projectService).isMemberOfProjectTeam(projectId);
     verify(projectService).modifyLastAssessmentComment(projectId, comment);
-    verify(projectService).getProjectById(projectId);
     verifyNoMoreInteractions(projectService);
   }
 
@@ -452,9 +447,9 @@ class ProjectControllerTest {
     projectDTO.setAssessments(new ArrayList<>());
     projectDTO.getAssessments().add(assessmentDTO);
 
-    Team team = new Team();
-    ArrayList<User> members = new ArrayList<>();
-    User user = new User();
+    TeamDTO team = new TeamDTO();
+    ArrayList<UserDTO> members = new ArrayList<>();
+    UserDTO user = new UserDTO();
 
     user.setLogin("ledumaxe");
     members.add(user);
@@ -462,11 +457,10 @@ class ProjectControllerTest {
 
     projectDTO.setTeam(team);
 
-    when(projectService.getProjectById(projectId)).thenReturn(projectDTO);
-    when(projectService.modifyLastAssessmentComment(projectId, comment)).thenThrow(new CustomRuntimeException(CustomRuntimeException.USER_NOT_MEMBER_OF_TEAM_PROJECT));
+    when(projectService.isMemberOfProjectTeam(projectId)).thenReturn(false);
 
     // Act
-    mockMvc.perform(post("/projects/modify-last-assessment-comment")
+    mockMvc.perform(put("/projects/modify-last-assessment-comment")
                     .param("projectId", projectId)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(comment))
@@ -474,9 +468,79 @@ class ProjectControllerTest {
             .andReturn();
 
     // Assert
-    doThrow(new CustomRuntimeException(CustomRuntimeException.USER_NOT_MEMBER_OF_TEAM_PROJECT)).when(projectService).modifyLastAssessmentComment(projectId, comment);
-    verify(projectService).getProjectById(projectId);
+    verify(projectService).isMemberOfProjectTeam(projectId);
     verifyNoMoreInteractions(projectService);
   }
 
+  @Test
+  @WithMockUser(username = "user")
+  void modifyLastAssessmentTest() throws Exception {
+    // Arrange
+    String projectId = "1";
+    AssessmentDTO assessmentDTO = new AssessmentDTO();
+    assessmentDTO.setDate(new Date());
+    assessmentDTO.setComment("Modified Comment");
+    assessmentDTO.setTag(TagDTO.DRAFT);
+
+    ProjectDTO projectDTO = new ProjectDTO();
+    projectDTO.setId(projectId);
+    projectDTO.setName("Project 1");
+    projectDTO.setAssessments(new ArrayList<>());
+    projectDTO.getAssessments().add(assessmentDTO);
+
+    TeamDTO team = new TeamDTO();
+    ArrayList<UserDTO> members = new ArrayList<>();
+    UserDTO user = new UserDTO();
+
+    user.setLogin("user");
+    members.add(user);
+    team.setMembers(members);
+
+    projectDTO.setTeam(team);
+
+    when(projectService.isMemberOfProjectTeam(projectId)).thenReturn(true);
+    when(projectService.modifyLastAssessment(projectId, assessmentDTO)).thenReturn(projectDTO);
+
+    // Act
+    MvcResult result = mockMvc.perform(put("/projects/modify-last-assessment")
+            .param("projectId", projectId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(assessmentDTO)))
+        .andExpect(status().isOk())
+        .andReturn();
+
+    // Assert
+    String actualResponseBody = result.getResponse().getContentAsString();
+    ProjectDTO actualProject = objectMapper.readValue(actualResponseBody, ProjectDTO.class);
+    assertEquals(projectDTO, actualProject);
+
+    verify(projectService).isMemberOfProjectTeam(projectId);
+    verify(projectService).modifyLastAssessment(projectId, assessmentDTO);
+    verifyNoMoreInteractions(projectService);
+  }
+
+  @Test
+  @WithMockUser(username = "user")
+  void modifyLastAssessmentWhenNotMemberOfTeamTest() throws Exception {
+    // Arrange
+    String projectId = "1";
+    AssessmentDTO assessmentDTO = new AssessmentDTO();
+    assessmentDTO.setDate(new Date());
+    assessmentDTO.setComment("Modified Comment");
+    assessmentDTO.setTag(TagDTO.DRAFT);
+
+    when(projectService.isMemberOfProjectTeam(projectId)).thenReturn(false);
+
+    // Act
+    mockMvc.perform(put("/projects/modify-last-assessment")
+            .param("projectId", projectId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(assessmentDTO)))
+        .andExpect(status().is4xxClientError())
+        .andReturn();
+
+    // Assert
+    verify(projectService).isMemberOfProjectTeam(projectId);
+    verifyNoMoreInteractions(projectService);
+  }
 }

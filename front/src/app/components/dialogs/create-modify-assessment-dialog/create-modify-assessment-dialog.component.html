@@ -196,7 +196,7 @@
                 <mat-label>{{"OBJECT.COMMENT" | translate}}</mat-label>
                 <textarea id="comment-input"
                   matInput 
-                  formControlName="commentControl" 
+                  formControlName="commentControl"
                   required
                   cdkTextareaAutosize
                   cdkAutosizeMinRows="3"
@@ -207,8 +207,9 @@
               
               <mat-radio-group formControlName="tagControl">
                 <mat-radio-button id="select-initial" value="INITIAL" [disabled]="this.lastAssessment != null">Initial</mat-radio-button>
-                <mat-radio-button id="select-draft" value="DRAFT">Draft</mat-radio-button>
+                <mat-radio-button id="select-intermediate" value="INTERMEDIATE">Intermediate</mat-radio-button>
                 <mat-radio-button id="select-final" value="FINAL">Final</mat-radio-button>
+                <mat-radio-button id="select-draft" value="DRAFT">Draft</mat-radio-button>
               </mat-radio-group>
 
             </div>
@@ -232,8 +233,9 @@
           <h2>{{"ASSESSMENT_DIALOG.CONFIRM_ASSESSMENT" | translate}}</h2>
         </div>
         <div class="center">
-          <app-xrl-graph-radar *ngIf="lastAssessment != null" [actualXrl]="lastAssessment" [newXrl]="newAssessment" [scale]="2"></app-xrl-graph-radar>
-          <app-xrl-graph-radar *ngIf="lastAssessment == null" [actualXrl]="newAssessment" [scale]="2"></app-xrl-graph-radar>
+          <app-xrl-graph style="width: 100%;" [assesment]="newAssessment" [compareAssesment]="lastAssessment" [options]="graphOptions"></app-xrl-graph>
+          <!-- <app-xrl-graph-radar *ngIf="lastAssessment != null" [actualXrl]="lastAssessment" [newXrl]="newAssessment" [scale]="2"></app-xrl-graph-radar>
+          <app-xrl-graph-radar *ngIf="lastAssessment == null" [actualXrl]="newAssessment" [scale]="2"></app-xrl-graph-radar> -->
         </div>
         <div class="button-container">
           <button id="previous" mat-raised-button matStepperPrevious>{{"ACTION.BACK" | translate}}</button>

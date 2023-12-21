@@ -14,7 +14,8 @@ export class ReadinessLevelModel {
     public id: string,
     public name: string,
     public description: string,
-    public levels: Level[]
+    public levels: Level[],
+    public isUsed: boolean
   ) {}
 }
 
@@ -30,7 +31,8 @@ export class ReadinessLevelAdapter implements Adapter<ReadinessLevelModel> {
       item.levels.map(
         (level: any) =>
           new Level(level.level, level.shortDescription, level.longDescription)
-      )
+      ),
+      item.isUsed
     );
   }
 }
