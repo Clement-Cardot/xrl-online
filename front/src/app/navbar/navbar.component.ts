@@ -17,6 +17,8 @@ export class NavbarComponent implements OnInit {
 
   currentUser: UserModel | undefined = undefined;
 
+  rotate = false;
+
   constructor(
     private router: Router,
     private currentUserService: CurrentUserService,
@@ -50,8 +52,7 @@ export class NavbarComponent implements OnInit {
     this.dialog.open(LoginComponent, {
       enterAnimationDuration,
       exitAnimationDuration,
-      disableClose: true,
-      autoFocus: false
+      disableClose: true
     });
   }
 
@@ -83,7 +84,7 @@ export class NavbarComponent implements OnInit {
   openSnackBar(): void {
     this._snackBar.open(
       this.translate.instant("LOGIN.LOGOUT_SUCCESS", { username: this.currentUser?.login }),
-      this.translate.instant("LOGIN.SUCCESS_CLOSE"),
+      this.translate.instant("ACTION.CLOSE"),
       { duration: 5000 }
     );
   }

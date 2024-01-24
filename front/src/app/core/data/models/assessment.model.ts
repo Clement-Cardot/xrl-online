@@ -6,14 +6,14 @@ import { ReadinessLevelRankAdapter, ReadinessLevelRankModel } from "./readiness-
 export enum Tag {
   INITIAL = "INITIAL",
   INTERMEDIATE = "INTERMEDIATE",
-  FINAL = "FINAL",
-  DRAFT = "DRAFT"
+  FINAL = "FINAL"
 }
 
 export class AssessmentModel {
     constructor(
         public date: Date,
         public tag: Tag,
+        public draft: boolean,
         public comment: string,
         public readinessLevelRanks: ReadinessLevelRankModel[]
     ) {}
@@ -29,6 +29,7 @@ export class AssessmentModel {
       return new AssessmentModel(
         new Date(item.date),
         item.tag,
+        item.draft,
         item.comment,
         item.readinessLevelRanks.map((readinessLevel: any) => this.readinessLevelRankAdapter.adapt(readinessLevel))
       );

@@ -1,13 +1,13 @@
 <mat-dialog-content>
   <h1 mat-dialog-title>{{title | translate}}</h1>
   <mat-form-field id="nameField">
-    <mat-label>{{'PROJECTS.NAME' | translate}}</mat-label>
+    <mat-label>{{'OBJECT.NAME' | translate}}</mat-label>
     <input id="project-name-input" matInput [formControl]="nameFormControl">
     <mat-error id="project-name-mat-error">{{getNameErrorMessage()}}</mat-error>
   </mat-form-field>
   <div id="team-business-line-form-fields">
     <mat-form-field>
-        <mat-label>{{'PROJECTS.TEAM' | translate}}</mat-label>
+        <mat-label>{{'OBJECT.TEAM' | translate}}</mat-label>
         <input id="team-name-input" matInput [formControl]="teamFormControl" [matAutocomplete]="autoTeam">
         <mat-error id="team-name-mat-error">{{getTeamErrorMessage()}}</mat-error>
         <mat-autocomplete #autoTeam="matAutocomplete" [displayWith]="displayTeamFn">
@@ -17,7 +17,7 @@
         </mat-autocomplete>
     </mat-form-field>
     <mat-form-field>
-        <mat-label>{{'PROJECTS.BUSINESS_LINE' | translate}}</mat-label>
+        <mat-label>{{'OBJECT.BUSINESS_LINE' | translate}}</mat-label>
         <input id="business-line-name-input" matInput [formControl]="businessLineFormControl" [matAutocomplete]="autoBusinessLine">
         <mat-error id="business-line-name-mat-error">{{getBusinessLineErrorMessage()}}</mat-error>
         <mat-autocomplete #autoBusinessLine="matAutocomplete" [displayWith]="displayBusinessLineFn">
@@ -28,8 +28,9 @@
     </mat-form-field>
   </div>
   <mat-form-field id="descriptionField">
-    <mat-label>{{'PROJECTS.DESCRIPTION' | translate}}</mat-label>
+    <mat-label>{{'OBJECT.DESCRIPTION' | translate}}</mat-label>
     <textarea id="description-input" matInput [formControl]="descriptionFormControl" cdkTextareaAutosize></textarea>
+    <mat-error id="description-mat-error">{{getDescriptionErrorMessage()}}</mat-error>
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions align="center">

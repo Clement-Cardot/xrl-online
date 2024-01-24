@@ -57,7 +57,7 @@ export class TeamCardComponent implements OnInit {
             this.deleteTeamEvent.emit(v);
             this.snackBar.open(
               this.translateService.instant('TEAM.DELETE_SUCCESS'),
-              'OK',
+              this.translateService.instant('ACTION.CLOSE'),
               {
                 duration: 3000,
               }

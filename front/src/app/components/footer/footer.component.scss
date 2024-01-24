@@ -29,3 +29,8 @@ p {
   font-size: smaller;
   margin: 0;
 }
+
+.no-wrap {
+  overflow: hidden;
+  white-space: nowrap;
+}

@@ -1,10 +1,8 @@
-import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators, ValidationErrors } from '@angular/forms';
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
-import { all, is } from 'cypress/types/bluebird';
 import { Observable, map, startWith } from 'rxjs';
 import { BusinessLineModel } from 'src/app/core/data/models/business-line';
 import { ProjectModel } from 'src/app/core/data/models/project.model';
@@ -61,7 +59,7 @@ export class ProjectFormDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.nameFormControl = new FormControl(this.project?.name, [Validators.required, Validators.maxLength(20), Validators.minLength(3)]);
-    this.descriptionFormControl = new FormControl(this.project?.description);
+    this.descriptionFormControl = new FormControl(this.project?.description, [Validators.maxLength(1000)]);
     this.teamFormControl = new FormControl(this.project?.team, [Validators.required]);
     this.businessLineFormControl = new FormControl(this.project?.businessLine, [Validators.required]);
 
@@ -81,7 +79,7 @@ export class ProjectFormDialogComponent implements OnInit {
             map(value => this._filterTeam(value))
           );
         },
-        error: (err) => console.log(err),
+        error: (err) => console.error(err),
       });
     }
     else {
@@ -94,7 +92,7 @@ export class ProjectFormDialogComponent implements OnInit {
               map(value => this._filterTeam(value))
             );
           },
-          error: (err) => console.log(err),
+          error: (err) => console.error(err),
         });
       }
 
@@ -106,7 +104,7 @@ export class ProjectFormDialogComponent implements OnInit {
             map(value => this._filterTeam(value))
           );
         },
-        error: (err) => console.log(err),
+        error: (err) => console.error(err),
       });
 
       if (!this.isCreate) {
@@ -123,7 +121,7 @@ export class ProjectFormDialogComponent implements OnInit {
           map(value => this._filterBusinessLine(value))
         );
       },
-      error: (err) => console.log(err),
+      error: (err) => console.error(err),
     });
   }
 
@@ -185,14 +183,14 @@ export class ProjectFormDialogComponent implements OnInit {
         this.descriptionFormControl.value,
         this.teamFormControl.value,
         this.businessLineFormControl.value,
-        [],
+        this.project?.assessments ?? [],
       );
 
       if (this.project) {
-        this.projectService.updateProjectWithoutAssesments(project).subscribe({
+        this.projectService.updateProject(project).subscribe({
           next: (v) => {
             this.project = v;
-            this.snackBar.open(this.translateService.instant('PROJECTS.UPDATE_SUCCESS'), 'OK', {
+            this.snackBar.open(this.translateService.instant('PROJECT.UPDATE_SUCCESS'), this.translateService.instant('ACTION.CLOSE'), {
               duration: 3000,
             });
             this.dialogRef.close(v);
@@ -210,7 +208,7 @@ export class ProjectFormDialogComponent implements OnInit {
         this.projectService.createProject(project).subscribe({
           next: (v) => {
             this.project = v;
-            this.snackBar.open(this.translateService.instant('PROJECTS.CREATE_SUCCESS'), 'OK', {
+            this.snackBar.open(this.translateService.instant('PROJECT.CREATE_SUCCESS'), this.translateService.instant('ACTION.CLOSE'), {
               duration: 3000,
             });
             this.dialogRef.close(v);
@@ -231,39 +229,46 @@ export class ProjectFormDialogComponent implements OnInit {
 
   getNameErrorMessage() {
     if (this.nameFormControl.hasError('required')) {
-      return this.translateService.instant('PROJECTS.NAME_REQUIRED');
+      return this.translateService.instant('PROJECT.NAME_REQUIRED');
     }
     if (this.nameFormControl.hasError('projectNameAlreadyExists')) {
-      return this.translateService.instant('PROJECTS.NAME_ALREADY_EXISTS');
+      return this.translateService.instant('PROJECT.NAME_ALREADY_EXISTS');
     }
     if (this.nameFormControl.hasError('maxlength')) {
-      return this.translateService.instant('PROJECTS.NAME_MAX_LENGTH');
+      return this.translateService.instant('PROJECT.NAME_MAX_LENGTH');
     }
     if (this.nameFormControl.hasError('minlength')) {
-      return this.translateService.instant('PROJECTS.NAME_MIN_LENGTH');
+      return this.translateService.instant('PROJECT.NAME_MIN_LENGTH');
     }
     return '';
   }
 
   getTeamErrorMessage() {
     if (this.teamFormControl.hasError('required')) {
-      return this.translateService.instant('PROJECTS.TEAM_REQUIRED');
+      return this.translateService.instant('PROJECT.TEAM_REQUIRED');
     }
     if (this.teamFormControl.hasError('teamNotExists')) {
-      return this.translateService.instant('PROJECTS.TEAM_NOT_EXISTS');
+      return this.translateService.instant('PROJECT.TEAM_NOT_EXISTS');
     }
     if (this.teamFormControl.hasError('teamNotAllowed')) {
-      return this.translateService.instant('PROJECTS.TEAM_NOT_ALLOWED');
+      return this.translateService.instant('PROJECT.TEAM_NOT_ALLOWED');
     }
     return '';
   }
 
   getBusinessLineErrorMessage() {
     if (this.businessLineFormControl.hasError('required')) {
-      return this.translateService.instant('PROJECTS.BUSINESS_LINE_REQUIRED');
+      return this.translateService.instant('PROJECT.BUSINESS_LINE_REQUIRED');
     }
     if (this.businessLineFormControl.hasError('businessLineNotExists')) {
-      return this.translateService.instant('PROJECTS.BUSINESS_LINE_NOT_EXISTS');
+      return this.translateService.instant('PROJECT.BUSINESS_LINE_NOT_EXISTS');
+    }
+    return '';
+  }
+
+  getDescriptionErrorMessage() {
+    if (this.descriptionFormControl.hasError('maxlength')) {
+      return this.translateService.instant('PROJECT.DESCRIPTION_MAX_LENGTH');
     }
     return '';
   }

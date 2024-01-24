@@ -7,6 +7,8 @@ import fr.eseo.pfe.xrlonline.model.dto.AssessmentDTO;
 import fr.eseo.pfe.xrlonline.model.dto.ProjectDTO;
 import fr.eseo.pfe.xrlonline.service.ProjectService;
 import lombok.extern.log4j.Log4j2;
+
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +20,7 @@ import java.util.List;
 @RequestMapping("/projects")
 public class ProjectController {
 
-  private ProjectService projectService;
+  private final ProjectService projectService;
 
   UserLogger logger = UserLoggerFactory.getLogger(ProjectController.class, log);
 
@@ -41,43 +43,47 @@ public class ProjectController {
       return ResponseEntity.ok(projectService.getProjectById(id));
     } catch (CustomRuntimeException e) {
       logger.logError("Error while trying to get project with this id : %s, Error Details : %s", id, e.getMessage());
-      return new ResponseEntity<>(e.getHttpCode());
+      HttpStatusCode httpCode = e.getHttpCode();
+      return new ResponseEntity<>(httpCode);
     }
   }
 
   @PostMapping("/create-project")
   public ResponseEntity<ProjectDTO> createProject(@RequestBody ProjectDTO projectDTO) {
-    logger.logInfo("REQUEST: Create project with :", projectDTO);
+    logger.logInfo("REQUEST: Create project with : %s", projectDTO);
 
     try {
       return ResponseEntity.ok(projectService.createProject(projectDTO));
     } catch (CustomRuntimeException e) {
       logger.logError("Error while trying to create project with this name : %s, Error Details : %s", projectDTO.getName(), e.getMessage());
-      return new ResponseEntity<>(e.getHttpCode());
+      HttpStatusCode httpCode = e.getHttpCode();
+      return new ResponseEntity<>(httpCode);
     }
   }
 
   @DeleteMapping("/delete-project")
   public ResponseEntity<ProjectDTO> deleteProject(@RequestParam String id) {
-    logger.logInfo("REQUEST: Delete project with id :", id);
+    logger.logInfo("REQUEST: Delete project with id : %s", id);
 
     try {
       return ResponseEntity.ok(projectService.deleteProject(id));
     } catch (CustomRuntimeException e) {
       logger.logError("Error while trying to delete project with this id : %s, Error Details : %s", id, e.getMessage());
-      return new ResponseEntity<>(e.getHttpCode());
+      HttpStatusCode httpCode = e.getHttpCode();
+      return new ResponseEntity<>(httpCode);
     }
   }
 
   @PutMapping("/update-project")
   public ResponseEntity<ProjectDTO> updateProject(@RequestBody ProjectDTO projectDTO) {
-    logger.logInfo("REQUEST: Update project with :", projectDTO);
+    logger.logInfo("REQUEST: Update project with : %s", projectDTO);
 
     try {
       return ResponseEntity.ok(projectService.updateProject(projectDTO));
     } catch (CustomRuntimeException e) {
       logger.logError("Error while trying to update project with this id : %s, Error Details : %s", projectDTO.getId(), e.getMessage());
-      return new ResponseEntity<>(e.getHttpCode());
+      HttpStatusCode httpCode = e.getHttpCode();
+      return new ResponseEntity<>(httpCode);
     }
   }
 
@@ -95,17 +101,18 @@ public class ProjectController {
 
     } catch (CustomRuntimeException e) {
       logger.logError("Error while trying to add new assessment to project with this id : %s, Error Details : %s", projectId, e.getMessage());
-      return new ResponseEntity<>(e.getHttpCode());
+      HttpStatusCode httpCode = e.getHttpCode();
+      return new ResponseEntity<>(httpCode);
     }
   }
 
-  @PutMapping("/modify-last-assessment")
-  public ResponseEntity<ProjectDTO> modifyLastAssessment(@RequestParam String projectId, @RequestBody AssessmentDTO assessmentDTO) {
-    logger.logInfo("REQUEST: Modify last assessment of project with id : %s and assessment : %s", projectId, assessmentDTO);
+  @PutMapping("/modify-assessment")
+  public ResponseEntity<ProjectDTO> modifyAssessment(@RequestParam String projectId, @RequestBody AssessmentDTO assessmentDTO) {
+    logger.logInfo("REQUEST: Modify assessment of project with id : %s and assessment : %s", projectId, assessmentDTO);
 
     try {
       if (projectService.isMemberOfProjectTeam(projectId)) {
-        return ResponseEntity.ok(projectService.modifyLastAssessment(projectId, assessmentDTO));
+        return ResponseEntity.ok(projectService.modifyAssessment(projectId, assessmentDTO));
       }
       else {
         throw new CustomRuntimeException(CustomRuntimeException.USER_NOT_MEMBER_OF_TEAM_PROJECT);
@@ -113,25 +120,27 @@ public class ProjectController {
 
     } catch (CustomRuntimeException e) {
       logger.logError("Error while trying to modify last assessment of project with this id : %s, Error Details : %s", projectId, e.getMessage());
-      return new ResponseEntity<>(e.getHttpCode());
+      HttpStatusCode httpCode = e.getHttpCode();
+      return new ResponseEntity<>(httpCode);
     }
   }
 
-  @PutMapping("/modify-last-assessment-comment")
-  public ResponseEntity<ProjectDTO> modifyLastAssessmentComment(@RequestParam String projectId, @RequestBody String comment) {
-    logger.logInfo("REQUEST: Modify last assessment comment in project with id : %s, comment : %s", projectId, comment);
+  @PutMapping("/modify-assessment-comment")
+  public ResponseEntity<ProjectDTO> modifyAssessmentComment(@RequestParam String projectId, @RequestBody String[] data) {
+    logger.logInfo("REQUEST: Modify last assessment comment in project with id : %s, comment : %s, assessmentIndex : %s", projectId, data[0], data[1]);
 
     try {
       if (projectService.isMemberOfProjectTeam(projectId)) {
-        return ResponseEntity.ok(projectService.modifyLastAssessmentComment(projectId, comment));
+        return ResponseEntity.ok(projectService.modifyAssessmentComment(projectId, data));
       }
       else {
         throw new CustomRuntimeException(CustomRuntimeException.USER_NOT_MEMBER_OF_TEAM_PROJECT);
       }
 
     } catch (CustomRuntimeException e) {
-      logger.logError("Error while trying to modify last assessment comment in project with this id : %s, Error Details : %s", projectId, e.getMessage());
-      return new ResponseEntity<>(e.getHttpCode());
+      logger.logError("Error while trying to modify assessment comment in project with this id : %s, Error Details : %s", projectId, e.getMessage());
+      HttpStatusCode httpCode = e.getHttpCode();
+      return new ResponseEntity<>(httpCode);
     }
   }
   
@@ -142,7 +151,8 @@ public class ProjectController {
       return projectService.getProjectsByTeamId(id);
     } catch (CustomRuntimeException e) {
       logger.logError("Error while trying to get projects by team id : %s, Error Details : %s", id, e.getMessage());
-      return new ResponseEntity<>(e.getHttpCode());
+      HttpStatusCode httpCode = e.getHttpCode();
+      return new ResponseEntity<>(httpCode);
     }
   }
 
@@ -153,7 +163,27 @@ public class ProjectController {
       return projectService.getProjectsByBusinessLineId(id);
     } catch (CustomRuntimeException e) {
       logger.logError("Error while trying to get projects by business line id : %s, Error Details : %s", id, e.getMessage());
-      return new ResponseEntity<>(e.getHttpCode());
+      HttpStatusCode httpCode = e.getHttpCode();
+      return new ResponseEntity<>(httpCode);
+    }
+  }
+
+  @PostMapping("/delete-assessment")
+  public ResponseEntity<ProjectDTO> deleteAssessment(@RequestParam String projectId, @RequestBody AssessmentDTO assessmentDTO) {
+    logger.logInfo("REQUEST: Delete assessment to project with id : %s and assessment : %s", projectId, assessmentDTO);
+
+    try {
+      if (projectService.isAdmin()) {
+        return ResponseEntity.ok(projectService.deleteAssessment(projectId, assessmentDTO));
+      }
+      else {
+        throw new CustomRuntimeException(CustomRuntimeException.USER_NOT_ADMIN);
+      }
+
+    } catch (CustomRuntimeException e) {
+      logger.logError("Error while trying to add new assessment to project with this id : %s, Error Details : %s", projectId, e.getMessage());
+      HttpStatusCode httpCode = e.getHttpCode();
+      return new ResponseEntity<>(httpCode);
     }
   }
 

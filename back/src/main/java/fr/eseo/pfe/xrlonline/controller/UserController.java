@@ -7,6 +7,7 @@ import fr.eseo.pfe.xrlonline.model.dto.UserDTO;
 import fr.eseo.pfe.xrlonline.service.LoginService;
 import fr.eseo.pfe.xrlonline.service.UserService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +39,8 @@ public class UserController {
             return response;
         } catch (CustomRuntimeException e) {
             logger.logError("Error while trying to log in with : %s, Error Details : %s", login, e.getMessage());
-            return new ResponseEntity<>(e.getHttpCode());
+            HttpStatusCode httpCode = e.getHttpCode();
+            return new ResponseEntity<>(httpCode);
         }
     }
 
@@ -57,7 +59,8 @@ public class UserController {
             return userService.getAllUser();
         } catch (CustomRuntimeException e) {
             logger.logError("Error while trying to get all users, Error Details : %s", e.getMessage());
-            return new ResponseEntity<>(e.getHttpCode());
+            HttpStatusCode httpCode = e.getHttpCode();
+            return new ResponseEntity<>(httpCode);
         }
     }
 
@@ -68,7 +71,8 @@ public class UserController {
             return userService.getUserById(id);
         } catch (CustomRuntimeException e) {
             logger.logError("Error while trying to get user by id with : %s, Error Details : %s", id, e.getMessage());
-            return new ResponseEntity<>(e.getHttpCode());
+            HttpStatusCode httpCode = e.getHttpCode();
+            return new ResponseEntity<>(httpCode);
         }
     }
 
@@ -79,7 +83,8 @@ public class UserController {
             return userService.getUserByLogin(login);
         } catch (CustomRuntimeException e) {
             logger.logError("Error while trying to get user by id with : %s, Error Details : %s", login, e.getMessage());
-            return new ResponseEntity<>(e.getHttpCode());
+            HttpStatusCode httpCode = e.getHttpCode();
+            return new ResponseEntity<>(httpCode);
         }
     }
 
@@ -90,7 +95,8 @@ public class UserController {
             return userService.createUser(user);
         } catch (CustomRuntimeException e) {
             logger.logError("Error while trying to create user with : %s, Error Details : %s", user, e.getMessage());
-            return new ResponseEntity<>(e.getHttpCode());
+            HttpStatusCode httpCode = e.getHttpCode();
+            return new ResponseEntity<>(httpCode);
         }
     }
 
@@ -101,7 +107,8 @@ public class UserController {
             return userService.updateUser(user);
         } catch (CustomRuntimeException e) {
             logger.logError("Error while trying to update user with : %s, Error Details : %s", user, e.getMessage());
-            return new ResponseEntity<>(e.getHttpCode());
+            HttpStatusCode httpCode = e.getHttpCode();
+            return new ResponseEntity<>(httpCode);
         }
     }
 
@@ -112,7 +119,8 @@ public class UserController {
             return userService.deleteUser(id);
         } catch (CustomRuntimeException e) {
             logger.logError("Error while trying to delete user with : %s, Error Details : %s", id, e.getMessage());
-            return new ResponseEntity<>(e.getHttpCode());
+            HttpStatusCode httpCode = e.getHttpCode();
+            return new ResponseEntity<>(httpCode);
         }
     }
 }

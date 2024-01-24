@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { Adapter } from "../adapter";
 
 export class BusinessLineModel {

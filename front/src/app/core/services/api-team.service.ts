@@ -82,7 +82,6 @@ export class ApiTeamService extends BaseService{
    */
   deleteTeam(id: string): Observable<TeamModel> {
     const url = `${this.baseUrl}/delete-team?id=${id}`;
-    console.log('deleteTeam', id);
     return this.http
       .delete(url)
       .pipe(map((response: any) => this.teamAdapter.adapt(response)))

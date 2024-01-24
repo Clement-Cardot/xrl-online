@@ -7,123 +7,188 @@
             <div class="left-half">
                 <mat-tab-group id="tab-group">
 
-                    <mat-tab>
+                    <mat-tab id="infoMatTab">
                         <ng-template mat-tab-label>
-                            {{ "PROJECTS.INFORMATION_TAB" | translate }}
+                            {{ "PROJECT.INFORMATION_TAB" | translate }}
+                        </ng-template>
+                        <div class="infoTab">
+
+                            <div id="topPart">
+                                <div id="topLeft">
+                                    <h2>{{ "OBJECT.TEAM" | translate }} : {{this.project.team.name}}</h2>
+                                    <mat-icon (click)="openInfoMemberTeam()">info</mat-icon>
+                                </div>
+                                <div id="topRight">
+                                    <h2>{{ "OBJECT.BUSINESS_LINE" | translate }} : {{this.project.businessLine.name}}
+                                    </h2>
+                                </div>
+                            </div>
+
+                            <div id="centerPart">
+                                <h2>{{ "OBJECT.DESCRIPTION" | translate }} :</h2>
+                                <h4>{{this.project.description}}</h4>
+                            </div>
+
+                            <div *ngIf="this.project.assessments.length != 0" id="bottomPart">
+                                <div id="bottomLeft">
+                                    <h4>{{ "PROJECT.BEGIN_DATE" | translate }} :
+                                        {{this.project.assessments[0].date.toLocaleDateString()}}</h4>
+                                </div>
+                                <div id="bottomRight">
+                                    <h4>{{ "ASSESSMENT.ASSESSMENTS_NUMBER" | translate }} :
+                                        {{this.project.assessments.length}}</h4>
+                                </div>
+                            </div>
+
+                        </div>
+                    </mat-tab>
+
+                    <mat-tab id="assesmentMatTab" [disabled]="!(project.assessments) || project.assessments.length == 0">
+                        <ng-template mat-tab-label>
+                            {{ "PROJECT.ASSESSMENT_TAB" | translate }}
                         </ng-template>
                         <div class="tab-content">
-                            <div>
-                                <h2>{{ "OBJECT.BUSINESS_LINE" | translate }} :  {{this.project.businessLine.name}}</h2>
+                            <div id="commentDiv" *ngIf="assessmentIndex != -1">
+                                <mat-form-field>
+                                    <mat-label *ngIf="(isInTeam() && isDraft())">{{"ACTION.LEAVE_COMMENT" |
+                                        translate}}</mat-label>
+                                    <textarea matInput id="lastAssessmentComment"
+                                        readonly="{{!(isInTeam() && isDraft())}}" cdkTextareaAutosize
+                                        cdkAutosizeMinRows="3" cdkAutosizeMaxRows="17"
+                                        matTooltip="{{'PROJECT.COMMENT_TOOLTIP' | translate}}"
+                                        [matTooltipDisabled]="isInTeam() && isDraft()"
+                                        [value]="this.project.assessments[assessmentIndex].comment"></textarea>
+                                </mat-form-field>
+
+                                <div id="buttonZone">
+                                    <button id="saveCommentButton" mat-raised-button color="primary" [disabled]="!isInTeam() || !isDraft()"
+                                        (click)="(modifyAssessmentComment())">{{"ACTION.SAVE" | translate}}</button>
+
+                                    <mat-checkbox color="primary" *ngIf="isInTeam()" [checked]="this.project.assessments[assessmentIndex].draft"
+                                        (change)="updateAssessmentDraft($event.checked)">Draft</mat-checkbox>
+                                </div>
                             </div>
-                            <div>
-                                <h2>{{ "OBJECT.TEAM" | translate }} :  {{this.project.team.name}}</h2>
-                            </div>
-                            <div>
-                                <h2>{{ "PROJECTS.DESCRIPTION" | translate }} :</h2>
-                                <h4>{{this.project.description}}</h4>
+                            <div *ngIf="assessmentIndex == -1">
+                                {{ "ASSESSMENT.NO_ASSESSMENT" | translate }}
                             </div>
                         </div>
                     </mat-tab>
 
-                    <mat-tab>
+                    <mat-tab [disabled]="!(project.assessments) || project.assessments.length == 0">
                         <ng-template mat-tab-label>
-                            {{ "PROJECTS.ASSESSMENT_TAB" | translate }}
+                            {{ "PROJECT.READINESS_LEVEL_TAB" | translate }}
                         </ng-template>
-                        <div class="tab-content">
-                            <div id="commentDiv" *ngIf="assessmentIndex != -1">
-                                <div *ngIf="isInTeam() && isLastAssessment()">
-                                    <mat-form-field>
-                                        <mat-label>{{"ACTION.LEAVE_COMMENT" | translate}}</mat-label>
-                                        <textarea matInput id="lastAssessmentComment"
-                                            cdkTextareaAutosize 
-                                            cdkAutosizeMinRows="3"
-                                            cdkAutosizeMaxRows="17">{{ this.project.assessments[assessmentIndex].comment }}</textarea>
-                                    </mat-form-field>
-                                    <button mat-raised-button color="primary" (click)="(modifyLastAssesmentComment())">{{"ACTION.SAVE" | translate}}</button>
+                        <div *ngIf="readinessLevelRank" class="readiness-level-detailled">
+
+                            <app-xrl-graph-gauge [readinessLevelRank]="readinessLevelRank" [blockGauge]="true"
+                                #gauge></app-xrl-graph-gauge>
+
+                            <div class="readiness-level">
+                                <div class="readiness-level-title">
+                                    <h2>{{readinessLevelRank.readinessLevel.name}}</h2>
                                 </div>
-                                
-                                <p *ngIf="!(isInTeam() && isLastAssessment())">{{this.project.assessments[assessmentIndex].comment}}</p>
+                                <div class="readiness-level-description">
+                                    <p>{{readinessLevelRank.readinessLevel.description}}</p>
+                                </div>
+                                <div class="readiness-level-rank">
+
+                                    <div class="blank-zone">
+                                    </div>
+
+                                    <h3>{{ "OBJECT.RANK" | translate }} : {{readinessLevelRank.rank}}</h3>
+
+                                    <mat-icon (click)="openInfoDescriptionRlRankDialog()">info</mat-icon>
+                                </div>
+
+                                <div class="readiness-level-comment-title">
+                                    <h3>{{ "OBJECT.COMMENT" | translate }} :</h3>
+                                </div>
+                                <div class="readiness-level-comment">
+                                    <p>{{readinessLevelRank.comment}}</p>
+                                </div>
+
+
+
                             </div>
-                            <div *ngIf="assessmentIndex == -1">
-                                {{ "PROJECT.NO_ASSESSMENT" | translate }}
-                            </div>
-                          </div>
+                        </div>
                     </mat-tab>
 
-                    <mat-tab>
+                    <mat-tab [disabled]="!(project.assessments) || project.assessments.length < 2">
                         <ng-template mat-tab-label>
-                            {{ "PROJECTS.READINESS_LEVEL_TAB" | translate }}
+                            {{ "PROJECT.HISTORY_TAB" | translate }}
                         </ng-template>
                         <div class="tab-content">
-                              TODO
-                          </div>
+                            <app-linear-graph style="width: 100%;" #linearGraph [assessments]="project.assessments"
+                                [rlName]="readinessLevelName"></app-linear-graph>
+                        </div>
                     </mat-tab>
 
-                    <mat-tab>
-                        <ng-template mat-tab-label>
-                            {{ "PROJECTS.HISTORY_TAB" | translate }}
-                        </ng-template>
-                        <div class="tab-content">
-                            <app-linear-graph style="width: 100%;" #linearGraph
-                            [assesments]="project.assessments" [rlName]="readinessLevelName"></app-linear-graph>
-                          </div>
-                    </mat-tab>
-    
                 </mat-tab-group>
             </div>
 
             <mat-divider id="half-divider" [vertical]="true"></mat-divider>
-            
+
             <div class="right-half">
                 <div class="toolbar">
                     <div class="left-toolbar">
-                        <div matTooltip="{{'PROJECTS.CANT_CREATE_NEW_ASSESSMENT' | translate}}" [matTooltipDisabled]="!isCreateButtonDisabled()">
-                            <button id="create" mat-raised-button color="primary" 
-                                [disabled]="isCreateButtonDisabled()" 
+                        <div [matTooltip]="isCreateButtonDisabled()!"
+                            [matTooltipDisabled]="isCreateButtonDisabled() == null">
+                            <button id="create" mat-raised-button color="primary" [disabled]="isCreateButtonDisabled() != null"
                                 (click)="openNewAssessmentDialog()">
-                                {{"ACTION.NEW" | translate}}
+                                <mat-icon id="add" class="upscale-on-hover">add</mat-icon>
                             </button>
                         </div>
-                        <div matTooltip="{{'PROJECTS.CANT_MODIFY_ASSESSMENT' | translate}}" [matTooltipDisabled]="!isModifyButtonDisabled()">
-                            <button id="modify" mat-raised-button color="primary" 
-                                [disabled]="isModifyButtonDisabled()"
+                        <div [matTooltip]="isModifyButtonDisabled()!"
+                            [matTooltipDisabled]="isModifyButtonDisabled() == null">
+                            <button id="modify" mat-raised-button color="primary" [disabled]="isModifyButtonDisabled() != null"
                                 (click)="openModifyAssessmentDialog()">
-                                {{"ACTION.MODIFY" | translate}}
+                                <mat-icon id="edit" class="upscale-on-hover">edit</mat-icon>
+                            </button>
+                        </div>
+                        <div *ngIf="this.currentUser && this.currentUser.isAdmin() && this.project.assessments.length != 0"
+                            matTooltip="{{'ASSESSMENT.DELETE_ASSESSMENT_FAILURE' | translate}}"
+                            [matTooltipDisabled]="this.assessmentIndex!=0">
+                            <button id="delete" mat-raised-button color="warn" (click)="openDeleteDialog()"
+                                [disabled]="isDeleteButtonDisabled()">
+                                <mat-icon id="delete" class="upscale-on-hover">delete</mat-icon>
                             </button>
                         </div>
                     </div>
                     <div class="right-toolbar">
-                        <button id="compare" mat-raised-button color="primary" (click)="openCompareDialog()">{{"ACTION.COMPARE" | translate}}</button>
-                        <button id="download" mat-raised-button color="primary" [matMenuTriggerFor]="downloadMenu">{{"ACTION.DOWNLOAD" | translate}}</button>
+                        <button id="compare" mat-raised-button color="primary" (click)="openCompareDialog()" [disabled]="!(project.assessments) || project.assessments.length == 0">
+                            <mat-icon id="compare_arrows" class="upscale-on-hover">compare_arrows</mat-icon>
+                        </button>
+                        <button id="download" mat-raised-button color="primary" [matMenuTriggerFor]="downloadMenu" [disabled]="!(project.assessments) || project.assessments.length == 0">
+                            <mat-icon id="compare_arrows" class="upscale-on-hover">insert_drive_file</mat-icon>
+                        </button>
                         <mat-menu #downloadMenu="matMenu">
-                            <button mat-menu-item>Download PDF</button>
-                            <button mat-menu-item>Download Word</button>
-                            <button mat-menu-item>Download PPT</button>
+                            <button mat-menu-item (click)="downloadReport('PDF')">{{"ACTION.DOWNLOAD" | translate}} PDF</button>
+                            <button mat-menu-item (click)="downloadReport('PPTX')">{{"ACTION.DOWNLOAD" | translate}} PPTX</button>
                         </mat-menu>
                     </div>
                 </div>
 
                 <div class="graphdiv">
-                    <app-xrl-graph [assesment]="this.project.assessments[assessmentIndex]" [options]="graphOptions" (labelClickEvent)="setReadinessLevel($event)"></app-xrl-graph>
+                    <app-xrl-graph #radarChart [assessment]="this.project.assessments[assessmentIndex]" [options]="graphOptions" (labelClickEvent)="setReadinessLevel($event)"></app-xrl-graph>
                 </div>
 
                 <div class="date" *ngIf="project.assessments.length > 0">
                     {{this.project.assessments[assessmentIndex].date.toLocaleDateString()}}
                 </div>
-                
-                <mat-paginator #paginator *ngIf="project.assessments.length > 0"
-                    class="demo-paginator"
-                    (page)="handlePaginatorEvent($event)"
-                    [length]="this.project.assessments.length"
-                    [pageSize]="1"
-                    [showFirstLastButtons]="true"
-                    [hidePageSize]="true"
-                    [pageIndex]="this.assessmentIndex"
+
+                <mat-paginator #paginator class="demo-paginator" [disabled]="!(project.assessments) || project.assessments.length == 0"
+                    (page)="handlePaginatorEvent($event)" [length]="this.project.assessments.length" [pageSize]="1"
+                    [showFirstLastButtons]="true" [hidePageSize]="true" [pageIndex]="this.assessmentIndex"
                     aria-label="Select page">
                 </mat-paginator>
+                <div class="page-info">
+                    {{ this.assessmentIndex + 1 }} / {{ project.assessments.length }}
+                </div>
             </div>
-    
-            
+
+
         </mat-card-content>
     </mat-card>
+</div>
+<div #graphToDownload style="position: absolute; visibility: hidden;">
 </div>

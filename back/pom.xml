@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>fr.eseo.pfe</groupId>
 	<artifactId>xrlonline-back</artifactId>
-	<version>0.4</version>
+	<version>1.0</version>
 	<packaging>war</packaging>
 	<name>xrlonline-back</name>
 	<description>Web App implementing Readiness Level</description>
@@ -86,6 +86,25 @@
 			<artifactId>jjwt</artifactId>
 			<version>0.9.1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itextpdf</artifactId>
+			<version>5.5.13.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>2.0.30</version> <!-- Vérifiez la dernière version disponible -->
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>5.2.5</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -97,6 +116,12 @@
 				<configuration>
 					<excludes>
 						<exclude>fr/eseo/pfe/xrlonline/model/**/*</exclude>
+						<exclude>fr/eseo/pfe/xrlonline/service/reports/**/*</exclude>
+						<exclude>fr/eseo/pfe/xrlonline/security/**/*</exclude>
+						<exclude>fr/eseo/pfe/xrlonline/config/**/*</exclude>
+						<exclude>fr/eseo/pfe/xrlonline/repository/**/*</exclude>
+						<exclude>fr/eseo/pfe/xrlonline/logger/**/*</exclude>
+						<exclude>fr/eseo/pfe/xrlonline/exception/**/*</exclude>
 					</excludes>
 				</configuration>
 				<executions>
@@ -127,6 +152,23 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.2</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>sources</goal>
+							<goal>resolve</goal>
+						</goals>
+						<configuration>
+							<classifier>javadoc</classifier>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

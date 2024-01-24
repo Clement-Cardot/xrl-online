@@ -2,7 +2,7 @@
     <div class="search-container">
         <div class="search-fields">
             <mat-form-field subscriptSizing="dynamic">
-                <mat-label>{{"PROJECTS.SEARCH_TYPE" | translate}}</mat-label>
+                <mat-label>{{"SEARCH.SEARCH_TYPE" | translate}}</mat-label>
                 <mat-select (selectionChange)="updateFilter()" [(value)]="searchType">
                     <mat-option *ngFor="let type of searchTypes" [value]="type.typeValue">
                         {{type.typeTranslation | translate}}
@@ -11,7 +11,7 @@
             </mat-form-field>
             <mat-form-field id="search-field" subscriptSizing="dynamic" floatLabel="always">
                 <!-- MatLabel sera positionné au-dessus de l'input -->
-                <mat-label>{{"PROJECTS.SEARCH" | translate}}</mat-label>
+                <mat-label>{{"SEARCH.SEARCH" | translate}}</mat-label>
                 <input matInput [formControl]="filterFormControl" (input)="updateFilter()">
                 <mat-icon [style.visibility]="filterFormControl.value ? 'visible': 'hidden'"
                     (click)="clearSearchInput()">
@@ -22,7 +22,7 @@
 
             <section *ngIf="checkboxDisplay" class="filter-my-projects">
                 <mat-checkbox class="my-checkbox" color="primary" (click)="changeCheckboxState()"></mat-checkbox>
-                <mat-label>{{"PROJECTS.MY_PROJECTS" | translate}}</mat-label>
+                <mat-label>{{"SEARCH.SEARCH_PROJECT" | translate}}</mat-label>
             </section>
 
         </div>
@@ -30,8 +30,9 @@
     </div>
     <mat-divider [vertical]="true"></mat-divider>
 
-    <div class="add-container">
-        <button mat-raised-button color="primary" (click)="openAddDialogEvent.emit()">{{"ACTION.ADD" |
+    <div class="add-container" matTooltip="{{'PROJECT.ADD_TOOLTIP' | translate}}"
+    [matTooltipDisabled]="!disabledAddButton">
+        <button mat-raised-button color="primary" [disabled]="disabledAddButton" (click)="openAddDialogEvent.emit()">{{"ACTION.ADD" |
             translate}}</button>
     </div>
 </mat-card>

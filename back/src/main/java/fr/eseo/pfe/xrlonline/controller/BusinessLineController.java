@@ -6,14 +6,15 @@ import fr.eseo.pfe.xrlonline.logger.UserLoggerFactory;
 import fr.eseo.pfe.xrlonline.model.dto.BusinessLineDTO;
 import fr.eseo.pfe.xrlonline.service.BusinessLineService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
 @CrossOrigin(origins = "http://localhost:4200") // Only For Dev
 @Log4j2
-@RestController
 @RequestMapping("/businessLines")
 public class BusinessLineController {
 
@@ -32,7 +33,8 @@ public class BusinessLineController {
       return businessLineService.getAllBusinessLine();
     } catch (CustomRuntimeException e) {
       logger.logError("Error while trying to get all businesslines, Error Details : %s", e.getMessage());
-      return new ResponseEntity<>(e.getHttpCode());
+      HttpStatusCode httpCode = e.getHttpCode();
+      return new ResponseEntity<>(httpCode);
     }
   }
 
@@ -43,7 +45,8 @@ public class BusinessLineController {
       return businessLineService.getBusinessLineById(id);
     } catch (CustomRuntimeException e) {
       logger.logError("Error while trying to get businnesline by id with : %s, Error Details : %s", id, e.getMessage());
-      return new ResponseEntity<>(e.getHttpCode());
+      HttpStatusCode httpCode = e.getHttpCode();
+      return new ResponseEntity<>(httpCode);
     }
   }
 
@@ -54,7 +57,8 @@ public class BusinessLineController {
       return businessLineService.createBusinessLine(businessLineDTO);
     } catch (CustomRuntimeException e) {
       logger.logError("Error while trying to create businessline with : %s, Error Details : %s", businessLineDTO, e.getMessage());
-      return new ResponseEntity<>(e.getHttpCode());
+      HttpStatusCode httpCode = e.getHttpCode();
+      return new ResponseEntity<>(httpCode);
     }
   }
 
@@ -65,7 +69,8 @@ public class BusinessLineController {
       return businessLineService.updateBusinessLine(businessLineDTO);
     } catch (CustomRuntimeException e) {
       logger.logError("Error while trying to update businessline with : %s, Error Details : %s", businessLineDTO, e.getMessage());
-      return new ResponseEntity<>(e.getHttpCode());
+      HttpStatusCode httpCode = e.getHttpCode();
+      return new ResponseEntity<>(httpCode);
     }
   }
 
@@ -76,7 +81,8 @@ public class BusinessLineController {
       return businessLineService.deleteBusinessLine(id);
     } catch (CustomRuntimeException e) {
       logger.logError("Error while trying to delete businessline with : %s, Error Details : %s", id, e.getMessage());
-      return new ResponseEntity<>(e.getHttpCode());
+      HttpStatusCode httpCode = e.getHttpCode();
+      return new ResponseEntity<>(httpCode);
     }
   }
 

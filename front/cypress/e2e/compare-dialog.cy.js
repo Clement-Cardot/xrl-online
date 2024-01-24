@@ -10,6 +10,7 @@ describe("Compare dialog tests", () => {
     beforeEach(() => {
         let idProject = database.projects[0]._id;
         cy.visit("/");
+        cy.changeLang('fr');
         cy.PerformLogin("admin");
         cy.GoToPage("projects");
         cy.get(`#project-card-${idProject} > .card > .front > .content > .card-header > h2`).click();
@@ -30,7 +31,7 @@ describe("Compare dialog tests", () => {
         cy.get('.date').invoke('text').then((date) => {
 
             // Open compare dialog
-            cy.get('#compare > .mdc-button__label').click();
+            cy.get('#compare').click();
 
             // Check that default value is correct
             cy.get('.mat-mdc-select-value-text > .mat-mdc-select-min-line').should('have.text', date.trim());

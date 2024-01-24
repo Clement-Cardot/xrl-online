@@ -1,11 +1,12 @@
-<div style="height: 90%; position: relative;">
-  <canvas *ngIf="assesment != null && assesment != undefined"
+<div [style]="'height: ' + (options?.isDownloadOnlyUse ? '800px' : '90%') + '; position: relative;'">
+  <canvas *ngIf="assessment != null && assessment != undefined"
     baseChart
     #chart
     [data]="radarChartData"
     [options]="radarChartOptions"
-    [plugins]="[radarChartPlugins]"
+    [plugins]="[radarChartPlugins, componentReadySubjectComplete]"
     [type]="radarChartType">
   </canvas>
-  <p class="no-data-text" *ngIf="assesment == null || assesment == undefined">{{"PROJECTS.RADAR_CHART_EMPTY" | translate}}</p>
+  <p class="no-data-text" *ngIf="assessment == null || assessment == undefined">{{"ASSESSMENT.EMPTY_DATA" | translate}}</p>
+  <app-graph-button #downloadButton></app-graph-button>
 </div>

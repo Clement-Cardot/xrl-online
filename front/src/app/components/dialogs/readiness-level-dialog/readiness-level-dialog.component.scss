@@ -30,7 +30,7 @@ mat-dialog-content {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin-bottom: 5px;
+  margin-bottom: 1.5rem;
 }
 
 .edit-description-container mat-form-field {
@@ -61,4 +61,8 @@ mat-dialog-actions {
   gap: 2rem;
   margin: 0 1rem 0 1rem;
   justify-content: center;
+}
+
+#name-formfield {
+  min-width: 15rem;
 }

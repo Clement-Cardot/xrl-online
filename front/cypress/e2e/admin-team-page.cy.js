@@ -9,6 +9,7 @@ describe("Admin Team Page tests", () => {
 
   beforeEach(() => {
     cy.visit("/");
+    cy.changeLang('fr');
     cy.PerformLogin("admin");
     cy.GoToPage("admin-teams");
   });
@@ -17,8 +18,8 @@ describe("Admin Team Page tests", () => {
       it("Create a new User success", () => {
         cy.addNewUser(
           "new_user_login",
-          "new_user_firstname",
-          "new_user_lastname"
+          "new_firstname",
+          "new_lastname"
         );
       });
 

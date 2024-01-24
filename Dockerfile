@@ -26,20 +26,21 @@ COPY mkdocs.yml /workspace/mkdocs.yml
 WORKDIR /workspace
 # Do not remove the following line, it is used by the gitlab pipeline to set proxy for pip
 #PLACEHOLDER3
-RUN pip install mkdocs
+RUN pip install mkdocs mkdocs-material
 RUN mkdocs build
 
 # DEPLOY STAGE
 FROM tomcat:10.1.13-jre17
 
 # Configure Tomcat
-RUN cp -r $CATALINA_HOME/webapps.dist/host-manager $CATALINA_HOME/webapps/host-manager
-RUN cp -r $CATALINA_HOME/webapps.dist/manager $CATALINA_HOME/webapps/manager
+RUN cp -r "$CATALINA_HOME/webapps.dist/host-manager" "$CATALINA_HOME/webapps/host-manager"
+RUN cp -r "$CATALINA_HOME/webapps.dist/manager" "$CATALINA_HOME/webapps/manager"
 
 COPY .tomcat/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
 COPY .tomcat/context.xml /usr/local/tomcat/conf/context.xml
 COPY .tomcat/context.xml /usr/local/tomcat/webapps/host-manager/META-INF/context.xml
 COPY .tomcat/context.xml /usr/local/tomcat/webapps/manager/META-INF/context.xml
+COPY .tomcat/server.xml /usr/local/tomcat/conf/server.xml
 
 # Deploy Back End
 COPY --from=back-build /back/target/xrlonline-back-*.war /usr/local/tomcat/webapps/api.war

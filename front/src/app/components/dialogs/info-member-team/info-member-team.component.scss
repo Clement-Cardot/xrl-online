@@ -1,0 +1,21 @@
+.info-member-team-component {
+    padding: 15px;
+    margin: 15px;
+}
+
+.title-close-component {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    h2 {
+        text-align: center;
+        margin: 0;
+    }
+    margin-bottom: 1rem;
+
+    button {
+        margin-left: 150px;
+    }
+}

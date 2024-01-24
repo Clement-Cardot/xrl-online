@@ -9,6 +9,7 @@ describe("Create Assessment dialog tests", () => {
 
     beforeEach(() => {
         cy.visit("/");
+        cy.changeLang('fr');
         cy.PerformLogin("admin");
         cy.GoToPage("projects");
     });
@@ -203,6 +204,7 @@ describe("Create Assessment dialog tests", () => {
 
             // Enter Comment & Tag
             cy.get('#comment-input').type('Global Comment');
+            cy.get('#select-intermediate-input').check();
             cy.get('#next-button-comment').click();
 
 

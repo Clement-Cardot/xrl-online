@@ -217,22 +217,28 @@ class TeamControllerTest {
         );
     }
 
-    // TODO move to projectControllerTest
-//    @Test
-//    void testGetProjectsByTeamId_TeamFound() throws Exception {
-//        when(teamService.getProjectsByTeamId("1")).thenReturn(ResponseEntity.ok(Collections.singletonList(projectDTO)));
-//
-//        mockMvc.perform(MockMvcRequestBuilders.get("/teams/get-projects-by-team-id?id=1"))
-//                .andExpect(MockMvcResultMatchers.status().isOk());
-//    }
-//
-//    @Test
-//    void testGetProjectsByTeamId_TeamNotFound() throws Exception {
-//        when(teamService.getProjectsByTeamId("1")).thenThrow(new CustomRuntimeException(CustomRuntimeException.TEAM_NOT_FOUND));
-//
-//        mockMvc.perform(MockMvcRequestBuilders.get("/teams/get-projects-by-team-id?id=1"))
-//                .andExpect(MockMvcResultMatchers.status().isNotFound());
-//    }
+    @Test
+    void testGetTeamsByUserId_TeamsFound() throws Exception {
+        String userId = "1";
+        List<TeamDTO> teams = new ArrayList<>();
+        teams.add(teamDTO);
+        when(teamService.getTeamsByUserId(userId)).thenReturn(ResponseEntity.ok(teams));
 
+        assertDoesNotThrow(() ->
+            mockMvc.perform(MockMvcRequestBuilders.get("/teams/get-teams-by-user-id?id=" + userId))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("testTeam"))
+        );
+    }
+
+    @Test
+    void testGetTeamsByUserId_ExceptionThrown() throws Exception {
+        String userId = "1";
+        when(teamService.getTeamsByUserId(userId)).thenThrow(new CustomRuntimeException(CustomRuntimeException.INTERNAL_SERVER_ERROR));
+
+        assertDoesNotThrow(() ->
+            mockMvc.perform(MockMvcRequestBuilders.get("/teams/get-teams-by-user-id?id=" + userId))
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError())
+        );
+    }
 }
-

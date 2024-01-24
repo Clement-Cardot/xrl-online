@@ -1,8 +1,5 @@
 # Welcome to xRL Online Documentation
 
-[![pipeline status](https://gitlab-etu.openstack.etudis.eseo.fr/s9-pfe-xrl-online/xrl-online/badges/main/pipeline.svg)](https://gitlab-etu.openstack.etudis.eseo.fr/s9-pfe-xrl-online/xrl-online/-/commits/main)
-[![coverage report](https://gitlab-etu.openstack.etudis.eseo.fr/s9-pfe-xrl-online/xrl-online/badges/main/coverage.svg)](https://gitlab-etu.openstack.etudis.eseo.fr/s9-pfe-xrl-online/xrl-online/-/commits/main)
-
 ## Documentation
 
 The documentation is accessible in the folder ./docs<br>
@@ -23,3 +20,24 @@ To visualize it in the browser :
     Dockerfile          # Docker config file for Front/Back deployement
     mkdocs.yml          # MKdocs config
     README.md       
+
+## Build
+
+Use the Build_LOCAL.sh file in a shell env (git bash)
+
+This script will :
+
+1. Remove any artifact from last build
+2. Build the Angular app
+3. Build the Spring Boot app
+4. Build the DB script
+5. Deploy Front/Back/BDD with a docker compose
+
+## URL
+
+After build with the previous script, you can access the app with the following URL :
+
+- Front : http://localhost:8080
+- Back : http://localhost:8080/api
+- Documentation : http://localhost:8080/docs
+- BDD : http://localhost:27017

@@ -3,13 +3,13 @@ describe("Admin ReadinessLevel Page tests", () => {
 
   beforeEach(() => {
     cy.task("Seed_DB").then((result) => {
-      console.log(result);
       database = result;
     });
   });
 
   beforeEach(() => {
     cy.visit("/");
+    cy.changeLang('fr');
     cy.PerformLogin("admin");
     cy.GoToPage("admin-RL");
   });
@@ -244,7 +244,7 @@ describe("Admin ReadinessLevel Page tests", () => {
         cy.get('#confirm').should("be.disabled");
 
         //Check mat-error is displayed
-        cy.get("#mat-error-1-short").should("have.text", "Une description est requise");
+        cy.get("#mat-error-1-short").should("have.text", "Une description courte est requise");
       });
 
       it("Create a new ReadinessLevel without a long description", () => {
@@ -271,7 +271,7 @@ describe("Admin ReadinessLevel Page tests", () => {
         cy.get('#confirm').should("be.disabled");
 
         //Check mat-error is displayed
-        cy.get("#mat-error-1-long").should("have.text", "Au moins une description détaillée est requise");
+        cy.get("#mat-error-1-long").should("have.text", "Une description détaillée est requise");
       });
 
       it("Create a new ReadinessLevel name is already took", () => {

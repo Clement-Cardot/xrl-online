@@ -33,11 +33,12 @@ public class TeamService {
 
     public ResponseEntity<TeamDTO> getTeamById(String id) throws CustomRuntimeException {
         Team team = teamRepository.findById(id).orElse(null);
-        TeamDTO teamDTO = modelMapper.map(team, TeamDTO.class);
-        if (team != null) {
-            return ResponseEntity.ok(teamDTO);
+        if (team == null) {
+            throw new CustomRuntimeException(CustomRuntimeException.TEAM_NOT_FOUND);
         }
-        throw new CustomRuntimeException(CustomRuntimeException.TEAM_NOT_FOUND);
+        
+        TeamDTO teamDTO = modelMapper.map(team, TeamDTO.class);
+        return ResponseEntity.ok(teamDTO);
     }
 
     public ResponseEntity<List<TeamDTO>> getAllTeam() throws CustomRuntimeException {
@@ -63,10 +64,7 @@ public class TeamService {
         if (teamToSave.getMembers() == null) {
             teamToSave.setMembers(new ArrayList<>());
         }
-        teamRepository.save(teamToSave);
-        Team teamSaved = teamRepository.findById(teamToSave.getId()).orElseThrow(
-                () -> new CustomRuntimeException(CustomRuntimeException.TEAM_NOT_CREATED)
-        );
+        Team teamSaved = teamRepository.save(teamToSave);
         return ResponseEntity.ok(modelMapper.map(teamSaved, TeamDTO.class));
     }
 

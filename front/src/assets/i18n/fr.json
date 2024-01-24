@@ -2,32 +2,64 @@
   "ACTION": {
     "YES": "Oui",
     "NO": "Non",
-    "CANCEL": "Annuler",
+
     "SAVE": "Enregistrer",
+    "CANCEL": "Annuler",
+
     "CREATE": "Créer",
-    "CLOSE": "Fermer",
-    "DELETE": "Supprimer",
     "ADD": "Ajouter",
     "NEW": "Nouveau",
     "MODIFY": "Modifier",
-    "COMPARE": "Comparer",
-    "DOWNLOAD": "Télécharger",
-    "NEXT": "Suivant",
-    "BACK": "Retour",
     "CONFIRM": "Confirmer",
     "SUBMIT": "Soumettre",
-    "LEAVE_COMMENT": "Laisser un commentaire"
+    "DELETE": "Supprimer",
+    "CLOSE": "Fermer",
+
+    "COMPARE": "Comparer",
+    "DOWNLOAD": "Télécharger",
+
+    "NEXT": "Suivant",
+    "BACK": "Retour",
+
+    "SHOW_MORE": "Afficher plus",
+    "SHOW_LESS": "Afficher moins",
+    
+    "LEAVE_COMMENT": "Laisser un commentaire",
+
+    "COPY_CHART": "Graphique copié"
   },
 
   "OBJECT": {
-    "PROJECT": "Projet",
+    "NONE": "Aucun",
+    "NAME": "Nom",
+
+    "USER": "Utilisateur",
+    "FIRSTNAME": "Prénom",
+    "LASTNAME": "Nom",
+    "LOGIN": "Identifiant",
+
     "TEAM": "Equipe",
-    "ASSESSMENT": "Evaluation",
-    "READINESS_LEVEL": "Niveau de Maturité",
+
     "BUSINESS_LINE": "Secteur d'activité",
+
+    "READINESS_LEVEL": "Niveau de Maturité",
+    "RESUME": "Courte description",
+    "DETAILS": "Description détaillée",
+    "RANK": "Rang",
+
+    "PROJECT": "Projet",
+    "DESCRIPTION": "Description",
+    "ASSESSMENT": "Evaluation",
     "COMMENT": "Commentaire",
-    "TAG": "Tag",
-    "NONE": "Aucun"
+    "TAG": "Tag"
+  },
+
+  "HOME": {
+    "TITLE": "Le meilleur outil d'évaluation pour vos projets",
+    "READINESS_LEVEL": "Niveaux de maturité",
+    "KTH_WEBSITE": "Visiter le site de KTH",
+
+    "EXPIRED_SESSION": "Votre session a expiré, veuillez vous reconnecter"
   },
 
   "MENU": {
@@ -36,8 +68,13 @@
     "READINESS_LEVELS": "Niveaux de Maturité",
     "MANAGEMENT": "Gestion",
     "TEAMS": "Equipes",
-    "BUSINESS_LINES": "Secteurs d'activité",
-    "CLOSE": "Fermer"
+    "BUSINESS_LINES": "Secteurs d'activité"
+  },
+
+  "FOOTER": {
+    "ALL_RIGHTS_RESERVED": "2023 - Tous droits réservés",
+    "KTH_LICENCE1": "Le travail de KTH est placée sous une licence Creative Commons",
+    "KTH_LICENCE2": "Attribution-NonCommercial-ShareAlike 4.0 International License."
   },
 
   "LOGIN": {
@@ -46,158 +83,191 @@
     "LOGOUT_SUCCESS": "Au revoir {{username}} !",
     "ENTER_LOGIN": "Entrer votre identifiant",
     "LOGIN_REQUIRED": "Un identifiant est requis",
+    "LOGIN_MIN_LENGTH": "L'identifiant doit contenir au moins 5 caractères",
+    "LOGIN_MAX_LENGTH": "L'identifiant ne doit pas dépasser 35 caractères",
     "LOGIN_INCORRECT": "Identifiant incorrect",
-    "SUCCESS": "Bienvenue {{username}} !",
-    "SUCCESS_CLOSE": "Fermer"
+    "SUCCESS": "Bienvenue {{username}} !"
   },
 
-  "USERS": {
-    "DELETE_USER": "Voulez-vous vraiment supprimer l'utilisateur :",
-    "FIRSTNAME_REQUIRED": "Un prénom est requis",
-    "LASTNAME_REQUIRED": "Un nom est requis",
-    "LOGIN_REQUIRED": "Un identifiant est requis",
-    "LOGIN_ALREADY_EXISTS": "Cet identifiant existe déjà",
+  "SEARCH": {
     "SEARCH_USER": "Rechercher un utilisateur",
-    "CREATE_USER": "Créer un utilisateur",
-    "EDIT_USER": "Éditer un utilisateur",
-    "USER_CREATED": "Utilisateur créé",
-    "USER_UPDATED": "Utilisateur mis à jour",
-    "USER_DELETED": "Utilisateur supprimé",
-    "FIRSTNAME": "Prénom",
-    "LASTNAME": "Nom",
-    "LOGIN": "Identifiant"
+    "SEARCH_PROJECT": "Uniquement mes projets",
+    "SEARCH_TYPE": "Type de recherche",
+    "SEARCH": "Rechercher"
+  },
+
+  "USER": {
+    "CREATE_TITLE": "Créer un utilisateur",
+    "EDIT_TITLE": "Éditer un utilisateur",
+
+    "FIRSTNAME_REQUIRED": "Un prénom est requis",
+    "FIRSTNAME_MIN_LENGTH": "Le prénom doit contenir au moins 2 caractères",
+    "FIRSTNAME_MAX_LENGTH": "Le prénom ne doit pas dépasser 15 caractères",
+
+    "LASTNAME_REQUIRED": "Un nom est requis",
+    "LASTNAME_MIN_LENGTH": "Le nom doit contenir au moins 2 caractères",
+    "LASTNAME_MAX_LENGTH": "Le nom ne doit pas dépasser 20 caractères",
+
+    "LOGIN_ALREADY_EXISTS": "Cet identifiant existe déjà",
+
+    "CREATE_SUCCESS": "Utilisateur créé",
+
+    "UPDATE_SUCCESS": "Utilisateur mis à jour",
+
+    "DELETE_CONFIRM": "Voulez-vous vraiment supprimer l'utilisateur :",
+    "DELETE_SUCCESS": "Utilisateur supprimé",
+    "DELETE_WARNING": "L'utilisateur fait partie d'une équipe,\nle supprimer le supprimera des équipes dont il est membre"
   },
 
   "TEAM": {
     "NAME": "Nom de l'équipe",
     "MEMBERS": "Membres de l'équipe",
+
+    "CREATE_TITLE": "Créer une équipe",
+    "UPDATE_TITLE": "Mettre à jour cette équipe",
+
     "NAME_REQUIRED": "Le nom de l'équipe est requis",
     "NAME_MIN_LENGTH": "Le nom de l'équipe doit contenir au moins 3 caractères",
     "NAME_MAX_LENGTH": "Le nom de l'équipe ne doit pas dépasser 20 caractères",
     "NAME_ALREADY_EXISTS": "Ce nom d'équipe existe déjà",
-    "DELETE_CONFIRM": "Etes-vous sûr de vouloir supprimer l'équipe ?",
-    "DELETE_SUCCESS": "L'équipe a été supprimée avec succès",
-    "DELETE_ERROR": "Une erreur est survenue lors de la suppression de l'équipe",
+
     "CREATE_SUCCESS": "L'équipe a été créée avec succès",
     "CREATE_ERROR": "Une erreur est survenue lors de la création de l'équipe",
+
     "UPDATE_SUCCESS": "L'équipe a été mise à jour avec succès",
     "UPDATE_ERROR": "Une erreur est survenue lors de la mise à jour de l'équipe",
-    "CANCEL": "Annuler",
-    "CREATE": "Créer une équipe",
-    "UPDATE": "Mettre à jour cette équipe",
-    "DELETE": "Supprimer",
-    "SEARCH_NAME": "Nom",
-    "SEARCH_USER": "Utilisateur"
-  },
 
-  "PROJECTS": {
-    "UPDATE": "Mettre à jour le projet",
-    "UPDATE_SUCCESS": "Le projet a été mis à jour avec succès",
-    "NAME": "Nom",
-    "DESCRIPTION": "Description",
-    "BUSINESS_LINE": "Secteur d'activité",
-    "TEAM": "Equipe",
-    "NAME_REQUIRED": "Le nom du projet est requis",
-    "NAME_ALREADY_EXISTS": "Ce nom de projet existe déjà",
-    "TEAM_REQUIRED": "Une équipe est requise",
-    "TEAM_NOT_EXISTS": "Cette équipe n'existe pas",
-    "TEAM_NOT_ALLOWED": "Équipe non autorisée",
-    "BUSINESS_LINE_REQUIRED": "Un secteur d'activité est requis",
-    "BUSINESS_LINE_NOT_EXISTS": "Ce secteur d'activité n'existe pas",
-    "DETAILS": "Détails",
-    "BACK": "Retour",
-    "DELETE": "Êtes-vous sûr de vouloir supprimer le projet ?",
-    "DELETE_SUCCESS": "Le projet a été supprimé avec succès",
-    "SEARCH_TYPE": "Type de recherche",
-    "SEARCH_NAME": "Nom",
-    "SEARCH_TEAM": "Equipe",
-    "SEARCH_BUSINESS_LINE": "Secteur d'activité",
-    "MY_PROJECTS": "Uniquement mes projets",
-    "SEARCH": "Rechercher",
-    "CREATE": "Créer un projet",
-    "CREATE_SUCCESS": "Le projet a été créé avec succès",
-    "NO_DESCRIPTION": "Aucune description",
-    "NO_ASSESSMENT": "Aucune évaluation",
-    "NAME_MAX_LENGTH": "Le nom du projet ne doit pas dépasser 20 caractères",
-    "NAME_MIN_LENGTH": "Le nom du projet doit contenir au moins 3 caractères",
-    "RADAR_CHART_EMPTY": "Aucune donnée pour ce projet",
-    "ASSESSMENT_COMMENT_CHANGED": "Le commentaire a été mis à jour",
-    "INFORMATION_TAB": "Information",
-    "ASSESSMENT_TAB": "Evaluation",
-    "READINESS_LEVEL_TAB": "Niveaux de maturité détaillés",
-    "HISTORY_TAB": "Historique",
-    "CANT_CREATE_NEW_ASSESSMENT": "Une évaluation est déjà en cours !",
-    "CANT_MODIFY_ASSESSMENT": "Aucune évalution en cours !",
-    "ASSESSMENT_ADDED": "L'évaluation a été ajoutée !",
-    "COMPARE": {
-      "SELECT_FIRST": "Première évaluation",
-      "SELECT_SECOND": "Seconde évaluation",
-      "OVERLAY": "Superposition",
-      "SIDE_BY_SIDE": "Côte à côte"
-    }
-  },
-
-  "ASSESSMENT_DIALOG": {
-    "SELECT_RL_STEP": "Choix Niveaux",
-    "SELECT_RL_TITLE": "Choisissez entre 3 et 10 niveaux de maturité",
-    "SELECT_RL_MIN": "Vous avez choisi moins de 3 niveaux de maturité",
-    "SELECT_RL_MAX": "Vous avez choisi plus de 10 niveaux de maturité",
-    "AVAILABLE_RL": "Niveaux de maturité disponibles",
-    "SELECTED_RL": "Niveaux de maturité sélectionnés",
-    "NO_RANK_SELECTED": "Choisissez un niveau de maturité pour voir sa description",
-    "RANK": "Rang",
-    "SHORT_DESCRIPTION": "Description courte",
-    "LONG_DESCRIPTION": "Description longue",
-    "SHOW_COMPLETE_DESCRIPTION": "Afficher la description complète",
-    "HIDE_COMPLETE_DESCRIPTION": "Masquer la description complète",
-    "ENTER_COMMENT": "Vous devez entrer un commentaire",
-    "ENTER_TAG": "Vous devez entrer un tag",
-    "CONFIRM_ASSESSMENT": "Confirmer l'évaluation"
+    "DELETE_CONFIRM": "Etes-vous sûr de vouloir supprimer l'équipe ?",
+    "DELETE_SUCCESS": "L'équipe a été supprimée avec succès",
+    "DELETE_ERROR": "Une erreur est survenue lors de la suppression de l'équipe"
   },
 
   "BUSINESSLINE": {
-    "CANCEL": "Annuler",
-    "SAVE": "Sauvegarder",
+    "NAME": "Nom du secteur d'activité",
+
+    "CREATE_TITLE": "Créer un secteur d'activité",
+    "UPDATE_TITLE": "Mettre à jour le secteur d'activité",
+
+    "LINKED_PROJECTS": "projet(s) lié(s)",
+    "NO_LINKED_PROJECTS": "Aucun projet lié",
+
     "NAME_REQUIRED": "Le nom du secteur d'activité est requis",
     "NAME_MIN_LENGTH": "Le nom du secteur d'activité doit contenir au moins 3 caractères",
     "NAME_MAX_LENGTH": "Le nom du secteur d'activité ne doit pas dépasser 20 caractères",
-    "NAME": "Nom du secteur d'activité",
-    "BUSINESSLINE_CREATED": "Secteur d'activité créé",
-    "BUSINESSLINE_UPDATED": "Secteur d'activité mis à jour",
     "NAME_ALREADY_EXISTS": "Ce nom de secteur d'activité existe déjà",
-    "UPDATE_BUSINESSLINE": "Mettre à jour le secteur d'activité",
-    "CREATE_BUSINESSLINE": "Créer un secteur d'activité",
-    "DELETE": "Êtes-vous sûr de vouloir supprimer le secteur d'activité ?",
-    "DELETE_SUCCESS": "Le secteur d'activité a été supprimé avec succès",
-    "SEARCH_NAME": "Nom",
-    "LINKED_PROJECTS": "projet(s) lié(s)",
-    "NO_LINKED_PROJECTS": "Aucun projet lié"
+
+    "CREATE_SUCCESS": "Secteur d'activité créé",
+    
+    "UPDATE_SUCCESS": "Secteur d'activité mis à jour",
+    
+    "DELETE_CONFIRM": "Êtes-vous sûr de vouloir supprimer le secteur d'activité ?",
+    "DELETE_SUCCESS": "Le secteur d'activité a été supprimé avec succès"
   },
 
   "READINESS_LEVEL": {
     "NAME": "Nom du niveau de maturité",
     "DESCRIPTION": "Description du niveau de maturité",
+
+    "CREATE_TITLE": "Créer un niveau de maturité",
+
     "NAME_REQUIRED": "Le nom du niveau de maturité est requis",
     "NAME_MIN_LENGTH": "Le nom du niveau de maturité doit contenir au moins 3 caractères",
     "NAME_MAX_LENGTH": "Le nom du niveau de maturité ne doit pas dépasser 20 caractères",
     "NAME_ALREADY_EXISTS": "Ce nom déjà pris",
     "DESCRIPTION_REQUIRED": "Une description est requise",
     "DESCRIPTION_MAX_LENGTH": "La description ne doit pas dépasser 1000 caractères",
-    "LONG_DESCRIPTION_REQUIRED": "Au moins une description détaillée est requise",
-    "DELETE": "Êtes-vous sûr de vouloir supprimer le niveau de maturité ?",
-    "DELETE_SUCCESS": "Le niveau de maturité a été supprimé avec succès",
-    "CREATE": "Créer un niveau de maturité",
+    "SHORT_DESCRIPTION_REQUIRED": "Une description courte est requise",
+    "LONG_DESCRIPTION_REQUIRED": "Une description détaillée est requise",
+    
     "CREATE_SUCCESS": "Le niveau de maturité a été créé avec succès",
+
     "UPDATE_SUCCESS": "Le niveau de maturité a été mis à jour avec succès",
-    "LEVEL": "Niveau",
-    "RESUME": "Courte description",
-    "DETAILS": "Description détaillée",
-    "SEARCH_NAME": "Nom"
+
+    "DELETE_CONFIRM": "Êtes-vous sûr de vouloir supprimer le niveau de maturité ?",
+    "DELETE_SUCCESS": "Le niveau de maturité a été supprimé avec succès"
   },
 
-  "FOOTER": {
-    "ALL_RIGHTS_RESERVED": "2023 - Tous droits réservés",
-    "KTH_LICENCE1": "Le travail de KTH est placée sous une licence Creative Commons",
-    "KTH_LICENCE2": "Attribution-NonCommercial-ShareAlike 4.0 International License."
-  }
+  "PROJECT": {
+    "DETAILS_TITLE": "Détails",
+
+    "CREATE_TITLE": "Créer un projet",
+    "UPDATE_TITLE": "Mettre à jour le projet",
+    
+    "NAME_REQUIRED": "Le nom du projet est requis",
+    "NAME_ALREADY_EXISTS": "Ce nom de projet existe déjà",
+    "NAME_MAX_LENGTH": "Le nom du projet ne doit pas dépasser 20 caractères",
+    "NAME_MIN_LENGTH": "Le nom du projet doit contenir au moins 3 caractères",
+    "TEAM_REQUIRED": "Une équipe est requise",
+    "TEAM_NOT_EXISTS": "Cette équipe n'existe pas",
+    "TEAM_NOT_ALLOWED": "Équipe non autorisée",
+    "BUSINESS_LINE_REQUIRED": "Un secteur d'activité est requis",
+    "BUSINESS_LINE_NOT_EXISTS": "Ce secteur d'activité n'existe pas",
+
+    "CREATE_SUCCESS": "Le projet a été créé avec succès",
+    
+    "UPDATE_SUCCESS": "Le projet a été mis à jour avec succès",
+
+    "DELETE_CONFIRM": "Êtes-vous sûr de vouloir supprimer le projet ?",
+    "DELETE_SUCCESS": "Le projet a été supprimé avec succès",
+
+    "NO_DESCRIPTION": "Aucune description",
+    
+    "INFORMATION_TAB": "Information",
+    "ASSESSMENT_TAB": "Evaluation",
+    "READINESS_LEVEL_TAB": "Niveaux de maturité détaillés",
+    "HISTORY_TAB": "Historique",
+
+    "BEGIN_DATE": "Date de début du projet",
+    "MEMBER_OF_TEAM": "Membres de l'équipe",
+
+    "ADD_TOOLTIP": "Vous ne pouvez pas créer de projet sans être connecté",
+    "COMMENT_TOOLTIP": "Vous ne pouvez pas modifier le commentaire de cette évaluation",
+
+    "DESCRIPTION_MAX_LENGTH": "La description ne doit pas dépasser 1000 caractères"
+  },
+
+  "ASSESSMENT": {
+    "NO_ASSESSMENT": "Aucune évaluation",
+    "EMPTY_DATA": "Aucune donnée",
+
+    "UPDATE_COMMENT_SUCCESS": "Le commentaire a été mis à jour",    
+    "CREATE_ASSESSMENT_SUCCESS": "L'évaluation a été ajoutée !",
+    "UPDATE_ASSESSMENT_SUCCESS": "L'évaluation a été mise à jour !",
+
+    "CREATE_ASSESSMENT_FAILURE": "Une évaluation est déjà en cours !",
+    "CREATE_ASSESSMENT_FINAL_FAILURE": "La dernière évaluation est définie comme finale !",
+    "MANAGE_ASSESSMENT_NOT_IN_TEAM": "Vous devez être membre de l'équipe pour effectuer cette Action",
+    "UPDATE_ASSESSMENT_FAILURE": "Cette évaluation n'est pas en cours !",
+    "DELETE_ASSESSMENT_FAILURE": "Vous ne pouvez pas supprimer la première évaluation !",
+    "CREATE_ASSESSMENT_ALREADY_EXIST_FOR_THIS_DATE": "Une évaluation existe déjà à la date d'aujourd'hui !",
+
+    "DELETE_CONFIRM": "Êtes-vous sûr de vouloir supprimer l'évaluation à cette date ?",
+    "DELETE_SUCCESS": "L'évaluation a été supprimé avec succès",
+
+    "COMPARE": {
+      "SELECT_FIRST": "Première évaluation",
+      "SELECT_SECOND": "Seconde évaluation",
+      "OVERLAY": "Superposition",
+      "SIDE_BY_SIDE": "Côte à côte"
+    },
+
+    "SELECT_RL_STEP": "Choix des niveaux",
+
+    "SELECT_RL_TITLE": "Choisissez entre 3 et 10 niveaux de maturité",
+    "SELECT_RL_MIN": "Vous avez choisi moins de 3 niveaux de maturité",
+    "SELECT_RL_MAX": "Vous avez choisi plus de 10 niveaux de maturité",
+    "AVAILABLE_RL": "Niveaux de maturité disponibles",
+    "SELECTED_RL": "Niveaux de maturité sélectionnés",
+
+    "NO_RANK_SELECTED": "Choisissez un niveau de maturité pour voir sa description",
+
+    "ENTER_COMMENT": "Vous devez entrer un commentaire",
+    "ENTER_TAG": "Vous devez entrer un tag",
+
+    "CREATE_CONFIRM": "Confirmer la création de l'évaluation",
+    "ASSESSMENTS_NUMBER" : "Nombre d'évaluations"
+  },
+
+  "NEW": "Nouveau",
+  "OLD": "Ancien"
 }

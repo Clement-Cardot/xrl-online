@@ -13,7 +13,6 @@ import { DeleteObjectDialogComponent } from './dialogs/delete-object-dialog/dele
 import { UserFormDialogComponent } from './dialogs/user-form-dialog/user-form-dialog.component';
 import { AddUpdateTeamDialogComponent } from './dialogs/add-update-team-dialog/add-update-team-dialog.component';
 import { ProjectFormDialogComponent } from './dialogs/project-form-dialog/project-form-dialog.component';
-import { XrlGraphRadarComponent } from './graphs/xrl-graph-radar/xrl-graph-radar.component';
 import { XrlGraphGaugeComponent } from './graphs/xrl-graph-gauge/xrl-graph-gauge.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { BusinessLineCardComponent } from './object-cards/business-line-card/business-line-card.component';
@@ -25,6 +24,10 @@ import { ReadinessLevelDialogComponent } from './dialogs/readiness-level-dialog/
 import { FilterAddToolboxComponent } from './filter-add-toolbox/filter-add-toolbox.component';
 import { LinearGraphComponent } from './graphs/linear-graph/linear-graph.component';
 import { CompareDialogComponent } from './dialogs/compare-dialog/compare-dialog.component';
+import { LoaderComponent } from './loader/loader.component';
+import { InfoDescriptionRlRankComponent } from './dialogs/info-description-rl-rank/info-description-rl-rank.component';
+import { InfoMemberTeamComponent } from './dialogs/info-member-team/info-member-team.component';
+import { GraphButtonComponent } from './graphs/graph-button/graph-button.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +43,6 @@ import { CompareDialogComponent } from './dialogs/compare-dialog/compare-dialog.
     ProjectFormDialogComponent,
     BusinessLineCardComponent,
     AddUpdateBusinesslineDialogComponent,
-    XrlGraphRadarComponent,
     XrlGraphGaugeComponent,
     XrlGraphComponent,
     CreateModifyAssessmentDialogComponent,
@@ -48,6 +50,10 @@ import { CompareDialogComponent } from './dialogs/compare-dialog/compare-dialog.
     FilterAddToolboxComponent,
     LinearGraphComponent,
     CompareDialogComponent,
+    LoaderComponent,
+    InfoDescriptionRlRankComponent,
+    InfoMemberTeamComponent,
+    GraphButtonComponent
   ],
   imports: [
     CommonModule,
@@ -65,7 +71,6 @@ import { CompareDialogComponent } from './dialogs/compare-dialog/compare-dialog.
     LanguageMenuComponent,
     UsersManagementComponent,
     AddUpdateTeamDialogComponent,
-    XrlGraphRadarComponent,
     XrlGraphGaugeComponent,
     BusinessLineCardComponent,
     AddUpdateBusinesslineDialogComponent,
@@ -73,6 +78,7 @@ import { CompareDialogComponent } from './dialogs/compare-dialog/compare-dialog.
     ReadinessLevelDialogComponent,
     FilterAddToolboxComponent,
     LinearGraphComponent,
+    LoaderComponent
   ],
 })
 export class ComponentsModule {}

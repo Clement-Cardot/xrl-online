@@ -36,9 +36,9 @@ export class UserFormDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.firstnameFormControl = new FormControl(this.user?.firstName, [Validators.required], );
-    this.lastnameFormControl = new FormControl(this.user?.lastName, [Validators.required], );
-    this.loginFormControl = new FormControl(this.user?.login, [Validators.required], );
+    this.firstnameFormControl = new FormControl(this.user?.firstName, [Validators.required, Validators.minLength(2), Validators.maxLength(15)]);
+    this.lastnameFormControl = new FormControl(this.user?.lastName, [Validators.required, Validators.minLength(2), Validators.maxLength(20)]);
+    this.loginFormControl = new FormControl(this.user?.login, [Validators.required, Validators.minLength(5), Validators.maxLength(35)]);
     this.editUserForm  =  this.formBuilder.group({
       firstnameFormControl: this.firstnameFormControl,
       lastnameFormControl: this.lastnameFormControl,
@@ -54,24 +54,36 @@ export class UserFormDialogComponent implements OnInit {
 
   getFirstNameErrorMessage(): string {
     if (this.firstnameFormControl.hasError('required')) {
-      return this.translate.instant('USERS.FIRSTNAME_REQUIRED');
+      return this.translate.instant('USER.FIRSTNAME_REQUIRED');
+    } else if (this.firstnameFormControl.hasError('minlength')) {
+      return this.translate.instant('USER.FIRSTNAME_MIN_LENGTH');
+    } else if (this.firstnameFormControl.hasError('maxlength')) {
+      return this.translate.instant('USER.FIRSTNAME_MAX_LENGTH');
     }
     return '';
   }
 
   getLastNameErrorMessage(): string {
     if (this.lastnameFormControl.hasError('required')) {
-      return this.translate.instant('USERS.LASTNAME_REQUIRED');
+      return this.translate.instant('USER.LASTNAME_REQUIRED');
+    } else if (this.lastnameFormControl.hasError('minlength')) {
+      return this.translate.instant('USER.LASTNAME_MIN_LENGTH');
+    } else if (this.lastnameFormControl.hasError('maxlength')) {
+      return this.translate.instant('USER.LASTNAME_MAX_LENGTH');
     }
     return '';
   }
 
   getLoginErrorMessage(): string {
     if (this.loginFormControl.hasError('required')) {
-      return this.translate.instant('USERS.LOGIN_REQUIRED');
+      return this.translate.instant('LOGIN.LOGIN_REQUIRED');
+    } else if (this.loginFormControl.hasError('minlength')) {
+      return this.translate.instant('LOGIN.LOGIN_MIN_LENGTH');
+    } else if (this.loginFormControl.hasError('maxlength')) {
+      return this.translate.instant('LOGIN.LOGIN_MAX_LENGTH');
     }
     if (this.loginFormControl.hasError('loginAlreadyExists')) {
-      return this.translate.instant('USERS.LOGIN_ALREADY_EXISTS');
+      return this.translate.instant('USER.LOGIN_ALREADY_EXISTS');
     }
     return '';
   }

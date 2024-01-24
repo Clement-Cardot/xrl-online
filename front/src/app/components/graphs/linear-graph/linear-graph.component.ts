@@ -1,9 +1,11 @@
 import { ReadinessLevelModel } from 'src/app/core/data/models/readiness-level.model';
 import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { ChartConfiguration, ChartData, ChartEvent, ChartType, LegendElement, LegendItem, Plugin, Scale } from 'chart.js';
+import { ChartConfiguration, ChartData, ChartEvent, ChartType, LegendElement, LegendItem, Plugin } from 'chart.js';
 import { AssessmentModel } from 'src/app/core/data/models/assessment.model';
 import 'chartjs-adapter-date-fns';
 import zoomPlugin from 'chartjs-plugin-zoom';
+import { Subject } from 'rxjs';
+import { XrlGraphOptions } from '../xrl-graph-options';
 
 @Component({
   selector: 'app-linear-graph',
@@ -14,8 +16,10 @@ export class LinearGraphComponent implements OnInit, OnChanges, AfterViewInit {
 
   @ViewChild("chart") chart!: ElementRef;
 
-  @Input({ required: true }) assesments!: AssessmentModel[];
+  @Input({ required: true }) assessments!: AssessmentModel[];
   @Input({ required: false }) rlName?: string;
+  // boolean for disabled some options when download graph only for project report
+  @Input({ required: false }) options?: XrlGraphOptions;
 
   public radarChartType: ChartType = 'line';
   public radarChartData?: ChartData<'line'>;
@@ -23,8 +27,20 @@ export class LinearGraphComponent implements OnInit, OnChanges, AfterViewInit {
 
   public zoomPlugin: Plugin = zoomPlugin;
 
+  // only use to trigger view init for generate graph (for pdf report)
+  private componentReadySubject = new Subject<void>();
+  public componentReady$ = this.componentReadySubject.asObservable();
+
+  public componentReadySubjectComplete: Plugin = {
+    id: 'componentReadySubjectComplete',
+    afterRender: (chart: any) => {
+      this.componentReadySubject.next();
+      this.componentReadySubject.complete();
+    }
+  }
+
   ngOnInit(): void {
-    if (this.assesments.length === 0) {
+    if (this.assessments.length === 0) {
       return;
     }
     this.radarChartOptions = {
@@ -37,6 +53,11 @@ export class LinearGraphComponent implements OnInit, OnChanges, AfterViewInit {
             displayFormats: {
               quarter: 'MMM YYYY'
             }
+          },
+          ticks: {
+            font: {
+              size: this.options?.isDownloadOnlyUse ? 25 : 12
+            }
           }
         },
         y: {
@@ -45,6 +66,11 @@ export class LinearGraphComponent implements OnInit, OnChanges, AfterViewInit {
           afterDataLimits: (scale) => {
             scale.max = 9.5;
             scale.min = 0;
+          },
+          ticks: {
+            font: {
+              size: this.options?.isDownloadOnlyUse ? 30 : 12
+            }
           }
         }
       },
@@ -73,6 +99,11 @@ export class LinearGraphComponent implements OnInit, OnChanges, AfterViewInit {
         }
       }
     };
+    if (this.options?.isDownloadOnlyUse) {
+      this.radarChartOptions.animation = {
+        duration: 0.01
+      }
+    }
     this.updateChart();
   }
 
@@ -82,6 +113,8 @@ export class LinearGraphComponent implements OnInit, OnChanges, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.addRefreshButton();
+    //this.componentReadySubject.next();
+    // this.componentReadySubject.complete();
   }
 
   updateChart() {
@@ -90,32 +123,47 @@ export class LinearGraphComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   setLegendOnClick() {
-    if (!this.rlName) {
-      this.radarChartOptions!.plugins!.legend = {
-        onClick: (e: ChartEvent, legendItem: LegendItem, legend: LegendElement<"line">) => {
-          const index = legendItem.datasetIndex;
-          const ci = legend.chart;
-          const showElements = legend.legendItems?.filter(li => !li.hidden) ?? [];
-          if (ci.isDatasetVisible(index!) && showElements.length > 1) {
-            ci.hide(index!);
-            legendItem.hidden = true;
-          } else {
-            ci.show(index!);
-            legendItem.hidden = false;
-          }
+    // Ensure that radarChartOptions is initialized
+    if (!this.radarChartOptions) {
+      this.radarChartOptions = {};
+    }
+
+    // Ensure that plugins is initialized within radarChartOptions
+    if (!this.radarChartOptions.plugins) {
+      this.radarChartOptions.plugins = {};
+    }
+
+    this.radarChartOptions!.plugins!.legend = {
+      display: this.options?.legend ?? true,
+      position: this.options?.legendPosition ?? 'top',
+      labels: {
+        font: {
+          size: this.options?.isDownloadOnlyUse ? 28 : 12
         }
       }
+    }
+    if (!this.rlName) {
+      this.radarChartOptions!.plugins!.legend.onClick = (e: ChartEvent, legendItem: LegendItem, legend: LegendElement<"line">) => {
+        const index = legendItem.datasetIndex;
+        const ci = legend.chart;
+        const showElements = legend.legendItems?.filter(li => !li.hidden) ?? [];
+        if (ci.isDatasetVisible(index!) && showElements.length > 1) {
+          ci.hide(index!);
+          legendItem.hidden = true;
+        } else {
+          ci.show(index!);
+          legendItem.hidden = false;
+        }
+      };
     } else {
-      this.radarChartOptions!.plugins!.legend = {
-        onClick: () => { }
-      }
+      this.radarChartOptions!.plugins!.legend.onClick = () => { };
     }
   }
 
   setData() {
     const rls: ReadinessLevelModel[] = [];
-    for (const assesment of this.assesments) {
-      for (const rlRank of assesment.readinessLevelRanks) {
+    for (const assessment of this.assessments) {
+      for (const rlRank of assessment.readinessLevelRanks) {
         if (!rls.find(rl => rl.id === rlRank.readinessLevel.id)) {
           rls.push(rlRank.readinessLevel);
         }
@@ -126,10 +174,10 @@ export class LinearGraphComponent implements OnInit, OnChanges, AfterViewInit {
       datasets: rls.map(rl => {
         return {
           label: rl.name,
-          data: this.assesments.map(assesment => {
+          data: this.assessments.map(assessment => {
             return {
-              x: assesment.date,
-              y: assesment.readinessLevelRanks.find(rlRank => rlRank.readinessLevel.id === rl.id)?.rank ?? null
+              x: assessment.date,
+              y: assessment.readinessLevelRanks.find(rlRank => rlRank.readinessLevel.id === rl.id)?.rank ?? null
             };
           }) as any[],
         }
@@ -141,15 +189,15 @@ export class LinearGraphComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   getMaxLimit(): number | 'original' {
-    if (!this.assesments) return 'original';
-    const lastAssesment = this.assesments.sort((a, b) => a.date.getTime() - b.date.getTime())[this.assesments.length - 1];
-    return lastAssesment.date.getTime() + 1000 * 60 * 60 * 24 * 10;
+    if (!this.assessments) return 'original';
+    const lastAssessment = this.assessments.sort((a, b) => a.date.getTime() - b.date.getTime())[this.assessments.length - 1];
+    return lastAssessment.date.getTime() + 1000 * 60 * 60 * 24 * 10;
   }
 
   getMinLimit(): number | 'original' {
-    if (!this.assesments) return 'original';
-    const firstAssesment = this.assesments.sort((a, b) => a.date.getTime() - b.date.getTime())[0];
-    return firstAssesment.date.getTime() - 1000 * 60 * 60 * 24 * 10;
+    if (!this.assessments) return 'original';
+    const firstAssessment = this.assessments.sort((a, b) => a.date.getTime() - b.date.getTime())[0];
+    return firstAssessment.date.getTime() - 1000 * 60 * 60 * 24 * 10;
   }
 
   addRefreshButton() {
@@ -172,5 +220,10 @@ export class LinearGraphComponent implements OnInit, OnChanges, AfterViewInit {
       this.rlName = undefined;
       this.updateChart();
     });
+  }
+
+  getPngImage() {
+    const canvas = this.chart.nativeElement as HTMLCanvasElement;
+    return canvas.toDataURL("image/png");
   }
 }

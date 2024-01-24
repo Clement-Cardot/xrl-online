@@ -2,6 +2,7 @@ describe('Pages Loading Tests', () => {
 
   beforeEach(() => {
     cy.visit('/');
+    cy.changeLang('fr');
   });
 
   context('FR', () => {
@@ -34,17 +35,7 @@ describe('Pages Loading Tests', () => {
   
     it('Home page test', () => {
       cy.get('#barMenu > div > :nth-child(1) > .mdc-button__label').click();
-      cy.get('.ng-star-inserted > p').should('have.text', 'home-page works!'); // TODO: add tests when home page is implemented
-    })
-  
-    it('Project page test', () => {
-      cy.get(':nth-child(2) > .mdc-button__label').click();
-      // TODO: add tests when project page is implemented
-    })
-  
-    it('Readiness levels page test', () => {
-      cy.get(':nth-child(3) > .mdc-button__label').click();
-      // TODO: add tests when readiness levels page is implemented
+      // TODO: add tests when home page is implemented
     })
   
     context('Admin menu tests', () => {
@@ -147,17 +138,6 @@ describe('Pages Loading Tests', () => {
     it('Home page test', () => {
       cy.get('#barMenu > div > :nth-child(1) > .mdc-button__label').click();
       // TODO: add tests when home page is implemented
-    })
-  
-    it('Project page test', () => {
-      cy.get(':nth-child(2) > .mdc-button__label').click();
-      
-      // TODO: add tests when project page is implemented
-    })
-  
-    it('Readiness levels page test', () => {
-      cy.get(':nth-child(3) > .mdc-button__label').click();
-      // TODO: add tests when readiness levels page is implemented
     })
   
     context('Admin menu tests', () => {

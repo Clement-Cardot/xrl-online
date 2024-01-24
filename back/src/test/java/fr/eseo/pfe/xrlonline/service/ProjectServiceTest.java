@@ -1,6 +1,7 @@
 package fr.eseo.pfe.xrlonline.service;
 
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
+import fr.eseo.pfe.xrlonline.logger.UserLogger;
 import fr.eseo.pfe.xrlonline.model.dto.AssessmentDTO;
 import fr.eseo.pfe.xrlonline.model.dto.BusinessLineDTO;
 import fr.eseo.pfe.xrlonline.model.dto.ProjectDTO;
@@ -10,44 +11,48 @@ import fr.eseo.pfe.xrlonline.model.entity.Assessment;
 import fr.eseo.pfe.xrlonline.model.entity.BusinessLine;
 import fr.eseo.pfe.xrlonline.model.entity.Project;
 import fr.eseo.pfe.xrlonline.model.entity.Team;
+import fr.eseo.pfe.xrlonline.model.entity.User;
 import fr.eseo.pfe.xrlonline.model.entity.Assessment.Tag;
 import fr.eseo.pfe.xrlonline.repository.BusinessLineRepository;
 import fr.eseo.pfe.xrlonline.repository.ProjectRepository;
 import fr.eseo.pfe.xrlonline.repository.TeamRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class ProjectServiceTest {
 
-  @MockBean
-  private ProjectRepository projectRepository;
-
-  @MockBean
-  private BusinessLineRepository businessLineRepository;
-
-  @MockBean
-  private TeamRepository teamRepository;
-
-  @Autowired
+  @InjectMocks
   private ProjectService projectService;
 
-  @Autowired
+  @Mock
+  private ProjectRepository projectRepository;
+
+  @Mock
+  private BusinessLineRepository businessLineRepository;
+
+  @Mock
+  private TeamRepository teamRepository;
+
+  @Spy
   private ModelMapper modelMapper;
 
 
@@ -77,6 +82,45 @@ class ProjectServiceTest {
     assertEquals("Project 2", result.get(1).getName());
 
     verify(projectRepository).findAll();
+  }
+
+  @Test
+  void testGetProjectById() {
+    // Arrange
+    String projectId = "1";
+    Project project = new Project();
+    project.setId(projectId);
+    project.setName("Test Project");
+
+    when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+
+    // Act
+    ProjectDTO result = null;
+    try {
+      result = projectService.getProjectById(projectId);
+    } catch (CustomRuntimeException e) {
+      fail("Should not throw exception", e);
+    }
+
+    // Assert
+    assertNotNull(result);
+    assertEquals(project.getId(), result.getId());
+    assertEquals(project.getName(), result.getName());
+
+    verify(projectRepository).findById(projectId);
+  }
+
+  @Test
+  void testGetProjectByIdWithNonExistingId() {
+    // Arrange
+    String projectId = "nonexistentId";
+
+    when(projectRepository.findById(projectId)).thenReturn(Optional.empty());
+
+    // Act and Assert
+    assertThrows(CustomRuntimeException.class,
+        () -> projectService.getProjectById(projectId),
+        CustomRuntimeException.PROJECT_NOT_FOUND);
   }
 
   // Returns an empty list when projectRepository has no projects
@@ -518,10 +562,12 @@ class ProjectServiceTest {
   }
 
   @Test
-  void testModifyLastAssessmentComment() {
+  void testModifyAssessmentComment() {
     // Arrange
     String projectId = "1";
     String comment = "New comment";
+    String[] data = {"0", comment};
+    System.out.println(data[0]);
     List<Assessment> assessments = new ArrayList<>();
     Assessment assessment = new Assessment();
     assessment.setComment("First Comment");
@@ -537,7 +583,7 @@ class ProjectServiceTest {
     // Act
     ProjectDTO result = null;
     try {
-      result = projectService.modifyLastAssessmentComment(projectId, comment);
+      result = projectService.modifyAssessmentComment(projectId, data);
     } catch (CustomRuntimeException e) {
       fail("Should not throw exception", e);
     }
@@ -553,11 +599,12 @@ class ProjectServiceTest {
   }
 
   @Test
-  void testModifyLastAssessmentCommentNull() {
+  void testModifyAssessmentCommentNull() {
     // Arrange
     String projectId = "1";
     String newComment = null;
     String firstComment = "First Comment";
+    String[] data = {"1", newComment};
     List<Assessment> assessments = new ArrayList<>();
     Assessment assessment = new Assessment();
     assessment.setComment(firstComment);
@@ -572,7 +619,7 @@ class ProjectServiceTest {
     // Act
     // Assert
     CustomRuntimeException customRuntimeException = assertThrowsExactly(CustomRuntimeException.class,
-            () -> projectService.modifyLastAssessmentComment(projectId, newComment),
+            () -> projectService.modifyAssessmentComment(projectId, data),
             CustomRuntimeException.PROJECT_LAST_ASSESSMENT_COMMENT_NULL);
     assertEquals(CustomRuntimeException.PROJECT_LAST_ASSESSMENT_COMMENT_NULL, customRuntimeException.getMessage());
 
@@ -580,10 +627,11 @@ class ProjectServiceTest {
   }
 
   @Test
-  void testModifyLastAssessmentCommentAssessmentListEmpty() {
+  void testModifyAssessmentCommentAssessmentListEmpty() {
     // Arrange
     String projectId = "1";
     String newComment = "New Comment";
+    String[] data = {"1", newComment};
     List<Assessment> assessments = new ArrayList<>();
 
     Project existingProject = new Project();
@@ -595,7 +643,7 @@ class ProjectServiceTest {
     // Act
     // Assert
     CustomRuntimeException customRuntimeException = assertThrowsExactly(CustomRuntimeException.class,
-            () -> projectService.modifyLastAssessmentComment(projectId, newComment),
+            () -> projectService.modifyAssessmentComment(projectId, data),
             CustomRuntimeException.PROJECT_ASSESSMENT_LIST_IS_EMPTY);
     assertEquals(CustomRuntimeException.PROJECT_ASSESSMENT_LIST_IS_EMPTY, customRuntimeException.getMessage());
 
@@ -603,26 +651,32 @@ class ProjectServiceTest {
   }
 
   @Test
-  void testModifyLastAssessment() {
+  void testModifyAssessment() {
     // Arrange
     String projectId = "1";
     AssessmentDTO assessmentDTO = new AssessmentDTO();
-    assessmentDTO.setTag(TagDTO.DRAFT);
+    assessmentDTO.setTag(TagDTO.INITIAL);
+    assessmentDTO.setDraft(true);
     assessmentDTO.setComment("Modified comment");
+    assessmentDTO.setDate(new Date(2002, 1, 1));
+    assessmentDTO.setReadinessLevelRanks(new ArrayList<>());
 
     Project existingProject = new Project();
     existingProject.setId(projectId);
     Assessment lastAssessment = new Assessment();
-    lastAssessment.setTag(Tag.DRAFT);
+    lastAssessment.setTag(Tag.INITIAL);
+    lastAssessment.setDraft(true);
     lastAssessment.setComment("Old comment");
-    existingProject.setAssessments(Collections.singletonList(lastAssessment));
+    lastAssessment.setDate(new Date(2002, 1, 1));
+    existingProject.setAssessments(new ArrayList<>());
+    existingProject.getAssessments().add(lastAssessment);
 
     when(projectRepository.findById(projectId)).thenReturn(Optional.of(existingProject));
 
     // Act
     ProjectDTO modifiedProject = null;
     try {
-      modifiedProject = projectService.modifyLastAssessment(projectId, assessmentDTO);
+      modifiedProject = projectService.modifyAssessment(projectId, assessmentDTO);
     } catch (CustomRuntimeException e) {
       fail("Should not throw exception", e);
     }
@@ -637,42 +691,310 @@ class ProjectServiceTest {
   }
 
   @Test
-  void testModifyLastAssessmentWithNonexistentProject() {
+  void testModifyAssessmentWithNonexistentProject() {
     // Arrange
     String projectId = "nonexistentId";
     AssessmentDTO assessmentDTO = new AssessmentDTO();
-    assessmentDTO.setTag(TagDTO.DRAFT);
+    assessmentDTO.setTag(TagDTO.INITIAL);
+    assessmentDTO.setDraft(true);
     assessmentDTO.setComment("Modified comment");
 
     when(projectRepository.findById(projectId)).thenReturn(Optional.empty());
 
     // Act and Assert
     assertThrows(CustomRuntimeException.class,
-        () -> projectService.modifyLastAssessment(projectId, assessmentDTO),
+        () -> projectService.modifyAssessment(projectId, assessmentDTO),
         CustomRuntimeException.PROJECT_NOT_FOUND);
   }
 
   @Test
-  void testModifyLastAssessmentWithNonDraftAssessment() {
+  void testModifyAssessmentWithNonDraftAssessment() {
     // Arrange
     String projectId = "1";
     AssessmentDTO assessmentDTO = new AssessmentDTO();
-    assessmentDTO.setTag(TagDTO.FINAL);
+    assessmentDTO.setTag(TagDTO.INITIAL);
+    assessmentDTO.setDraft(true);
     assessmentDTO.setComment("Modified comment");
+    assessmentDTO.setDate(new Date(2002, 1, 1));
+    assessmentDTO.setReadinessLevelRanks(new ArrayList<>());
 
     Project existingProject = new Project();
     existingProject.setId(projectId);
     Assessment lastAssessment = new Assessment();
-    lastAssessment.setTag(Tag.FINAL);
+    lastAssessment.setTag(Tag.INITIAL);
+    lastAssessment.setDraft(false);
     lastAssessment.setComment("Old comment");
-    existingProject.setAssessments(Collections.singletonList(lastAssessment));
+    lastAssessment.setDate(new Date(2002, 1, 1));
+    existingProject.setAssessments(new ArrayList<>());
+    existingProject.getAssessments().add(lastAssessment);
 
     when(projectRepository.findById(projectId)).thenReturn(Optional.of(existingProject));
 
     // Act and Assert
     assertThrows(CustomRuntimeException.class,
-        () -> projectService.modifyLastAssessment(projectId, assessmentDTO),
+        () -> projectService.modifyAssessment(projectId, assessmentDTO),
         CustomRuntimeException.ASSESSMENT_MUST_BE_DRAFT_TO_BE_MODIFIED);
   }
 
+  @Test
+  void testGetProjectsByTeamId() {
+    // Arrange
+    String teamId = "1";
+    Team team = new Team();
+    team.setId(teamId);
+
+    List<Project> projects = new ArrayList<>();
+    Project project1 = new Project();
+    project1.setId("1");
+    project1.setName("Project 1");
+    project1.setTeam(team);
+    Project project2 = new Project();
+    project2.setId("2");
+    project2.setName("Project 2");
+    project2.setTeam(team);
+    projects.add(project1);
+    projects.add(project2);
+
+    when(teamRepository.findById(teamId)).thenReturn(Optional.of(team));
+    when(projectRepository.findByTeam(team)).thenReturn(projects);
+
+    // Act
+    ResponseEntity<List<ProjectDTO>> response = null;
+    try {
+      response = projectService.getProjectsByTeamId(teamId);
+    } catch (CustomRuntimeException e) {
+      fail("Should not throw exception", e);
+    }
+
+    // Assert
+    assertNotNull(response);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    List<ProjectDTO> result = response.getBody();
+    assertNotNull(result);
+    assertEquals(2, result.size());
+    assertEquals("1", result.get(0).getId());
+    assertEquals("Project 1", result.get(0).getName());
+    assertEquals("2", result.get(1).getId());
+    assertEquals("Project 2", result.get(1).getName());
+
+    verify(teamRepository).findById(teamId);
+    verify(projectRepository).findByTeam(team);
+  }
+
+  @Test
+  void testGetProjectsByTeamIdWithNonExistingTeamId() {
+    // Arrange
+    String teamId = "nonexistentId";
+
+    when(teamRepository.findById(teamId)).thenReturn(Optional.empty());
+
+    // Act and Assert
+    assertThrows(CustomRuntimeException.class,
+        () -> projectService.getProjectsByTeamId(teamId),
+        CustomRuntimeException.TEAM_NOT_FOUND);
+  }
+
+  @Test
+  void testGetProjectsByBusinessLineId() {
+    // Arrange
+    String businessLineId = "1";
+    BusinessLine businessLine = new BusinessLine();
+    businessLine.setId(businessLineId);
+    List<Project> projects = new ArrayList<>();
+    Project project1 = new Project();
+    project1.setId("1");
+    project1.setName("Project 1");
+    project1.setBusinessLine(businessLine);
+    Project project2 = new Project();
+    project2.setId("2");
+    project2.setName("Project 2");
+    project2.setBusinessLine(businessLine);
+    projects.add(project1);
+    projects.add(project2);
+
+    when(businessLineRepository.findById(businessLineId)).thenReturn(Optional.of(businessLine));
+    when(projectRepository.findByBusinessLine(businessLine)).thenReturn(projects);
+
+    // Act
+    ResponseEntity<List<ProjectDTO>> response = null;
+    try {
+      response = projectService.getProjectsByBusinessLineId(businessLineId);
+    } catch (CustomRuntimeException e) {
+      fail("Should not throw exception", e);
+    }
+
+    // Assert
+    assertNotNull(response);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    List<ProjectDTO> result = response.getBody();
+    assertNotNull(result);
+    assertEquals(2, result.size());
+    assertEquals("1", result.get(0).getId());
+    assertEquals("Project 1", result.get(0).getName());
+    assertEquals("2", result.get(1).getId());
+    assertEquals("Project 2", result.get(1).getName());
+
+    verify(businessLineRepository).findById(businessLineId);
+    verify(projectRepository).findByBusinessLine(businessLine);
+  }
+
+  @Test
+  void testGetProjectsByBusinessLineIdWithNonExistingId() {
+    // Arrange
+    String businessLineId = "nonexistentId";
+
+    when(businessLineRepository.findById(businessLineId)).thenReturn(Optional.empty());
+
+    // Act and Assert
+    assertThrows(CustomRuntimeException.class,
+        () -> projectService.getProjectsByBusinessLineId(businessLineId),
+        CustomRuntimeException.BUSINESS_LINE_NOT_FOUND);
+  }
+
+  @Test
+  void testDeleteAssessment() {
+    // Arrange
+    String projectId = "1";
+    AssessmentDTO assessmentDTO = new AssessmentDTO();
+    assessmentDTO.setTag(TagDTO.INTERMEDIATE);
+    assessmentDTO.setComment("comment");
+
+    Project existingProject = new Project();
+    existingProject.setId(projectId);
+    Assessment assessmentToRemove = new Assessment();
+    assessmentToRemove.setTag(Tag.INTERMEDIATE);
+    assessmentToRemove.setComment("comment");
+    existingProject.setAssessments(new ArrayList<>(List.of(assessmentToRemove)));
+
+    when(projectRepository.findById(projectId)).thenReturn(Optional.of(existingProject));
+    when(projectRepository.save(any(Project.class))).thenAnswer(i -> i.getArguments()[0]);
+
+    // Act
+    ProjectDTO result = null;
+    try {
+      result = projectService.deleteAssessment(projectId, assessmentDTO);
+    } catch (CustomRuntimeException e) {
+      fail("Should not throw exception", e);
+    }
+
+    // Assert
+    assertNotNull(result);
+    assertEquals(projectId, result.getId());
+    assertTrue(result.getAssessments().isEmpty());
+
+    verify(projectRepository).findById(projectId);
+    verify(projectRepository).save(existingProject);
+  }
+
+  @Test
+  void testIsMemberOfProjectTeam() {
+    // Arrange
+    String projectId = "1";
+    Project project = new Project();
+    project.setId(projectId);
+    Team team = new Team();
+    User user1 = new User();
+    user1.setLogin("user1");
+    User user2 = new User();
+    user2.setLogin("user2");
+    team.setMembers(List.of(user1, user2));
+    project.setTeam(team);
+
+    when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+    
+    // Mock logger
+    UserLogger logger = mock(UserLogger.class);
+    projectService.logger = logger;
+    when(logger.getUsername()).thenReturn("user1");
+
+    // Act
+    boolean result = false;
+    try {
+      result = projectService.isMemberOfProjectTeam(projectId);
+    } catch (CustomRuntimeException e) {
+      fail("Should not throw exception", e);
+    }
+
+    // Assert
+    assertTrue(result);
+
+    verify(projectRepository).findById(projectId);
+    verify(logger, times(team.getMembers().size())).getUsername();
+  }
+
+  @Test
+  void testIsMemberOfProjectTeamWithNonExistingProject() {
+    // Arrange
+    String projectId = "nonexistentId";
+
+    when(projectRepository.findById(projectId)).thenReturn(Optional.empty());
+
+    // Act and Assert
+    assertThrows(CustomRuntimeException.class,
+        () -> projectService.isMemberOfProjectTeam(projectId),
+        CustomRuntimeException.PROJECT_NOT_FOUND);
+  }
+
+  @Test
+  void testIsMemberOfProjectTeamWithNonMemberUser() {
+    // Arrange
+    String projectId = "1";
+    Project project = new Project();
+    project.setId(projectId);
+    Team team = new Team();
+    User user1 = new User();
+    user1.setLogin("user1");
+    User user2 = new User();
+    user2.setLogin("user2");
+    team.setMembers(List.of(user1, user2));
+    project.setTeam(team);
+
+    when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+    // Mock logger
+    UserLogger logger = mock(UserLogger.class);
+    projectService.logger = logger;
+    when(logger.getUsername()).thenReturn("user3");
+
+    // Act
+    boolean result = false;
+    try {
+      result = projectService.isMemberOfProjectTeam(projectId);
+    } catch (CustomRuntimeException e) {
+      fail("Should not throw exception", e);
+    }
+
+    // Assert
+    assertFalse(result);
+
+    verify(projectRepository).findById(projectId);
+    verify(logger, times(team.getMembers().size())).getUsername();
+  }
+
+  @Test
+  void testIsAdmin() {
+    // Mock logger
+    UserLogger logger = mock(UserLogger.class);
+    projectService.logger = logger;
+    when(logger.getUsername()).thenReturn("admin");
+
+    // Act
+    boolean result = projectService.isAdmin();
+
+    // Assert
+    assertTrue(result);
+  }
+
+  @Test
+  void testIsNotAdmin() {
+    // Mock logger
+    UserLogger logger = mock(UserLogger.class);
+    projectService.logger = logger;
+    when(logger.getUsername()).thenReturn("not admin");
+
+    // Act
+    boolean result = projectService.isAdmin();
+
+    // Assert
+    assertFalse(result);
+  }
 }

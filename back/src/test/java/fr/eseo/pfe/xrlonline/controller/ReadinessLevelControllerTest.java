@@ -73,6 +73,16 @@ class ReadinessLevelControllerTest {
     }
 
     @Test
+    void testGetAllReadinessLevel_Error() throws Exception {
+        List<ReadinessLevelDTO> readinessLevelDTOList = new ArrayList<>();
+        readinessLevelDTOList.add(readinessLevelDTO);
+        when(readinessLevelService.getAllReadinessLevel()).thenThrow(new CustomRuntimeException(CustomRuntimeException.INTERNAL_SERVER_ERROR));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/readiness-levels/get-all-readiness-levels"))
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError());
+    }
+
+    @Test
     void testGetReadinessLevelById_RLFound() throws Exception {
         when(readinessLevelService.getReadinessLevelById("id")).thenReturn(ResponseEntity.ok(readinessLevelDTO));
 

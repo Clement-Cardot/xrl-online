@@ -15,15 +15,18 @@ export class ProjectModel {
         public assessments: AssessmentModel[],
     ) {}
 
-    getLastAssesment(): AssessmentModel | null {
+    getLastAssessment(): AssessmentModel | null {
         if (this.assessments.length === 0) return null;
-        let lastAssesment = this.assessments[0];
-        for (const assesment of this.assessments) {
-            if (assesment.date.getTime() > lastAssesment.date.getTime()) {
-                lastAssesment = assesment;
-            }
-        }
-        return lastAssesment;
+        return this.getSortedAssessments()[this.assessments.length - 1];
+    }
+
+    getFirstAssessment(): AssessmentModel | null {
+        if (this.assessments.length === 0) return null;
+        return this.getSortedAssessments()[0];
+    }
+
+    getSortedAssessments(): AssessmentModel[] {
+        return this.assessments.sort((a, b) => a.date.getTime() - b.date.getTime());
     }
 
     toMap(): any {

@@ -10,6 +10,7 @@ public class AssessmentDTO {
     
     private Date date;
     private TagDTO tag;
+    private Boolean draft;
     private String comment;
     private List<ReadinessLevelRankDTO> readinessLevelRanks;
 
@@ -40,7 +41,6 @@ public class AssessmentDTO {
     public enum TagDTO {
         INITIAL,
         INTERMEDIATE,
-        FINAL,
-        DRAFT
+        FINAL
     }
 }

@@ -45,6 +45,7 @@ export class XrlGraphGaugeComponent implements OnInit, OnChanges {
 
   @Input({ required: true }) readinessLevelRank!: ReadinessLevelRankModel;
   @Input() scale: number = 1; // Important: Keep te ratio
+  @Input({ required: false }) blockGauge!: boolean;
 
   @Output() changeRankEvent: EventEmitter<ReadinessLevelRankModel> =
     new EventEmitter<ReadinessLevelRankModel>();
@@ -81,14 +82,16 @@ export class XrlGraphGaugeComponent implements OnInit, OnChanges {
       },
     },
     colors: [
-      '#F44F5E',
-      '#E55A89',
-      '#D863B1',
-      '#CA6CD8',
-      '#B57BED',
-      '#8D95EB',
-      '#62ACEA',
-      '#4BC3E6',
+      '#388E3C',
+      '#66BB6A',
+      '#AED581',
+      '#E6EE9C',
+      '#FFF59D',
+      '#FFCC66',
+      '#FFB266',
+      '#FF9966',
+      '#FF6666',
+      '#FFFFFF'
     ],
     dataLabels: {
       enabled: true,
@@ -101,16 +104,7 @@ export class XrlGraphGaugeComponent implements OnInit, OnChanges {
     },
     title: {},
     xaxis: {
-      categories: [
-        'Sweets',
-        'Processed Foods',
-        'Healthy Fats',
-        'Meat',
-        'Beans & Legumes',
-        'Dairy',
-        'Fruits & Vegetables',
-        'Grains',
-      ],
+      categories: ['', '', '', '', '', '', '', '', '', ''],
     },
     legend: {
       show: false,
@@ -130,7 +124,6 @@ export class XrlGraphGaugeComponent implements OnInit, OnChanges {
     tooltip: {
       enabled: false,
       custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-        console.log(series, seriesIndex, dataPointIndex, w);
         return (
           '<div class="arrow_box">' +
           '<span>' +
@@ -147,12 +140,10 @@ export class XrlGraphGaugeComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
     if (this.chart) {
       if (changes['readinessLevelRank'] || changes['scale']) {
         this.ApexOptions = this.setChartParameters();
         this.chart.updateOptions(this.ApexOptions);
-        console.log('test');
       }
     }
   }
@@ -200,6 +191,7 @@ export class XrlGraphGaugeComponent implements OnInit, OnChanges {
         '#FFB266',
         '#FF9966',
         '#FF6666',
+        '#FFFFFF'
       ],
       dataLabels: {
         enabled: true,
@@ -227,7 +219,6 @@ export class XrlGraphGaugeComponent implements OnInit, OnChanges {
       tooltip: {
         enabled: false,
         custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-          console.log(series, seriesIndex, dataPointIndex, w);
           return (
             '<div class="arrow_box">' +
             '<span>' +
@@ -254,9 +245,11 @@ export class XrlGraphGaugeComponent implements OnInit, OnChanges {
   }
 
   changeRank(e: any, chart: any, options: any): void {
-    let newRank = 10 - (options.dataPointIndex + 1);
-    this.readinessLevelRank.rank = newRank;
-    this.changeRankEvent.emit(this.readinessLevelRank);
-    this.chart.updateSeries([{ data: this.getRank() }]);
+    if (!this.blockGauge) {
+      let newRank = 10 - (options.dataPointIndex + 1);
+      this.readinessLevelRank.rank = newRank;
+      this.changeRankEvent.emit(this.readinessLevelRank);
+      this.chart.updateSeries([{ data: this.getRank() }]);
+    }
   }
 }

@@ -15,9 +15,6 @@ export abstract class BaseService {
     * @returns An observable with a user-facing error message.
     */
     protected handleError(error: HttpErrorResponse) {
-        // TODO: Remove this when going to production, it's for debugging only
-        console.error(`Backend returned code ${error.status}, body was: `, error.error);
-
         // If client get 403 error, it means that the token is expired
         if (error.status == 403) {
             // If client get 403 error, it means that the token is expired

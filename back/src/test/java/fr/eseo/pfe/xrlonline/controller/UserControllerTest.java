@@ -111,6 +111,31 @@ class UserControllerTest {
     }
 
     @Test
+    void testGetUserByLoginUserExist() throws Exception {
+        when(userService.getUserByLogin("testUser")).thenReturn(ResponseEntity.ok(userDTO));
+
+        assertDoesNotThrow(() ->
+            mockMvc.perform(MockMvcRequestBuilders.get("/users/get-user-by-login")
+                            .param("login", "testUser")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.login").value("testUser"))
+        );
+    }
+
+    @Test
+    void testGetUserByLoginUser_Error() throws Exception {
+        when(userService.getUserByLogin("nonexistentUser")).thenThrow(new CustomRuntimeException(CustomRuntimeException.INTERNAL_SERVER_ERROR));
+
+        assertDoesNotThrow(() ->
+            mockMvc.perform(MockMvcRequestBuilders.get("/users/get-user-by-login")
+                            .param("login", "nonexistentUser")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.status().isInternalServerError())
+        );
+    }
+
+    @Test
     void testGetUserByIdUserExist() throws Exception {
         when(userService.getUserById("1")).thenReturn(ResponseEntity.ok(userDTO));
 
@@ -145,6 +170,18 @@ class UserControllerTest {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.login").value("testUser"))
+        );
+    }
+
+    @Test
+    void testCreateUser_Error() throws Exception {
+        when(userService.createUser(any(UserDTO.class))).thenThrow(new CustomRuntimeException(CustomRuntimeException.INTERNAL_SERVER_ERROR));
+
+        assertDoesNotThrow(() -> 
+            mockMvc.perform(MockMvcRequestBuilders.post("/users/create-user")
+                            .content(asJsonString(userDTO))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.status().isInternalServerError())
         );
     }
 
@@ -210,12 +247,20 @@ class UserControllerTest {
         );
     }
 
-        // Méthode utilitaire pour convertir un objet en JSON
-        private static String asJsonString(final Object obj) {
-            try {
-                return new ObjectMapper().writeValueAsString(obj);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+    @Test
+    void testCheckConnexion() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/check-connexion")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("true"));
+    }
+
+    // Méthode utilitaire pour convertir un objet en JSON
+    private static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
+}

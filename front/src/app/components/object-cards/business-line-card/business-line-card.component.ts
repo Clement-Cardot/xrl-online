@@ -34,23 +34,23 @@ export class BusinessLineCardComponent implements OnInit {
       .getProjectsByBusinessLineId(this.businessLine.id)
       .subscribe({
         next: (v) => {
+          this.projects = v;
           // if there are projects for this business line, we hide the delete button
-          if (v.length > 0) {
-            this.projects = v;
-            this.hideDeleteButton();
+          if (v.length == 0) {
+            this.showDeleteButton();
           }
         },
         error: (e) => console.error(e),
       });
   }
 
-  hideDeleteButton() {
+  showDeleteButton() {
     const deleteButton = document.querySelector(
       '#business-line-card-'+this.businessLine.id+' > mat-card-header > .icons-container > #delete'
     ) as HTMLElement;
     if (deleteButton) {
-      deleteButton.style.color = 'grey';
-      deleteButton.style.pointerEvents = 'none';
+      deleteButton.style.color = 'red';
+      deleteButton.style.pointerEvents = 'visible';
     }
   }
 
@@ -70,7 +70,7 @@ export class BusinessLineCardComponent implements OnInit {
   openDeleteDialog() {
     const dialogRef = this.dialog.open(DeleteObjectDialogComponent, {
       data: {
-        title: 'BUSINESSLINE.DELETE',
+        title: 'BUSINESSLINE.DELETE_CONFIRM',
         content: this.businessLine.name,
       },
       autoFocus: false,
@@ -84,7 +84,7 @@ export class BusinessLineCardComponent implements OnInit {
               this.deleteBusinessLineEvent.emit(v);
               this.snackBar.open(
                 this.translateService.instant('BUSINESSLINE.DELETE_SUCCESS'),
-                'OK',
+                this.translateService.instant('ACTION.CLOSE'),
                 {
                   duration: 3000,
                 }

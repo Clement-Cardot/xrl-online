@@ -27,6 +27,7 @@ public class CustomUserDetailService implements UserDetailsService{
             userService.getUserByLogin(login);
             return User.withUsername(login)
                     .password(login)
+                    .roles(login.equals("admin") ? "ADMIN" : "USER")
                     .build();
         } catch (CustomRuntimeException e) {
             log.error(e);

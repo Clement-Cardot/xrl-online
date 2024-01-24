@@ -1,16 +1,16 @@
 package fr.eseo.pfe.xrlonline.controller;
 
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import fr.eseo.pfe.xrlonline.logger.UserLogger;
 import fr.eseo.pfe.xrlonline.logger.UserLoggerFactory;
 import fr.eseo.pfe.xrlonline.model.dto.ReadinessLevelDTO;
 import fr.eseo.pfe.xrlonline.service.ReadinessLevelService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -33,7 +33,8 @@ public class ReadinessLevelController {
             return readinessLevelService.getAllReadinessLevel();
         } catch (CustomRuntimeException e) {
             logger.logError("Error while trying to get all readiness levels, Error Details : %s", e.getMessage());
-            return new ResponseEntity<>(e.getHttpCode());
+            HttpStatusCode httpCode = e.getHttpCode();
+            return new ResponseEntity<>(httpCode);
         }
     }
 
@@ -45,7 +46,8 @@ public class ReadinessLevelController {
         } catch (CustomRuntimeException e) {
             logger.logError("Error while trying to get readiness level with this ID : %s, Error Details : %s", id,
                     e.getMessage());
-            return new ResponseEntity<>(e.getHttpCode());
+            HttpStatusCode httpCode = e.getHttpCode();
+            return new ResponseEntity<>(httpCode);
         }
     }
 
@@ -57,7 +59,8 @@ public class ReadinessLevelController {
         } catch (CustomRuntimeException e) {
             logger.logError("Error while trying to create readiness level with this name : %s, Error Details : %s",
                     readinessLevelDTO.getName(), e.getMessage());
-            return new ResponseEntity<>(e.getHttpCode());
+            HttpStatusCode httpCode = e.getHttpCode();
+            return new ResponseEntity<>(httpCode);
         }
     }
 
@@ -69,7 +72,8 @@ public class ReadinessLevelController {
         } catch (CustomRuntimeException e) {
             logger.logError("Error while trying to update readiness level with this ID : %s, Error Details : %s",
                     readinessLevelDTO.getId(), e.getMessage());
-            return new ResponseEntity<>(e.getHttpCode());
+            HttpStatusCode httpCode = e.getHttpCode();
+            return new ResponseEntity<>(httpCode);
         }
     }
 
@@ -81,7 +85,8 @@ public class ReadinessLevelController {
         } catch (CustomRuntimeException e) {
             logger.logError("Error while trying to delete readiness level with this ID : {}, Error Details : {}", id,
                     e.getMessage());
-            return new ResponseEntity<>(e.getHttpCode());
+            HttpStatusCode httpCode = e.getHttpCode();
+            return new ResponseEntity<>(httpCode);
         }
     }
 }

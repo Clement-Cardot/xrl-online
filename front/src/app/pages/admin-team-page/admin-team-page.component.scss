@@ -3,7 +3,7 @@
 }
 
 .user-container {
-  height: calc(100vh - 150px);
+  height: calc(100vh - 110px);
   padding: 1rem 2rem;
 
   app-users-management {
@@ -13,7 +13,7 @@
 }
 
 .team-container {
-  height: calc(100vh - 150px - 2rem);
+  height: calc(100vh - 110px - 2rem);
   width: 100%;
   padding: 1rem 1rem;
   overflow-y: overlay;
@@ -21,7 +21,7 @@
 
 .team-card-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
 }
 
 /* Media query for smaller screens */

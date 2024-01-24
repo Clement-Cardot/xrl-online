@@ -7,7 +7,8 @@ import { AssessmentModel, Tag } from 'src/app/core/data/models/assessment.model'
 import { ReadinessLevelRankModel } from 'src/app/core/data/models/readiness-level-rank.model';
 import { ReadinessLevelModel } from 'src/app/core/data/models/readiness-level.model';
 import { ApiReadinessLevelService } from 'src/app/core/services/api-readiness-level.service';
-import { XrlGraphOptions } from '../../graphs/xrl-graph/xrl-graph.component';
+import { TranslateService } from '@ngx-translate/core';
+import { XrlGraphOptions } from '../../graphs/xrl-graph-options';
 
 @Component({
   selector: 'app-create-modify-assessment-dialog',
@@ -32,6 +33,10 @@ export class CreateModifyAssessmentDialogComponent implements OnInit {
     tagControl: ['', Validators.required],
   });
 
+  isDraft: boolean = false;
+
+  showMoreDescription = false;
+
   rankCommentFormControls: FormGroup[] = [];
 
   public formPage: number = 0;
@@ -48,7 +53,11 @@ export class CreateModifyAssessmentDialogComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef, // Inject ChangeDetectorRef
     private _formBuilder: FormBuilder,
     private apiReadinessLevelService: ApiReadinessLevelService,
+    private translateService: TranslateService
   ) {
+    const NEW = this.translateService.instant('NEW');
+    const OLD = this.translateService.instant('OLD');
+    this.graphOptions.legendTitle = `${NEW} (\${date})|${OLD} (\${date})`;
   }
 
   ngOnInit(): void {
@@ -56,6 +65,10 @@ export class CreateModifyAssessmentDialogComponent implements OnInit {
       this.selectedReadinessLevels = this.lastAssessment.readinessLevelRanks.map((r: ReadinessLevelRankModel) => r.readinessLevel);
       this.commentAndTagFormControl.controls.commentControl.setValue(this.lastAssessment.comment);
       this.commentAndTagFormControl.controls.tagControl.setValue(this.lastAssessment.tag);
+      if (this.lastAssessment.tag === Tag.INITIAL) {
+        this.commentAndTagFormControl.controls.tagControl.disable();
+      }
+      this.isDraft = this.lastAssessment.draft;
     }
     else {
       this.commentAndTagFormControl.controls.tagControl.setValue('INITIAL');
@@ -66,7 +79,7 @@ export class CreateModifyAssessmentDialogComponent implements OnInit {
       next: (v) => {
         this.readinessLevels = v.filter((rl: ReadinessLevelModel) => !this.selectedReadinessLevels.map((srl: ReadinessLevelModel) => srl.id).includes(rl.id));
       },
-      error: (err) => console.log(err), // TODO: handle error (404 not found)
+      error: (err) => console.error(err),
     });
 
   }
@@ -92,7 +105,12 @@ export class CreateModifyAssessmentDialogComponent implements OnInit {
   }
 
   addReadinessLevelToAssessment(readinessLevel: ReadinessLevelModel) {
-    this.selectedReadinessLevels.push(readinessLevel);
+    if (this.lastAssessment != null && this.lastAssessment.readinessLevelRanks.find((rlr: ReadinessLevelRankModel) => rlr.readinessLevel.id === readinessLevel.id) != null) {
+      this.selectedReadinessLevels.splice(
+        this.lastAssessment.readinessLevelRanks.map((rlr) => rlr.readinessLevel.id).indexOf(readinessLevel.id),0, readinessLevel);
+    } else {
+      this.selectedReadinessLevels.push(readinessLevel);
+    }
     this.readinessLevels.splice(this.readinessLevels.indexOf(readinessLevel), 1);
     this.selectTable.renderRows();
     this.RLTable.renderRows();
@@ -144,10 +162,19 @@ export class CreateModifyAssessmentDialogComponent implements OnInit {
     let tagValue: Tag = Tag[tagControlValue as keyof typeof Tag];
 
     this.newAssessment = new AssessmentModel(
-      new Date(),
-      tagValue, 
+      this.lastAssessment?.date ?? new Date(),
+      tagValue,
+      this.isDraft, 
       commentControlValue, 
       this.newAssessmentReadinessLevelRanks
     );
+  }
+
+  toggleShowMoreDescription() {
+    this.showMoreDescription = !this.showMoreDescription;
+  }
+
+  resetShowMoreDescription() {
+    this.showMoreDescription = false;
   }
 }

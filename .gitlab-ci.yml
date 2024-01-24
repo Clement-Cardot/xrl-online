@@ -12,18 +12,18 @@ stages:
 
 # Define environment variables for the GitLab CI/CD pipeline
 variables:
-  HTTP_PROXY_IP: "192.168.4.8"
-  HTTP_PROXY_PORT: "3128"
+  HTTP_PROXY_IP: "YOUR_PROXY_IP"
+  HTTP_PROXY_PORT: "YOUR_PROXY_PORT"
   # Define Maven options for the pipeline, including proxy settings, repository location, and logging configuration
   MAVEN_OPTS: "-Dhttp.proxyHost=$HTTP_PROXY_IP -Dhttp.proxyPort=$HTTP_PROXY_PORT -Dhttps.proxyHost=$HTTP_PROXY_IP -Dhttps.proxyPort=$HTTP_PROXY_PORT -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
   # Define Maven CLI options for the pipeline, including batch mode, error handling, and version information
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
   # Define the IP address of the development server
-  DEV_SERVER_IP: 172.24.1.26
+  DEV_SERVER_IP: YOUR_DEV_SERVER_IP
   # Define the username for the development server
-  DEV_SERVER_USER: etudiant
+  DEV_SERVER_USER: YOUR_DEV_SERVER_USERNAME
   # Define the URL for the Docker image repository
-  DOCKER_IMAGE_REPOSITORY_URL: srv-proxy.openstack.etudis.eseo.fr:1971
+  DOCKER_IMAGE_REPOSITORY_URL: YOUR_DOCKER_IMAGE_REPOSITORY_URL
 
 # This section sets up the environment variables that define the proxy server to be used for the GitLab CI pipeline.
 before_script:
@@ -94,7 +94,7 @@ quality-dev:
     - cd back
     - mvn --log-file $CI_PROJECT_DIR/mvn_clean_compile_test.log $MAVEN_CLI_OPTS clean compile test
     - cd ..
-    - mvn --log-file $CI_PROJECT_DIR/mvn_sonar.log $MAVEN_CLI_OPTS validate sonar:sonar -Dsonar.projectKey=xrl_online_project -Dsonar.host.url=http://172.24.1.1:9000/sonar/ -Dsonar.login=$SONAR_TOKEN
+    - mvn --log-file $CI_PROJECT_DIR/mvn_sonar.log $MAVEN_CLI_OPTS validate sonar:sonar -Dsonar.projectKey=xrl_online_project -Dsonar.host.url=YOUR_SONAR_URL -Dsonar.login=$SONAR_TOKEN
   artifacts:
     paths:
       - $CI_PROJECT_DIR/mvn_clean_compile_test.log
@@ -124,7 +124,7 @@ release:
     DOCKER_HOST: "tcp://docker:2375"
     HTTPS_PROXY: "http://$HTTP_PROXY_IP:$HTTP_PROXY_PORT/"
     HTTP_PROXY: "http://$HTTP_PROXY_IP:$HTTP_PROXY_PORT/"
-    NO_PROXY: "192.168.4.8,srv-proxy.openstack.eseo.fr,172.24.0.0/16,docker,gitlab-etu.openstack.etudis.eseo.fr"
+    NO_PROXY: "YOUR_NO_PROXY_CONFIG"
   # Define the Docker image to use for this job
   image: docker:24.0.6
   # Define the Docker services to use for this job
@@ -139,6 +139,7 @@ release:
     - sed -i "s,#PLACEHOLDER3,RUN pip config set global.proxy 'http://$HTTP_PROXY_IP:$HTTP_PROXY_PORT',g" ./Dockerfile
     # Remove dos2unix command from Dockerfile
     - sed -i '/dos2unix/d' ./db/Dockerfile
+    - sed -i '/cron/d' ./db/Dockerfile
   # Define the script to run for this job
   script:
     - docker compose build -q
@@ -160,7 +161,7 @@ deploy:
     DOCKER_HOST: "tcp://docker:2375"
     HTTPS_PROXY: "http://$HTTP_PROXY_IP:$HTTP_PROXY_PORT/"
     HTTP_PROXY: "http://$HTTP_PROXY_IP:$HTTP_PROXY_PORT/"
-    NO_PROXY: "192.168.4.8,srv-proxy.openstack.eseo.fr,172.24.0.0/16,docker,gitlab-etu.openstack.etudis.eseo.fr,$DEV_SERVEUR"
+    NO_PROXY: ""YOUR_NO_PROXY_CONFIG""
   image: docker:24.0.6
   services:
     - docker:24.0.6-dind

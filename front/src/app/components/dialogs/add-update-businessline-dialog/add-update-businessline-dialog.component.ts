@@ -48,7 +48,7 @@ export class AddUpdateBusinesslineDialogComponent implements OnInit {
         next: (businessLine) => {
           this.dialogRef.close(businessLine);
           this.businessLine.name = businessLine.name;
-          this.snackBar.open(this.translateService.instant('BUSINESSLINE.BUSINESSLINE_UPDATED'), this.translateService.instant('CLOSE'), {
+          this.snackBar.open(this.translateService.instant('BUSINESSLINE.UPDATE_SUCCESS'), this.translateService.instant('ACTION.CLOSE'), {
             duration: 3000
           });
         },
@@ -61,7 +61,7 @@ export class AddUpdateBusinesslineDialogComponent implements OnInit {
         next: (businessLine) => {
           this.dialogRef.close(businessLine);
           this.businessLine.name = businessLine.name;
-          this.snackBar.open(this.translateService.instant('BUSINESSLINE.BUSINESSLINE_CREATED'), this.translateService.instant('CLOSE'), {
+          this.snackBar.open(this.translateService.instant('BUSINESSLINE.CREATE_SUCCESS'), this.translateService.instant('ACTION.CLOSE'), {
             duration: 3000
           });
         },
@@ -91,20 +91,20 @@ export class AddUpdateBusinesslineDialogComponent implements OnInit {
   handleError(error: any): void {
     switch (error.status) {
       case 409: // Conflict
-        console.log('Error 409: ', error);
+        console.error('Error 409: ', error);
         this.formControlBusinessLineName.setErrors({ nameAlreadyExist: true });
         break;
       default:
-        console.log('This error is not handled: ', error);
+        console.error('This error is not handled: ', error);
         break;
     }
   }
 
   getDialogTitle(): string {
     if (this.businessLine.id != '') {
-      return this.translateService.instant('BUSINESSLINE.UPDATE_BUSINESSLINE');
+      return this.translateService.instant('BUSINESSLINE.UPDATE_TITLE');
     } else {
-      return this.translateService.instant('BUSINESSLINE.CREATE_BUSINESSLINE');
+      return this.translateService.instant('BUSINESSLINE.CREATE_TITLE');
     }
   }
 

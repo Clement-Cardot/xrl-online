@@ -1,12 +1,18 @@
 <div class="body-container">
+  <div class="search-add-container">
+    <app-filter-add-toolbox
+      (updateDisplayEvent)="updateBusinessLinesToDisplay($event)"
+      [searchTypes]="searchTypes"
+      (openAddDialogEvent)="openAddUpdateBusinessLineDialog()"
+    ></app-filter-add-toolbox>
+  </div>
 
-    <div class="search-add-container">
-        <app-filter-add-toolbox (updateDisplayEvent)="updateBusinessLinesToDisplay($event)" [searchTypes]="searchTypes" (openAddDialogEvent)="openAddUpdateBusinessLineDialog()"></app-filter-add-toolbox>
-    </div>
-
-    <div class="business-lines-container">
-        <app-business-line-card class="business-line-card" *ngFor="let businessLine of businessLinesToDisplay"
-        [businessLine]="businessLine" (deleteBusinessLineEvent)="deleteBusinessLine($event)"></app-business-line-card>
-    </div>
-    
+  <div class="business-lines-container">
+    <app-business-line-card
+      class="business-line-card"
+      *ngFor="let businessLine of businessLinesToDisplay"
+      [businessLine]="businessLine"
+      (deleteBusinessLineEvent)="deleteBusinessLine($event)"
+    ></app-business-line-card>
+  </div>
 </div>
