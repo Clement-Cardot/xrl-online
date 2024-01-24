@@ -1,6 +1,7 @@
 @import "src/styles.scss";
 
 .close-button-login{
+  // visibility: hidden;
   float: right;
   top:-24px;
   right:-24px;
@@ -16,10 +17,11 @@
 
 .readiness-level-list-container {
   width: 20em;
-  background-color: $color-primary-light;
+  background-color: whitesmoke;
   padding: 15px;
   margin: 0 1rem;
   border-radius: 5px;
+  // border: 2px solid #969696;
   h2 {
     display: flex;
     flex-direction: column;
@@ -28,6 +30,16 @@
     line-height: 56px;
     border-bottom: solid 1px #969696;
   }
+  font-size: 18px;
+}
+
+mat-stepper {
+  padding-right: 4%;
+  padding-left: 5%;
+}
+
+.readiness-level-container {
+  width: 100%;
 }
 
 .readiness-level-list {
@@ -41,7 +53,7 @@
 }
 
 .readiness-level-list tr {
-  background-color: $color-primary-light;
+  background-color: whitesmoke;
 }
 
 .dialog-head {
@@ -49,9 +61,13 @@
   flex-direction: column;
   align-items: center;
 
+  h2 {
+    margin-bottom: 0;
+  }
+
   p {
     word-wrap: break-word;
-    width: 90%;
+    width: 100%;
   }
 }
 
@@ -62,7 +78,7 @@
 }
 
 .description-container {
-  margin: 2rem 4rem;
+  margin: 1rem 2rem 1rem 4rem;
   width: 100%;
 }
 
@@ -86,6 +102,11 @@
   padding: 0 1rem;
 }
 
+.longDescription {
+  max-height: 18rem;
+  overflow-y: auto;
+}
+
 .rankComment mat-form-field {
   min-width: 85%;
   min-height: 9rem;
@@ -104,7 +125,7 @@
 }
 
 .button-container {
-  margin: 2rem 0 1rem 0;
+  margin: 1rem 0 1rem 0;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -131,4 +152,18 @@
   justify-content: center;
   flex-direction: column;
   align-items: center;
+}
+
+.showMore, .showLess {
+  margin-left: 0.5rem;
+  border-radius: 5px;
+  color: blue;
+  font-weight:bolder;
+  word-spacing: 0.2px;
+  font-size: 14px;
+}
+
+.showMore:hover, .showLess:hover {
+  text-decoration: underline 2px;
+  cursor: pointer;
 }

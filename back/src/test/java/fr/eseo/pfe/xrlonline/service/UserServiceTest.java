@@ -2,7 +2,9 @@ package fr.eseo.pfe.xrlonline.service;
 
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
 import fr.eseo.pfe.xrlonline.model.dto.UserDTO;
+import fr.eseo.pfe.xrlonline.model.entity.Team;
 import fr.eseo.pfe.xrlonline.model.entity.User;
+import fr.eseo.pfe.xrlonline.repository.TeamRepository;
 import fr.eseo.pfe.xrlonline.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +31,9 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private TeamRepository teamRepository;
 
     @Mock
     private ModelMapper modelMapper;
@@ -201,6 +207,7 @@ class UserServiceTest {
     void testDeleteUser_UserFound() throws CustomRuntimeException {
         when(userRepository.findById("1")).thenReturn(Optional.of(user));
         when(modelMapper.map(user, UserDTO.class)).thenReturn(userDTO);
+        when(teamRepository.findAll()).thenReturn(new ArrayList<>());
 
         ResponseEntity<UserDTO> response = userService.deleteUser("1");
 
@@ -223,6 +230,41 @@ class UserServiceTest {
 
         CustomRuntimeException customRuntimeException = assertThrowsExactly(CustomRuntimeException.class, () -> userService.deleteUser("1"), "User admin");
         assertEquals(CustomRuntimeException.USER_ADMIN_DELETE, customRuntimeException.getMessage());
+    }
+
+    @Test
+    void testRemoveFromTeam() {
+        // Create a user
+        User user = new User();
+        user.setId("1");
+
+        // Create a team
+        Team team = new Team();
+        team.setId("1");
+        team.setMembers(new ArrayList<>());
+        team.getMembers().add(user);
+
+        // Create a list of teams
+        List<Team> teams = new ArrayList<>();
+        teams.add(team);
+
+        // Mock the findAll method of teamRepository to return the list of teams
+        when(teamRepository.findAll()).thenReturn(teams);
+
+        // Call the removeFromTeam method
+        try {
+            Method method = UserService.class.getDeclaredMethod("removeFromTeam", User.class);
+            method.setAccessible(true);
+            method.invoke(userService, user);
+        } catch (Exception e) {
+            fail("Exception thrown");
+        }
+
+        // Verify that the members list of the team is updated
+        assertEquals(0, team.getMembers().size(), "User removed from team");
+
+        // Verify that the save method of teamRepository is called for each team
+        verify(teamRepository, times(1)).save(team);
     }
 }
 

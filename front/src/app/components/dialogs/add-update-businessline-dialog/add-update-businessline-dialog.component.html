@@ -1,6 +1,6 @@
 <div class="add-update-businessline-dialog-container">
   <h1 mat-dialog-title>{{ getDialogTitle() }}</h1>
-  <div mat-dialog-content>
+  <div id="content" mat-dialog-content>
     <mat-form-field>
       <mat-label>{{ "BUSINESSLINE.NAME" | translate }}</mat-label>
       <input
@@ -16,7 +16,7 @@
       >
     </mat-form-field>
   </div>
-  <div mat-dialog-actions>
+  <div id="buttons" mat-dialog-actions>
     <button
       id="close"
       mat-button
@@ -24,7 +24,7 @@
       mat-raised-button
       color="warn"
     >
-      {{ "BUSINESSLINE.CANCEL" | translate }}
+      {{ "ACTION.CANCEL" | translate }}
     </button>
     <button
       id="confirm"
@@ -34,7 +34,7 @@
       mat-raised-button
       color="primary"
     >
-      {{ "BUSINESSLINE.SAVE" | translate }}
+      {{ "ACTION.CREATE" | translate }}
     </button>
   </div>
 </div>

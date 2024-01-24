@@ -43,7 +43,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         useFactory: HttpLoaderFactory,
         deps: [HttpClient],
       },
-      defaultLanguage: 'fr',
+      defaultLanguage: localStorage.getItem('lang') || 'en',
     }),
     NgChartsModule,
   ],

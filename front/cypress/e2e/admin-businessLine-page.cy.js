@@ -4,13 +4,13 @@ describe('Admin BusinessLine Page tests', () => {
 
   beforeEach(() => {
     cy.task('Seed_DB').then((result) => {
-      console.log(result);
       database = result;
     });
   })
 
   beforeEach(() => {
     cy.visit('/');
+    cy.changeLang('fr');
     cy.PerformLogin('admin');
     cy.GoToPage('admin-BL')
   })

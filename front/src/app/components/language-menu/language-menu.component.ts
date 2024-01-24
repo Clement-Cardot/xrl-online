@@ -17,5 +17,6 @@ export class LanguageMenuComponent {
   setLanguage(language:string) {
     this.translateService.use(language);
     this.language = language;
+    localStorage.setItem('lang', language);
   }
 }

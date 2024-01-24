@@ -841,6 +841,7 @@ const Seed_MongoDB = async () => {
             {
                 date: new Date("2021-08-27T19:00:38.000+00:00"),
                 tag:"INITIAL",
+                draft:false,
                 comment:"First assessment",
                 readinessLevelRanks:[
                     {
@@ -898,6 +899,7 @@ const Seed_MongoDB = async () => {
                 date: new Date("2022-08-27T19:00:38.000+00:00"),
                 comment:"assessment 2",
                 tag:"INTERMEDIATE",
+                draft:false,
                 readinessLevelRanks:[
                     {
                         readinessLevel: {
@@ -952,7 +954,8 @@ const Seed_MongoDB = async () => {
 
             {
                 date: new Date("2023-08-27T19:00:38.000+00:00"),
-                tag:"DRAFT",
+                tag:"INTERMEDIATE",
+                draft:true,
                 comment:"First assessment",
                 readinessLevelRanks:[
                     {
@@ -1022,6 +1025,7 @@ const Seed_MongoDB = async () => {
             {
                 date: new Date("2021-08-27T19:00:38.000+00:00"),
                 tag:"INITIAL",
+                draft:false,
                 comment:"First assessment",
                 readinessLevelRanks:[
                     {

@@ -45,7 +45,7 @@ db.createCollection("projects", {
                     bsonType: "array",
                     items: {
                         bsonType: "object",
-                        required: ["date", "comment", "tag", "readinessLevelRanks"],
+                        required: ["date", "comment", "draft", "tag", "readinessLevelRanks"],
                         properties: {
                             date: {
                                 bsonType: "date",
@@ -54,6 +54,10 @@ db.createCollection("projects", {
                             tag: {
                                 bsonType: "string",
                                 description: "must be a string and is required"
+                            },
+                            draft: {
+                                bsonType: "bool",
+                                description: "must be a bool and is required"
                             },
                             comment: {
                                 bsonType: "string",

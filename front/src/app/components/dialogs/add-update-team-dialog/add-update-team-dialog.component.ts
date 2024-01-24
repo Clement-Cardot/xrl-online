@@ -111,9 +111,9 @@ export class AddUpdateTeamDialogComponent implements OnInit {
    */
   getDialogTitle(): string {
     if (this.team.id != '') {
-      return this.translateService.instant('TEAM.UPDATE');
+      return this.translateService.instant('TEAM.UPDATE_TITLE');
     } else {
-      return this.translateService.instant('TEAM.CREATE');
+      return this.translateService.instant('TEAM.CREATE_TITLE');
     }
   }
 
@@ -165,7 +165,7 @@ export class AddUpdateTeamDialogComponent implements OnInit {
           this.dialogRef.close(teamresult);
           this.snackBar.open(
             this.translateService.instant('TEAM.UPDATE_SUCCESS'),
-            this.translateService.instant('CLOSE'),
+            this.translateService.instant('ACTION.CLOSE'),
             {
               duration: 3000,
             }
@@ -181,7 +181,7 @@ export class AddUpdateTeamDialogComponent implements OnInit {
           this.dialogRef.close(teamresult);
           this.snackBar.open(
             this.translateService.instant('TEAM.CREATE_SUCCESS'),
-            this.translateService.instant('CLOSE'),
+            this.translateService.instant('ACTION.CLOSE'),
             {
               duration: 3000,
             }
@@ -240,14 +240,13 @@ export class AddUpdateTeamDialogComponent implements OnInit {
    * @param error - The error that occurred.
    */
   handleError(error: any): void {
-    console.log(error);
+    console.error(error);
     switch (error.status) {
       case 409: // Already exists
         this.formControlTeamName.setErrors({ nameAlreadyExists: true });
-        console.log('Team name already exists');
         break;
       default:
-        console.log('This error is not handled: ', error);
+        console.error('This error is not handled: ', error);
         break;
     }
   }

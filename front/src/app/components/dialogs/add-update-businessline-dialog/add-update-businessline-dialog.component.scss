@@ -1,4 +1,25 @@
-.add-update-businessline-dialog-container div {
-  display: flex;
-  justify-content: center;
+.add-update-businessline-dialog-container {
+
+  margin: 1em;
+
+  div {
+    display: flex;
+    justify-content: center;
+    margin: 1em;
+    padding: 1rem;
+  }
+}
+
+#content {
+  width: 25rem;
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  input {
+    width: 20rem;
+  }
+
+  overflow-y:hidden;
 }

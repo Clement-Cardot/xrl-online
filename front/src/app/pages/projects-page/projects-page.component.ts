@@ -20,9 +20,9 @@ export class ProjectsPageComponent implements OnInit {
   currentUser: UserModel | undefined;
 
   searchTypes: {typeValue: string, typeTranslation: string}[] = [
-    {typeValue: 'name', typeTranslation: 'PROJECTS.SEARCH_NAME'},
-    {typeValue: 'team', typeTranslation: 'PROJECTS.SEARCH_TEAM'},
-    {typeValue: 'business-line', typeTranslation: 'PROJECTS.SEARCH_BUSINESS_LINE'}
+    {typeValue: 'name', typeTranslation: 'OBJECT.NAME'},
+    {typeValue: 'team', typeTranslation: 'OBJECT.TEAM'},
+    {typeValue: 'business-line', typeTranslation: 'OBJECT.BUSINESS_LINE'}
   ];
 
   constructor(
@@ -40,23 +40,21 @@ export class ProjectsPageComponent implements OnInit {
         this.projects = v;
         this.projectsToDisplay = v;
       },
-      error: (err) => console.log(err),
+      error: (err) => console.error(err),
     });
   }
 
   deleteProject(project: ProjectModel) {
-    this.projects = this.projects.filter((p) => p.id !== project.id);
-    this.projectsToDisplay = this.projectsToDisplay.filter((p) => p.id !== project.id);
+    this.projectsToDisplay = this.projectsToDisplay.filter(
+      (p) => p.id != project.id
+    );
   }
 
   updateProjectsToDisplay(options: any) {
 
     let projectsCheckboxed = this.projects;
 
-    console.log(options.checkbox);
-
     if (options.checkbox) {
-      console.log('checkbox');
       projectsCheckboxed = this.projects.filter((p) => p.team.members.some((m) => m.id === this.currentUser?.id));
     }
 
@@ -91,7 +89,7 @@ export class ProjectsPageComponent implements OnInit {
   openAddProjectDialog() {
     const dialogRef = this.dialog.open(ProjectFormDialogComponent, {
       data: {
-        title: 'PROJECTS.CREATE',
+        title: 'PROJECT.CREATE_TITLE',
         save: 'ACTION.CREATE',
         currentUser: this.currentUser,
         isCreate: true
@@ -99,7 +97,7 @@ export class ProjectsPageComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.projects.push(result);
+        this.projectsToDisplay.push(result);
       }
     });
   }

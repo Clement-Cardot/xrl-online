@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslateService } from '@ngx-translate/core';
 import { ReadinessLevelDialogComponent } from 'src/app/components/dialogs/readiness-level-dialog/readiness-level-dialog.component';
 import { ReadinessLevelModel } from 'src/app/core/data/models/readiness-level.model';
 import { ApiReadinessLevelService } from 'src/app/core/services/api-readiness-level.service';
@@ -18,14 +16,12 @@ export class AdminReadinessLevelPageComponent implements OnInit {
   displayOptions: any = { filterValue: '', searchType: 'name' };
 
   searchTypes: { typeValue: string; typeTranslation: string }[] = [
-    { typeValue: 'name', typeTranslation: 'READINESS_LEVEL.SEARCH_NAME' },
+    { typeValue: 'name', typeTranslation: 'OBJECT.NAME' },
   ];
 
   constructor(
     private apiReadinessLevelService: ApiReadinessLevelService,
     public dialog: MatDialog,
-    private snackBar: MatSnackBar,
-    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -34,7 +30,7 @@ export class AdminReadinessLevelPageComponent implements OnInit {
         this.readinessLevels = v;
         this.readinessLevelsToDisplay = v;
       },
-      error: (err) => console.log(err),
+      error: (err) => console.error(err),
     });
   }
 

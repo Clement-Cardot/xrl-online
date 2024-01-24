@@ -1,7 +1,7 @@
 <mat-card id="users-management">
     <div id="search-user-container">
         <mat-form-field class="usernameField" subscriptSizing="dynamic">
-            <mat-label>{{ "USERS.SEARCH_USER" | translate }}</mat-label>
+            <mat-label>{{ "SEARCH.SEARCH_USER" | translate }}</mat-label>
             <input type="text" matInput [formControl]="userControl">
         </mat-form-field>
         <mat-icon class="upscale-on-hover" id="addUserBtn" (click)="openAddUserDialog()">add</mat-icon>
@@ -33,7 +33,7 @@
                 <th mat-header-cell *matHeaderCellDef id="actions"> Actions </th>
                 <td mat-cell *matCellDef="let element" [attr.id]="'list-user-'+element.login" class="list-user" (mouseenter)="mouseEnterActionsButton(element)" (mouseleave)="mouseLeaveActionsButton(element)">
                     <div [attr.id]="'list-users-actions-'+element.login" class="list-users-actions">
-                        <button id="{{'modify-'+element.login}}" (click)="openEditUserDialog(element)">
+                        <button id="{{'modify-'+element.login}}" [attr.class]="element.isAdmin() ? 'invisible' : ''" (click)="openEditUserDialog(element)">
                             <mat-icon class="upscale-on-hover">edit</mat-icon>
                         </button>
                         <button id="{{'delete-'+element.login}}" [attr.class]="element.isAdmin() ? 'invisible' : ''" (click)="openDeleteUserDialog(element)">

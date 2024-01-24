@@ -3,7 +3,9 @@ package fr.eseo.pfe.xrlonline.service;
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
 import fr.eseo.pfe.xrlonline.model.dto.BusinessLineDTO;
 import fr.eseo.pfe.xrlonline.model.entity.BusinessLine;
+import fr.eseo.pfe.xrlonline.model.entity.Project;
 import fr.eseo.pfe.xrlonline.repository.BusinessLineRepository;
+import fr.eseo.pfe.xrlonline.repository.ProjectRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +30,9 @@ class BusinessLineServiceTest {
 
     @Mock
     private BusinessLineRepository businessLineRepository;
+
+    @Mock
+    private ProjectRepository projectRepository;
 
     @Mock
     private ModelMapper modelMapper;
@@ -175,14 +180,28 @@ class BusinessLineServiceTest {
     }
 
     @Test
-    void testDeleteBusinessLine_Exist() throws CustomRuntimeException {
+    void testDeleteBusinessLine_ExistWithNoProject() throws CustomRuntimeException {
         when(businessLineRepository.findById("1")).thenReturn(Optional.of(businessLine));
+        when(projectRepository.findAll()).thenReturn(new ArrayList<>());
         when(modelMapper.map(businessLine, BusinessLineDTO.class)).thenReturn(businessLineDTO);
 
         ResponseEntity<BusinessLineDTO> response = businessLineService.deleteBusinessLine("1");
 
         assertEquals(ResponseEntity.ok(businessLineDTO), response, "Business Line deleted");
         verify(businessLineRepository).delete(businessLine);
+        verify(projectRepository).findAll();
+        verifyNoMoreInteractions(businessLineRepository);
+        verifyNoMoreInteractions(projectRepository);
+    }
+
+    @Test
+    void testDeleteBusinessLineWithExistingProject() {
+        Project project = new Project();
+        project.setBusinessLine(businessLine);
+        when(businessLineRepository.findById("1")).thenReturn(Optional.of(businessLine));
+        when(projectRepository.findAll()).thenReturn(List.of(project));
+
+        assertThrowsExactly(CustomRuntimeException.class, () -> businessLineService.deleteBusinessLine("1"), CustomRuntimeException.BUSINESS_LINE_NOT_DELETABLE);
     }
 
     @Test

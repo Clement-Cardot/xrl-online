@@ -7,6 +7,7 @@ import fr.eseo.pfe.xrlonline.model.dto.TeamDTO;
 import fr.eseo.pfe.xrlonline.service.TeamService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +34,8 @@ public class TeamController {
             return teamService.getAllTeam();
         } catch (CustomRuntimeException e) {
             logger.logError("Error while trying to get all teams, Error Details : %s", e.getMessage());
-            return new ResponseEntity<>(e.getHttpCode());
+            HttpStatusCode httpCode = e.getHttpCode();
+            return new ResponseEntity<>(httpCode);
         }
     }
 
@@ -45,7 +47,8 @@ public class TeamController {
             return teamService.getTeamById(id);
         } catch (CustomRuntimeException e) {
             logger.logError("Error while trying to get team with this ID : %s, Error Details : %s", id, e.getMessage());
-            return new ResponseEntity<>(e.getHttpCode());
+            HttpStatusCode httpCode = e.getHttpCode();
+            return new ResponseEntity<>(httpCode);
         }
     }
 
@@ -57,7 +60,8 @@ public class TeamController {
         } catch (CustomRuntimeException e) {
             logger.logError("Error while trying to create team with this name : %s, Error Details : %s",
                     teamDTO.getName(), e.getMessage());
-            return new ResponseEntity<>(e.getHttpCode());
+            HttpStatusCode httpCode = e.getHttpCode();
+            return new ResponseEntity<>(httpCode);
         }
     }
 
@@ -69,7 +73,8 @@ public class TeamController {
         } catch (CustomRuntimeException e) {
             logger.logError("Error while trying to update team with this ID : %s, Error Details : %s", teamDTO.getId(),
                     e.getMessage());
-            return new ResponseEntity<>(e.getHttpCode());
+            HttpStatusCode httpCode = e.getHttpCode();
+            return new ResponseEntity<>(httpCode);
         }
     }
 
@@ -81,7 +86,8 @@ public class TeamController {
         } catch (CustomRuntimeException e) {
             logger.logError("Error while trying to delete team with this ID : %s, Error Details : %s", id,
                     e.getMessage());
-            return new ResponseEntity<>(e.getHttpCode());
+            HttpStatusCode httpCode = e.getHttpCode();
+            return new ResponseEntity<>(httpCode);
         }
     }
 
@@ -92,7 +98,8 @@ public class TeamController {
             return teamService.getTeamsByUserId(id);
         } catch (CustomRuntimeException e) {
             logger.logError("Error while trying to get teams by user id : {}, Error Details : {}", id, e.getMessage());
-            return new ResponseEntity<>(e.getHttpCode());
+            HttpStatusCode httpCode = e.getHttpCode();
+            return new ResponseEntity<>(httpCode);
         }
     }
 

@@ -65,16 +65,6 @@ export class ApiProjectService extends BaseService {
     );
   }
 
-  updateProjectWithoutAssesments(project: ProjectModel): Observable<ProjectModel> {
-    const url = `${this.baseUrl}/update-project`;
-    const projectMap = project.toMap();
-    delete projectMap.assessments;
-    return this.http
-      .put<any>(url, projectMap)
-      .pipe(map((response: any) => this.projectAdapter.adapt(response)))
-      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
-  }
-
   deleteProject(project: ProjectModel): Observable<ProjectModel> {
     const url = `${this.baseUrl}/delete-project?id=${project.id}`;
     return this.http.delete<any>(url)
@@ -122,7 +112,7 @@ export class ApiProjectService extends BaseService {
   }
 
   modifyLastAssessment(projectId: string, assessment: AssessmentModel): Observable<ProjectModel> {
-    const url = `${this.baseUrl}/modify-last-assessment?projectId=${projectId}`;
+    const url = `${this.baseUrl}/modify-assessment?projectId=${projectId}`;
     return this.http.put<any>(url, assessment)
     .pipe(
       map((response: any) => this.projectAdapter.adapt(response))
@@ -132,9 +122,20 @@ export class ApiProjectService extends BaseService {
     );
   }
 
-  modifyLastAssesmentComment(projectId: string, comment: string): Observable<ProjectModel> {
-    const url = `${this.baseUrl}/modify-last-assessment-comment?projectId=${projectId}`;
-    return this.http.put<any>(url, comment)
+  modifyAssessmentComment(projectId: string, data: string[]): Observable<ProjectModel> {
+    const url = `${this.baseUrl}/modify-assessment-comment?projectId=${projectId}`;
+    return this.http.put<any>(url, data)
+    .pipe(
+      map((response: any) => this.projectAdapter.adapt(response))
+    )
+    .pipe(
+      catchError((error: HttpErrorResponse) => this.handleError(error))
+    );
+  }
+
+  deleteAssessment(projectId: string, assessment: AssessmentModel): Observable<ProjectModel> {
+    const url = `${this.baseUrl}/delete-assessment?projectId=${projectId}`;
+    return this.http.post<any>(url, assessment)
     .pipe(
       map((response: any) => this.projectAdapter.adapt(response))
     )

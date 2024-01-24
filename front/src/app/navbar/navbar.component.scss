@@ -22,6 +22,7 @@ mat-sidenav-container {
 
 #mainButton {
     font-family: Arial, Monospace;
+    letter-spacing: -0.3px;
     font-size: 28px;
     font-style: normal;
     font-weight: bold;
@@ -45,6 +46,10 @@ mat-sidenav-container {
 
 .content {
     background-color: #eeeeee;
-    height: calc(100vh - 150px);
+    height: calc(100vh - 110px);
     width: 100%;
+}
+
+.rotate-transition {
+    transition: all 0.35s ease-in-out;
 }

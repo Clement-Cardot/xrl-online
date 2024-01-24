@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatusCode;
 
 public class CustomRuntimeException extends Exception {
 
+    private final HttpStatusCode httpCode;
+
     public static final String READINESS_LEVEL_NOT_FOUND = "Readiness Level Not Found !";
     public static final String READINESS_LEVEL_LIST_EMPTY = "The Readiness Level List Is Empty !";
     public static final String READINESS_LEVEL_NAME_NULL = "Readiness Level Name Cannot Be Null !";
@@ -13,18 +15,19 @@ public class CustomRuntimeException extends Exception {
     public static final String READINESS_LEVEL_LEVELS_SIZE = "Readiness Level Levels Size Must Be 9 !";
     public static final String READINESS_LEVEL_ID_NULL = "Readiness Level Id Cannot Be Null !";
     public static final String READINESS_LEVEL_USED = "Readiness Level Is Used !";
-    private final HttpStatusCode httpCode;
     public static final String BUSINESS_LINE_NOT_FOUND = "Business Line Not Found !";
     public static final String BUSINESS_LINE_NAME_ALREADY_EXISTS = "Business Line Name Already Exists !";
     public static final String BUSINESS_LINE_DESCRIPTION_NULL = "Business Line Description Cannot Be Null !";
     public static final String BUSINESS_LINE_NAME_NULL = "Business Line Name Cannot Be Null !";
     public static final String BUSINESS_LINE_LIST_EMPTY = "The Business Line List Is Empty !";
+    public static final String BUSINESS_LINE_NOT_DELETABLE = "Business Line Not Deletable !";
     public static final String USER_LOGIN_NULL = "User Login Cannot Be Null !";
     public static final String USER_FIRSTNAME_NULL = "User Firstname Cannot Be Null !";
     public static final String USER_LASTNAME_NULL = "User Lastname Cannot Be Null !";
     public static final String UNEXPECTED_EXCEPTION = "Unexpected exception occured !";
     public static final String USER_NOT_FOUND = "User Not Found !";
     public static final String USER_LIST_EMPTY = "The User List Is Empty !";
+    public static final String USER_NOT_ADMIN = "The User doesn't have the right to do that !";
     public static final String USER_ADMIN_DELETE = "Admin User Cannot Be Deleted !";
     public static final String TEAM_LIST_EMPTY = "The Team List Is Empty !";
     public static final String TEAM_NAME_NULL = "Team Name Cannot Be Null !";
@@ -40,10 +43,13 @@ public class CustomRuntimeException extends Exception {
     public static final String PROJECT_NOT_FOUND = "Project Not Found !";
     public static final String TEAM_NOT_CREATED = "Team Not Created !";
     public static final String TEAM_NOT_UPDATED = "Team Not Updated !";
+    public static final String INTERNAL_SERVER_ERROR = "Internal Server Error !";
     public static final String USER_NOT_MEMBER_OF_TEAM_PROJECT = "User Not Member Of Team Project !";
     public static final String PROJECT_LAST_ASSESSMENT_COMMENT_NULL = "Project Last Assessment Comment Cannot Be Null !";
     public static final String PROJECT_ASSESSMENT_LIST_IS_EMPTY = "Project Assessment List Is Empty !";
     public static final String ASSESSMENT_MUST_BE_DRAFT_TO_BE_MODIFIED = "Assessment Must Be Draft To Be Modified !";
+    public static final String ASSESSMENT_NOT_FOUND = "Assessment Not Found !";
+    public static final String ADMIN_CANNOT_BE_MODIFIED = "Admin Cannot Be Modified !";
 
     public CustomRuntimeException(String message, Throwable cause) {
         super(message, cause);
@@ -65,7 +71,8 @@ public class CustomRuntimeException extends Exception {
                     TEAM_NOT_FOUND,
                     PROJECT_NOT_FOUND,
                     BUSINESS_LINE_NOT_FOUND,
-                    READINESS_LEVEL_NOT_FOUND:
+                    READINESS_LEVEL_NOT_FOUND,
+                    ASSESSMENT_NOT_FOUND:
                 return HttpStatus.NOT_FOUND;
             case UNEXPECTED_EXCEPTION:
                 return HttpStatus.I_AM_A_TEAPOT;
@@ -73,6 +80,7 @@ public class CustomRuntimeException extends Exception {
                     USER_LOGIN_ALREADY_EXISTS,
                     PROJECT_NAME_ALREADY_EXISTS,
                     BUSINESS_LINE_NAME_ALREADY_EXISTS,
+                    BUSINESS_LINE_NOT_DELETABLE,
                     READINESS_LEVEL_NAME_ALREADY_EXISTS:
                 return HttpStatus.CONFLICT;
             case DUPLICATE_MEMBERS, TEAM_NAME_NULL,
@@ -89,8 +97,10 @@ public class CustomRuntimeException extends Exception {
                     PROJECT_ASSESSMENT_LIST_IS_EMPTY:
                 return HttpStatus.NO_CONTENT;
             case TEAM_LINKED_PROJECTS,
-                    USER_ADMIN_DELETE, USER_NOT_MEMBER_OF_TEAM_PROJECT, READINESS_LEVEL_USED:
+                    USER_ADMIN_DELETE, ADMIN_CANNOT_BE_MODIFIED, USER_NOT_MEMBER_OF_TEAM_PROJECT, READINESS_LEVEL_USED, USER_NOT_ADMIN:
                 return HttpStatus.UNAUTHORIZED;
+            case INTERNAL_SERVER_ERROR:
+                return HttpStatus.INTERNAL_SERVER_ERROR;
             default:
                 return HttpStatus.NOT_IMPLEMENTED;
         }

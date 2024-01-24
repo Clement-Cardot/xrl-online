@@ -3,7 +3,9 @@ package fr.eseo.pfe.xrlonline.service;
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
 import fr.eseo.pfe.xrlonline.model.dto.BusinessLineDTO;
 import fr.eseo.pfe.xrlonline.model.entity.BusinessLine;
+import fr.eseo.pfe.xrlonline.model.entity.Project;
 import fr.eseo.pfe.xrlonline.repository.BusinessLineRepository;
+import fr.eseo.pfe.xrlonline.repository.ProjectRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,11 +17,13 @@ import java.util.stream.Collectors;
 public class BusinessLineService {
 
   private final BusinessLineRepository businessLineRepository;
+  private final ProjectRepository projectRepository;
   private ModelMapper modelMapper;
 
-  public BusinessLineService(BusinessLineRepository businessLineRepository, ModelMapper modelMapper) {
+  public BusinessLineService(BusinessLineRepository businessLineRepository, ModelMapper modelMapper, ProjectRepository projectRepository) {
     this.businessLineRepository = businessLineRepository;
     this.modelMapper = modelMapper;
+    this.projectRepository = projectRepository;
   }
 
   public ResponseEntity<BusinessLineDTO> getBusinessLineById(String id) throws CustomRuntimeException {
@@ -95,6 +99,12 @@ public class BusinessLineService {
     BusinessLineDTO businessLineToDeleteDTO = modelMapper.map(businessLineToDelete, BusinessLineDTO.class);
 
     if (businessLineToDelete != null) {
+      List<Project> projects = projectRepository.findAll();
+      for (Project project : projects) {
+        if (project.getBusinessLine().getId().equals(id)) {
+          throw new CustomRuntimeException(CustomRuntimeException.BUSINESS_LINE_NOT_DELETABLE);
+        }
+      }
       businessLineRepository.delete(businessLineToDelete);
       return ResponseEntity.ok(businessLineToDeleteDTO);
     }

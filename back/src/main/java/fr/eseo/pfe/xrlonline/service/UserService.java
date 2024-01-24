@@ -2,7 +2,9 @@ package fr.eseo.pfe.xrlonline.service;
 
 import fr.eseo.pfe.xrlonline.exception.CustomRuntimeException;
 import fr.eseo.pfe.xrlonline.model.dto.UserDTO;
+import fr.eseo.pfe.xrlonline.model.entity.Team;
 import fr.eseo.pfe.xrlonline.model.entity.User;
+import fr.eseo.pfe.xrlonline.repository.TeamRepository;
 import fr.eseo.pfe.xrlonline.repository.UserRepository;
 
 import org.modelmapper.ModelMapper;
@@ -16,11 +18,13 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final TeamRepository teamRepository;
 
     private final ModelMapper modelMapper;
 
-    public UserService(UserRepository userRepository, ModelMapper modelMapper) {
+    public UserService(UserRepository userRepository, TeamRepository teamRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
+        this.teamRepository = teamRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -82,6 +86,11 @@ public class UserService {
         User existingUser = userRepository.findById(updatedUser.getId()).orElse(null);
 
         if (existingUser != null) {
+
+            if (existingUser.getLogin().equals("admin")) {
+                throw new CustomRuntimeException(CustomRuntimeException.ADMIN_CANNOT_BE_MODIFIED);
+            }
+
             if (userRepository.findByLogin(updatedUser.getLogin()) != null
                 && !existingUser.getLogin().equals(updatedUser.getLogin())) {
                 throw new CustomRuntimeException(CustomRuntimeException.USER_LOGIN_ALREADY_EXISTS);
@@ -107,7 +116,17 @@ public class UserService {
         if (userToDelete.isAdmin()) {
             throw new CustomRuntimeException(CustomRuntimeException.USER_ADMIN_DELETE);
         }
+        this.removeFromTeam(userToDelete);
         userRepository.delete(userToDelete);
         return ResponseEntity.ok(userToDeleteDTO);
+    }
+
+    private void removeFromTeam(User user) {
+        List<Team> teams = this.teamRepository.findAll();
+        for (Team team : teams) {
+            List<User> members = team.getMembers();
+            members.remove(user);
+            this.teamRepository.save(team);
+        }
     }
 }

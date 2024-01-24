@@ -11,6 +11,7 @@ public class Assessment {
 
   private Date date;
   private Tag tag;
+  private Boolean draft;
   private String comment;
   private List<ReadinessLevelRank> readinessLevelRanks;
 
@@ -24,7 +25,7 @@ public class Assessment {
   }
 
   @Data
-  private static class ReadinessLevelRank {
+  public static class ReadinessLevelRank {
     @DBRef
     private ReadinessLevel readinessLevel;
     private int rank;
@@ -42,7 +43,6 @@ public class Assessment {
   public enum Tag {
     INITIAL,
     INTERMEDIATE,
-    FINAL,
-    DRAFT
+    FINAL
   }
 }

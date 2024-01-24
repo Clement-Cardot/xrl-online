@@ -11,6 +11,7 @@ describe('Login Tests', () => {
         context('FR', () => {
 
             beforeEach(() => {
+                cy.changeLang('fr');
                 // Open login dialog before each test
                 cy.get('#loginBtn > .mdc-button__label').click();
             })
@@ -34,8 +35,7 @@ describe('Login Tests', () => {
     
             it('login required error test', () => {
                 // Click inside and outside the login field
-                cy.get('mat-label.ng-tns-c1205077789-4').click();
-                cy.get('#mat-input-login').click();
+                cy.get('#mat-input-login').click({ force: true });
                 cy.get('#loginComponent').click();
                 // Check error message
                 cy.get('#mat-error-empty').should('be.visible');
@@ -84,6 +84,8 @@ describe('Login Tests', () => {
                 cy.task('Seed_DB').then((result) => {
                     database = result;
                 });
+
+                cy.changeLang('fr');
             })
     
             it('login as admin', () => {

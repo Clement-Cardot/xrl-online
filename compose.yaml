@@ -1,15 +1,17 @@
 version: '3'
 services:
   mongodb:
-    image: clementcardot/xrl-online-db
+    image: xrl-online-db
     build:
       context: db
       dockerfile: Dockerfile
     ports:
       - "27017:27017"
+    volumes:
+      - ./mongo_backup:/mongo_backup
 
   tomcat:
-    image: clementcardot/xrl-online-tomcat
+    image: xrl-online-tomcat
     build:
       context: .
       dockerfile: Dockerfile

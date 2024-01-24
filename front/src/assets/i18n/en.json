@@ -2,32 +2,64 @@
   "ACTION": {
     "YES": "Yes",
     "NO": "No",
-    "CANCEL": "Cancel",
+
     "SAVE": "Save",
+    "CANCEL": "Cancel",
+
     "CREATE": "Create",
-    "CLOSE": "Close",
-    "DELETE": "Delete",
     "ADD": "Add",
     "NEW": "New",
     "MODIFY": "Modify",
-    "COMPARE": "Compare",
-    "DOWNLOAD": "Download",
-    "NEXT": "Next",
-    "BACK": "Back",
     "CONFIRM": "Confirm",
     "SUBMIT": "Submit",
-    "LEAVE_COMMENT": "Leave a comment"
+    "DELETE": "Delete",
+    "CLOSE": "Close",
+
+    "COMPARE": "Compare",
+    "DOWNLOAD": "Download",
+
+    "NEXT": "Next",
+    "BACK": "Back",
+
+    "SHOW_MORE": "Show more",
+    "SHOW_LESS": "Show less",
+
+    "LEAVE_COMMENT": "Leave a comment",
+
+    "COPY_CHART": "Chart copied"
   },
 
   "OBJECT": {
-    "PROJECT": "Project",
+    "NONE": "None",
+    "NAME": "Name",
+
+    "USER": "User",
+    "FIRSTNAME": "Firstname",
+    "LASTNAME": "Lastname",
+    "LOGIN": "Login",
+
     "TEAM": "Team",
+
+    "BUSINESS_LINE": "Business line",
+
+    "READINESS_LEVEL": "Readiness level",
+    "RESUME": "Resume",
+    "DETAILS": "Details",
+    "RANK": "Rank",
+
+    "PROJECT": "Project",
+    "DESCRIPTION": "Description",
     "ASSESSMENT": "Assessment",
-    "READINESS_LEVEL": "Readiness Level",
-    "BUSINESS_LINE": "Business Line",
     "COMMENT": "Comment",
-    "TAG": "Tag",
-    "NONE": "None"
+    "TAG": "Tag"
+  },
+
+  "HOME": {
+    "TITLE": "The best way to know the readiness of your projects",
+    "READINESS_LEVEL": "See Readiness Levels",
+    "KTH_WEBSITE": "Visit KTH website",
+
+    "EXPIRED_SESSION": "Your session has expired. Please log in again."
   },
 
   "MENU": {
@@ -36,8 +68,13 @@
     "READINESS_LEVELS": "Readiness Levels",
     "MANAGEMENT": "Management",
     "TEAMS": "Teams",
-    "BUSINESS_LINES": "Business Lines",
-    "CLOSE": "Close"
+    "BUSINESS_LINES": "Business lines"
+  },
+
+  "FOOTER": {
+    "ALL_RIGHTS_RESERVED": "2023 - All rights reserved",
+    "KTH_LICENCE1": "The KTH work is licensed under a Creative Commons",
+    "KTH_LICENCE2": "Attribution-NonCommercial-ShareAlike 4.0 International License."
   },
 
   "LOGIN": {
@@ -45,159 +82,191 @@
     "LOGOUT": "LOGOUT",
     "LOGOUT_SUCCESS": "Good bye {{username}} !",
     "ENTER_LOGIN": "Enter your login",
-    "LOGIN_REQUIRED": "A login is required",
+    "LOGIN_REQUIRED": "Login is required",
+    "LOGIN_MIN_LENGTH": "Login must be at least 5 characters long",
+    "LOGIN_MAX_LENGTH": "Login must not exceed 35 characters",
     "LOGIN_INCORRECT": "Login is incorrect",
-    "SUCCESS": "Welcome back {{username}} !",
-    "SUCCESS_CLOSE": "Close"
+    "SUCCESS": "Welcome back {{username}} !"
   },
 
-  "USERS": {
-    "DELETE_USER": "Are you sure to delete user :",
-    "FIRSTNAME_REQUIRED": "A firstname is required",
-    "LASTNAME_REQUIRED": "A lastname is required",
-    "LOGIN_REQUIRED": "An login is required",
-    "LOGIN_ALREADY_EXISTS": "Login already exists",
-    "SEARCH_USER": "Search a user",
-    "CREATE_USER": "Create a user",
-    "EDIT_USER": "Edit a user",
-    "USER_CREATED": "User created",
-    "USER_UPDATED": "User updated",
-    "USER_DELETED": "User deleted",
-    "FIRSTNAME": "Firstname",
-    "LASTNAME": "Lastname",
-    "LOGIN": "Login"
+  "SEARCH": {
+    "SEARCH_USER": "Search for a user",
+    "SEARCH_PROJECT": "Only my projects",
+    "SEARCH_TYPE": "Search type",
+    "SEARCH": "Search"
+  },
+
+  "USER": {
+    "CREATE_TITLE": "Create a user",
+    "EDIT_TITLE": "Update this user",
+
+    "FIRSTNAME_REQUIRED": "Firstname is required",
+    "FIRSTNAME_MIN_LENGTH": "Firstname must be at least 2 characters long",
+    "FIRSTNAME_MAX_LENGTH": "Firstname must not exceed 15 characters",
+
+    "LASTNAME_REQUIRED": "Lastname is required",
+    "LASTNAME_MIN_LENGTH": "Lastname must be at least 2 characters long",
+    "LASTNAME_MAX_LENGTH": "Lastname must not exceed 20 characters",
+
+    "LOGIN_ALREADY_EXISTS": "This login already exists",
+
+    "CREATE_SUCCESS": "User created",
+
+    "UPDATE_SUCCESS": "User updated",
+
+    "DELETE_CONFIRM": "Are you sure you want to delete the user: ",
+    "DELETE_SUCCESS": "User deleted",
+    "DELETE_WARNING": "The user is still linked to a team,\nif you delete it, it will be removed from the team"
   },
 
   "TEAM": {
-    "NAME": "Team Name",
-    "MEMBERS": "Team Members",
-    "NAME_REQUIRED": "Team's name is required",
-    "NAME_MIN_LENGTH": "Team's name must be at least 3 characters long",
-    "NAME_MAX_LENGTH": "Team's name must be at most 20 characters long",
-    "NAME_ALREADY_EXISTS": "Team's name already exists",
-    "DELETE_CONFIRM": "Are you sure you want to delete this team?",
-    "DELETE_SUCCESS": "The team has been deleted successfully",
-    "DELETE_ERROR": "An error occurred while deleting the team",
-    "CREATE_SUCCESS": "The team has been created successfully",
+    "NAME": "Team name",
+    "MEMBERS": "Team members",
+
+    "CREATE_TITLE": "Create a team",
+    "UPDATE_TITLE": "Update this team",
+
+    "NAME_REQUIRED": "Team name is required",
+    "NAME_MIN_LENGTH": "Team name must be at least 3 characters long",
+    "NAME_MAX_LENGTH": "Team name must not exceed 20 characters",
+    "NAME_ALREADY_EXISTS": "This team name already exists",
+
+    "CREATE_SUCCESS": "The team was successfully created",
     "CREATE_ERROR": "An error occurred while creating the team",
-    "UPDATE_SUCCESS": "The team has been updated successfully",
+
+    "UPDATE_SUCCESS": "The team was successfully updated",
     "UPDATE_ERROR": "An error occurred while updating the team",
-    "CANCEL": "Cancel",
-    "CREATE": "Create a new Team",
-    "UPDATE": "Update this Team",
-    "DELETE": "Delete",
-    "SEARCH_NAME": "Name",
-    "SEARCH_USER": "User"
+
+    "DELETE_CONFIRM": "Are you sure you want to delete the team?",
+    "DELETE_SUCCESS": "The team was successfully deleted",
+    "DELETE_ERROR": "An error occurred while deleting the team"
   },
 
-  "PROJECTS": {
-    "UPDATE": "Update this project",
-    "UPDATE_SUCCESS": "The project has been updated successfully",
-    "NAME": "Name",
-    "DESCRIPTION": "Description",
-    "BUSINESS_LINE": "Business Line",
-    "TEAM": "Team",
-    "NAME_REQUIRED": "Project's name is required",
-    "NAME_ALREADY_EXISTS": "Project's name already exists",
-    "TEAM_REQUIRED": "A team is required",
-    "TEAM_NOT_EXISTS": "This team doesn't exist",
+  "BUSINESSLINE": {
+    "NAME": "Business line name",
+
+    "CREATE_TITLE": "Create a business line",
+    "UPDATE_TITLE": "Update this business line",
+
+    "LINKED_PROJECTS": "linked project(s)",
+    "NO_LINKED_PROJECTS": "No linked project",
+
+    "NAME_REQUIRED": "Business line name is required",
+    "NAME_MIN_LENGTH": "Business line name must be at least 3 characters long",
+    "NAME_MAX_LENGTH": "Business line name must not exceed 20 characters",
+    "NAME_ALREADY_EXISTS": "This business line name already exists",
+
+    "CREATE_SUCCESS": "The business line was successfully created",
+
+    "UPDATE_SUCCESS": "The business line was successfully updated",
+
+    "DELETE_CONFIRM": "Are you sure you want to delete the business line?",
+    "DELETE_SUCCESS": "The business line was successfully deleted"
+  },
+
+  "READINESS_LEVEL": {
+    "NAME": "Readiness level name",
+    "DESCRIPTION": "Readiness level description",
+
+    "CREATE_TITLE": "Create a readiness level",
+
+    "NAME_REQUIRED": "Readiness level name is required",
+    "NAME_MIN_LENGTH": "Readiness level name must be at least 3 characters long",
+    "NAME_MAX_LENGTH": "Readiness level name must not exceed 20 characters",
+    "NAME_ALREADY_EXISTS": "This readiness level name already exists",
+    "DESCRIPTION_REQUIRED": "Readiness level description is required",
+    "DESCRIPTION_MAX_LENGTH": "Readiness level description must not exceed 1000 characters",
+    "SHORT_DESCRIPTION_REQUIRED": "Short description is required",
+    "LONG_DESCRIPTION_REQUIRED": "Long description is required",
+
+    "CREATE_SUCCESS": "The readiness level was successfully created",
+
+    "UPDATE_SUCCESS": "The readiness level was successfully updated",
+
+    "DELETE_CONFIRM": "Are you sure you want to delete the readiness level?",
+    "DELETE_SUCCESS": "The readiness level was successfully deleted"
+  },
+
+  "PROJECT": {
+    "DETAILS_TITLE": "Details",
+
+    "CREATE_TITLE": "Create a project",
+    "UPDATE_TITLE": "Update this project",
+
+    "NAME_REQUIRED": "Project name is required",
+    "NAME_ALREADY_EXISTS": "This project name already exists",
+    "NAME_MAX_LENGTH": "Project name must not exceed 20 characters",
+    "NAME_MIN_LENGTH": "Project name must be at least 3 characters long",
+    "TEAM_REQUIRED": "Team is required",
+    "TEAM_NOT_EXISTS": "This team does not exist",
     "TEAM_NOT_ALLOWED": "Team not allowed",
-    "BUSINESS_LINE_REQUIRED": "A business line is required",
-    "BUSINESS_LINE_NOT_EXISTS": "This business line doesn't exist",
-    "DETAILS": "Details",
-    "BACK": "Back",
-    "DELETE": "Are you sure you want to delete this project?",
-    "DELETE_SUCCESS": "The project has been deleted successfully",
-    "SEARCH_TYPE": "Type of search",
-    "SEARCH_NAME": "Name",
-    "SEARCH_TEAM": "Team",
-    "SEARCH_BUSINESS_LINE": "Business Line",
-    "MY_PROJECTS": "Only my projects",
-    "SEARCH": "Search",
-    "CREATE": "Create a new Project",
-    "CREATE_SUCCESS": "The project has been created successfully",
+    "BUSINESS_LINE_REQUIRED": "Business line is required",
+    "BUSINESS_LINE_NOT_EXISTS": "This business line does not exist",
+
+    "CREATE_SUCCESS": "The project was successfully created",
+
+    "UPDATE_SUCCESS": "The project was successfully updated",
+
+    "DELETE_CONFIRM": "Are you sure you want to delete the project?",
+    "DELETE_SUCCESS": "The project was successfully deleted",
+
     "NO_DESCRIPTION": "No description",
-    "NO_ASSESSMENT": "No assessment",
-    "NAME_MAX_LENGTH": "Project's name must be at most 20 characters long",
-    "NAME_MIN_LENGTH": "Project's name must be at least 3 characters long",
-    "RADAR_CHART_EMPTY": "No data to display",
-    "ASSESSMENT_COMMENT_CHANGED": "Assessment comment changed",
+
     "INFORMATION_TAB": "Information",
     "ASSESSMENT_TAB": "Assessment",
-    "READINESS_LEVEL_TAB": "Readiness Level Details",
+    "READINESS_LEVEL_TAB": "Detailed Readiness Level",
     "HISTORY_TAB": "History",
-    "CANT_CREATE_NEW_ASSESSMENT": "An assessment is already in progress !",
-    "CANT_MODIFY_ASSESSMENT": "No assessment in progress !",
-    "ASSESSMENT_ADDED": "New assessment submitted !",
+
+    "BEGIN_DATE": "Project start date",
+    "MEMBER_OF_TEAM": "Team members",
+
+    "ADD_TOOLTIP": "You can't add a project because you are not connected",
+    "COMMENT_TOOLTIP": "You cannot modify the comment of this assessment",
+
+    "DESCRIPTION_MAX_LENGTH": "Description must not exceed 1000 characters"
+  },
+
+  "ASSESSMENT": {
+    "NO_ASSESSMENT": "No assessment",
+    "EMPTY_DATA": "No data",
+
+    "UPDATE_COMMENT_SUCCESS": "Comment updated",
+    "CREATE_ASSESSMENT_SUCCESS": "Assessment created",
+    "UPDATE_ASSESSMENT_SUCCESS": "Assessment updated",
+
+    "CREATE_ASSESSMENT_FAILURE": "An assessment is already in progress!",
+    "CREATE_ASSESSMENT_FINAL_FAILURE": "The last assessment is defined as final!",
+    "MANAGE_ASSESSMENT_NOT_IN_TEAM": "You must be a member of the team to perform this action!",
+    "UPDATE_ASSESSMENT_FAILURE": "This assessment is not in progress!",
+    "DELETE_ASSESSMENT_FAILURE": "You can't delete an assessment in progress!",
+    "CREATE_ASSESSMENT_ALREADY_EXIST_FOR_THIS_DATE": "An assessment already exists for today!",
+
+    "DELETE_CONFIRM": "Are you sure you want to delete the assessment on this date?",
+    "DELETE_SUCCESS": "The assessment was successfully deleted",
+
     "COMPARE": {
       "SELECT_FIRST": "First assessment",
       "SELECT_SECOND": "Second assessment",
       "OVERLAY": "Overlay",
       "SIDE_BY_SIDE": "Side by side"
-    }
-  },
+    },
 
-  "ASSESSMENT_DIALOG": {
-    "SELECT_RL_STEP": "Select RL",
-    "SELECT_RL_TITLE": "Select between 3 and 10 Readiness Levels",
-    "SELECT_RL_MIN": "You must select at least 3 Readiness Levels",
-    "SELECT_RL_MAX": "You must select at most 10 Readiness Levels",
-    "AVAILABLE_RL": "Available Readiness Levels",
-    "SELECTED_RL": "Selected Readiness Levels",
-    "NO_RANK_SELECTED": "Select a rank to see its description",
-    "RANK": "Rank",
-    "SHORT_DESCRIPTION": "Short description",
-    "LONG_DESCRIPTION": "Long description",
-    "SHOW_COMPLETE_DESCRIPTION": "Show complete description",
-    "HIDE_COMPLETE_DESCRIPTION": "Hide complete description",
+    "SELECT_RL_STEP": "Readiness levels choice",
+
+    "SELECT_RL_TITLE": "Choose between 3 and 10 readiness levels",
+    "SELECT_RL_MIN": "You have chosen less than 3 readiness levels",
+    "SELECT_RL_MAX": "You have chosen more than 10 readiness levels",
+    "AVAILABLE_RL": "Available readiness levels",
+    "SELECTED_RL": "Selected readiness levels",
+
+    "NO_RANK_SELECTED": "Choose a readiness level to see the description",
+
     "ENTER_COMMENT": "You must enter a comment",
-    "ENTER_TAG": "You must select a tag",
-    "CONFIRM_ASSESSMENT": "Confirm assessment"
+    "ENTER_TAG": "You must choose a tag",
+    "CREATE_CONFIRM": "Confirm assessment creation",
+    "ASSESSMENTS_NUMBER" : "Number of Assessment"
   },
 
-  "BUSINESSLINE": {
-    "CANCEL": "Cancel",
-    "SAVE": "Save",
-    "NAME_REQUIRED": "Business line's name is required",
-    "NAME_MIN_LENGTH": "Business line's name must be at least 3 characters long",
-    "NAME_MAX_LENGTH": "Business line's name must be at most 20 characters long",
-    "NAME": "Business line Name",
-    "BUSINESSLINE_CREATED": "Business line created",
-    "BUSINESSLINE_UPDATED": "Business line updated",
-    "NAME_ALREADY_EXISTS": "Business line name already exists",
-    "UPDATE_BUSINESSLINE": "Update Business line",
-    "CREATE_BUSINESSLINE": "Create Business line",
-    "DELETE": "Are you sure you want to delete this business line?",
-    "DELETE_SUCCESS": "The business line has been deleted successfully",
-    "SEARCH_NAME": "Name",
-    "LINKED_PROJECTS": "linked project(s)",
-    "NO_LINKED_PROJECTS": "No linked project"
-  },
-
-  "READINESS_LEVEL": {
-    "NAME": "Readiness level Name",
-    "DESCRIPTION": "Readiness level Description",
-    "NAME_REQUIRED": "Readiness level's name is required",
-    "NAME_MIN_LENGTH": "Readiness level's name must be at least 3 characters long",
-    "NAME_MAX_LENGTH": "Readiness level's name must be at most 20 characters long",
-    "NAME_ALREADY_EXISTS": "Name already took",
-    "DESCRIPTION_REQUIRED": "A description is required",
-    "DESCRIPTION_MAX_LENGTH": "Description must be at most 1000 characters long",
-    "LONG_DESCRIPTION_REQUIRED": "At least one detailed description is required",
-    "DELETE": "Are you sure you want to delete this readiness level?",
-    "DELETE_SUCCESS": "The readiness level has been deleted successfully",
-    "CREATE": "Create a new Readiness level",
-    "CREATE_SUCCESS": "The readiness level has been created successfully",
-    "UPDATE_SUCCESS": "The readiness level has been updated successfully",
-    "LEVEL": "Level",
-    "RESUME": "Short description",
-    "DETAILS": "Detailed description",
-    "SEARCH_NAME": "Name"
-  },
-
-  "FOOTER": {
-    "ALL_RIGHTS_RESERVED": "2023 - All rights reserved",
-    "KTH_LICENCE1": "The KTH work is licensed under a Creative Commons",
-    "KTH_LICENCE2": "Attribution-NonCommercial-ShareAlike 4.0 International License."
-  }
+  "NEW": "New",
+  "OLD": "Old"
 }

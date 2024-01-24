@@ -1,0 +1,14 @@
+{
+  "title": "Rapport ${name}",
+  "team": "Équipe",
+  "businessLine": "Secteur d'activité",
+  "comment": "Commentaire :",
+  "startDate": "Date de début",
+  "endDate": "Date de fin",
+  "generateDate": "Généré le",
+  "teamMembers": "Membres de l'équipe",
+  "summary": "Résumé",
+  "compareWithInitialGraph": "Comparaison avec le graphique initial",
+  "compareTwoLastGraphs": "Comparaison avec les deux derniers graphiques",
+  "completeLinearGraph": "Graphique linéaire complet"
+}

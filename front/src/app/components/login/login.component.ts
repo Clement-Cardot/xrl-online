@@ -1,12 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormGroupDirective,
-  NgForm,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroupDirective, NgForm, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -51,7 +44,7 @@ export class LoginComponent implements OnInit {
     public dialogRef: MatDialogRef<LoginComponent>,
     private _snackBar: MatSnackBar,
     private translate: TranslateService
-  ) {}
+  ) { }
 
   /**
    * Initializes the component and creates a form group for the login form.
@@ -112,7 +105,7 @@ export class LoginComponent implements OnInit {
       this.translate.instant('LOGIN.SUCCESS', {
         username: this.loginForm.value.login,
       }),
-      this.translate.instant('LOGIN.SUCCESS_CLOSE'),
+      this.translate.instant('ACTION.CLOSE'),
       { duration: 5000 }
     );
   }
@@ -144,7 +137,7 @@ export class LoginComponent implements OnInit {
         this.usernameFormControl.setErrors({ incorrect: true });
         break;
       default:
-        console.log('This error is not handled: ', error.status, error.message);
+        console.error('This error is not handled: ', error.status, error.message);
         break;
     }
   }

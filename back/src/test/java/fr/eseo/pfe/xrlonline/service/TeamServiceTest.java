@@ -7,10 +7,13 @@ import fr.eseo.pfe.xrlonline.model.entity.Team;
 import fr.eseo.pfe.xrlonline.model.entity.User;
 import fr.eseo.pfe.xrlonline.repository.ProjectRepository;
 import fr.eseo.pfe.xrlonline.repository.TeamRepository;
+import fr.eseo.pfe.xrlonline.repository.UserRepository;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,9 +36,12 @@ class TeamServiceTest {
     private TeamRepository teamRepository;
 
     @Mock
-    private ProjectRepository projectRepository;
+    private UserRepository userRepository;
 
     @Mock
+    private ProjectRepository projectRepository;
+
+    @Spy
     private ModelMapper modelMapper;
 
     @Test
@@ -50,7 +57,6 @@ class TeamServiceTest {
         teamDTO.setMembers(new ArrayList<>());
 
         when(teamRepository.findById("1")).thenReturn(Optional.of(team));
-        when(modelMapper.map(team, TeamDTO.class)).thenReturn(teamDTO);
 
         ResponseEntity<TeamDTO> response = teamService.getTeamById("1");
 
@@ -85,7 +91,6 @@ class TeamServiceTest {
         teamsDTO.add(teamDTO);
 
         when(teamRepository.findAll()).thenReturn(teams);
-        when(modelMapper.map(team, TeamDTO.class)).thenReturn(teamDTO);
 
         ResponseEntity<List<TeamDTO>> response = teamService.getAllTeam();
 
@@ -131,15 +136,35 @@ class TeamServiceTest {
         teamDTO.setName("testTeam");
         teamDTO.setMembers(membersDTO);
 
-        when(modelMapper.map(teamDTO, Team.class)).thenReturn(team);
         when(teamRepository.findByName(team.getName())).thenReturn(null);
-        when(teamRepository.save(team)).thenReturn(team);
-        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
-        when(modelMapper.map(team, TeamDTO.class)).thenReturn(teamDTO);
+        when(teamRepository.save(any(Team.class))).thenReturn(team);
 
         ResponseEntity<TeamDTO> response = teamService.createTeam(teamDTO);
 
-        assertEquals(ResponseEntity.ok(teamDTO), response, "Team created");
+        assertEquals(ResponseEntity.ok(modelMapper.map(team, TeamDTO.class)), response, "Team created");
+    }
+
+    @Test
+    void testCreateTeam_NoMembers() throws CustomRuntimeException {
+        ArrayList<User> members = new ArrayList<>();
+
+        Team team = new Team();
+        team.setId("1");
+        team.setName("testTeam");
+        team.setMembers(members);
+
+        List<UserDTO> membersDTO = new ArrayList<>();
+
+        TeamDTO teamDTO = new TeamDTO();
+        teamDTO.setName("testTeam");
+        teamDTO.setMembers(membersDTO);
+
+        when(teamRepository.findByName(team.getName())).thenReturn(null);
+        when(teamRepository.save(any(Team.class))).thenReturn(team);
+
+        ResponseEntity<TeamDTO> response = teamService.createTeam(teamDTO);
+
+        assertEquals(ResponseEntity.ok(modelMapper.map(team, TeamDTO.class)), response, "Team created");
     }
 
     @Test
@@ -154,7 +179,6 @@ class TeamServiceTest {
         teamDTO.setName("testTeam");
         teamDTO.setMembers(new ArrayList<>());
 
-        when(modelMapper.map(teamDTO, Team.class)).thenReturn(team);
         when(teamRepository.findByName(team.getName())).thenReturn(team);
 
         try {
@@ -190,11 +214,9 @@ class TeamServiceTest {
         teamDTO.setName("testTeam");
         teamDTO.setMembers(new ArrayList<>());
 
-        when(modelMapper.map(teamDTO, Team.class)).thenReturn(team);
         when(teamRepository.findById(teamDTO.getId())).thenReturn(Optional.of(team));
         when(teamRepository.findByName(teamDTO.getName())).thenReturn(null);
         when(teamRepository.save(team)).thenReturn(team);
-        when(modelMapper.map(team, TeamDTO.class)).thenReturn(teamDTO);
 
         ResponseEntity<TeamDTO> response = teamService.updateTeam(teamDTO);
 
@@ -213,7 +235,6 @@ class TeamServiceTest {
         teamDTO.setName("testTeam");
         teamDTO.setMembers(new ArrayList<>());
 
-        when(modelMapper.map(teamDTO, Team.class)).thenReturn(team);
         when(teamRepository.findById(teamDTO.getId())).thenReturn(Optional.empty());
 
         try {
@@ -240,7 +261,6 @@ class TeamServiceTest {
         teamWithUpdatedName.setName("testTeam");
         teamWithUpdatedName.setMembers(new ArrayList<>());
 
-        when(modelMapper.map(teamDTO, Team.class)).thenReturn(team);
         when(teamRepository.findById(teamDTO.getId())).thenReturn(Optional.of(team));
         when(teamRepository.findByName(teamDTO.getName())).thenReturn(teamWithUpdatedName);
 
@@ -272,7 +292,6 @@ class TeamServiceTest {
         members.add(user2);
         teamDTO.setMembers(members);
 
-        when(modelMapper.map(teamDTO, Team.class)).thenReturn(team);
         when(teamRepository.findById(teamDTO.getId())).thenReturn(Optional.of(team));
         when(teamRepository.findByName(teamDTO.getName())).thenReturn(null);
 
@@ -298,7 +317,6 @@ class TeamServiceTest {
         teamDTO.setMembers(new ArrayList<>());
 
         when(teamRepository.findById(teamDTO.getId())).thenReturn(Optional.of(team));
-        when(modelMapper.map(team, TeamDTO.class)).thenReturn(teamDTO);
 
         ResponseEntity<TeamDTO> response = teamService.deleteTeam(teamDTO.getId());
 
@@ -316,35 +334,55 @@ class TeamServiceTest {
         }
     }
 
-    // TODO: transfer this test to projectServiceTest
-//    @Test
-//    void testGetProjectsByTeamId_TeamFound() throws CustomRuntimeException {
-//        Team team = new Team();
-//        team.setId("1");
-//        team.setName("testTeam");
-//        team.setMembers(new ArrayList<>());
-//
-//        Project project = new Project();
-//        project.setId("1");
-//        project.setName("testProject");
-//        project.setTeam(team);
-//
-//        List<Project> projects = new ArrayList<>();
-//        projects.add(project);
-//
-//        List<ProjectDTO> projectsDTO = new ArrayList<>();
-//        ProjectDTO projectDTO = new ProjectDTO();
-//        projectDTO.setId("1");
-//        projectDTO.setName("testProject");
-//        projectDTO.setTeam(team);
-//        projectsDTO.add(projectDTO);
-//
-//        when(teamRepository.findById("1")).thenReturn(Optional.of(team));
-//        when(projectRepository.findByTeam(team)).thenReturn(projects);
-//        when(modelMapper.map(project, ProjectDTO.class)).thenReturn(projectDTO);
-//
-//        ResponseEntity<List<ProjectDTO>> response = teamService.getProjectsByTeamId("1");
-//
-//        assertEquals(ResponseEntity.ok(projectsDTO), response, "Projects found");
-//    }
+    @Test
+    void testGetTeamsByUserId_UserFound() throws CustomRuntimeException {
+        String userId = "1";
+        User user = new User();
+        user.setId(userId);
+
+        List<Team> teams = new ArrayList<>();
+        Team team1 = new Team();
+        team1.setId("1");
+        team1.setName("testTeam1");
+        team1.setMembers(new ArrayList<>());
+        teams.add(team1);
+        Team team2 = new Team();
+        team2.setId("2");
+        team2.setName("testTeam2");
+        team2.setMembers(new ArrayList<>());
+        teams.add(team2);
+
+        List<TeamDTO> teamsDTO = new ArrayList<>();
+        TeamDTO teamDTO1 = new TeamDTO();
+        teamDTO1.setId("1");
+        teamDTO1.setName("testTeam1");
+        teamDTO1.setMembers(new ArrayList<>());
+        teamsDTO.add(teamDTO1);
+        TeamDTO teamDTO2 = new TeamDTO();
+        teamDTO2.setId("2");
+        teamDTO2.setName("testTeam2");
+        teamDTO2.setMembers(new ArrayList<>());
+        teamsDTO.add(teamDTO2);
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(teamRepository.findByMembers(user)).thenReturn(teams);
+
+        ResponseEntity<List<TeamDTO>> response = teamService.getTeamsByUserId(userId);
+
+        assertEquals(ResponseEntity.ok(teamsDTO), response, "Teams found");
+    }
+
+    @Test
+    void testGetTeamsByUserId_UserNotFound() {
+        String userId = "1";
+
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        try {
+            teamService.getTeamsByUserId(userId);
+        } catch (CustomRuntimeException e) {
+            assertEquals(CustomRuntimeException.USER_NOT_FOUND, e.getMessage(), "User not found");
+        }
+    }
+
 }

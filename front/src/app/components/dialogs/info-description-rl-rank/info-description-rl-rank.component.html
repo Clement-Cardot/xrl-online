@@ -1,0 +1,26 @@
+<div class="info-description-rl-rank-component">
+    
+    <div class="title-close-component">
+        <h2>{{ this.readinessLevelRank.readinessLevel.levels[this.readinessLevelRank.rank - 1].shortDescription }}</h2>
+
+        <button mat-icon-button class="close-button-login" [mat-dialog-close]="true">
+            <mat-icon class="close-icon" color="warn">close</mat-icon>
+        </button>
+    </div>
+    
+
+    <table mat-table
+        [dataSource]="this.readinessLevelRank.readinessLevel.levels[this.readinessLevelRank.rank - 1].longDescription">
+        <caption hidden>Long Description</caption>
+
+        <ng-container matColumnDef="longDescription">
+            <th mat-header-cell *matHeaderCellDef id="longDescription">longDescription
+            </th>
+            <td class="longDescriptionCell" mat-cell *matCellDef="let element">
+                {{ element }}
+            </td>
+        </ng-container>
+
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+</div>

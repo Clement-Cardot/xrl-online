@@ -1,6 +1,5 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { UserModel } from 'src/app/core/data/models/user.model';
 
 @Component({
   selector: 'app-delete-object-dialog',
@@ -10,6 +9,6 @@ import { UserModel } from 'src/app/core/data/models/user.model';
 export class DeleteObjectDialogComponent {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: {title: string, content: string},
+    @Inject(MAT_DIALOG_DATA) public data: {title: string, content: string, warning?: string},
   ) { }
 }

@@ -1,0 +1,14 @@
+{
+  "title": "${name} Report",
+  "team": "Team",
+  "businessLine": "Business Line",
+  "comment": "Comment :",
+  "startDate": "Start date",
+  "endDate": "End date",
+  "generateDate": "Generate the",
+  "teamMembers": "Team Members",
+  "summary": "Summary",
+  "compareWithInitialGraph": "Comparison with initial graph",
+  "compareTwoLastGraphs": "Comparison with two last graphs",
+  "completeLinearGraph": "Complete linear graph"
+}

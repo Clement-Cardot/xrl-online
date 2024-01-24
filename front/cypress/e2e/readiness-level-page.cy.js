@@ -9,13 +9,14 @@ describe("Readiness Level page tests", () => {
 
     beforeEach(() => {
         cy.visit("/");
+        cy.changeLang('fr');
         cy.PerformLogin("duboisj");
         cy.GoToPage("RL");
     });
 
     context("US : XRLO-95 As a User, I must be able to see all the readiness levels with the description of each ranks", () => {
 
-        it('First Level of first Readiness Level is the default page', () => {
+        it('First Rank of first Readiness Level is the default page', () => {
             cy.get('.dialog-head > h2').should('be.visible');
             cy.get('.dialog-head > h2').should('have.text', database.readiness_levels[0].name);
             cy.get('.dialog-head > p').should('be.visible');
@@ -28,7 +29,7 @@ describe("Readiness Level page tests", () => {
             cy.get(':nth-child(3) > .longDescription').should('have.text', database.readiness_levels[0].levels[0].longDescription[2]);
         });
 
-        it('Navigate between different Level', () => {
+        it('Navigate between different Ranks', () => {
 
             cy.get(`.apexcharts-series > :nth-child(5)`).filter(':visible').click();
 
@@ -57,7 +58,7 @@ describe("Readiness Level page tests", () => {
             cy.get('.short > h2').should('have.text', 'Rang ' + database.readiness_levels[1].levels[0].level);
         });
 
-        it('Navigation between different Readiness Level keeps the active Level', () => {
+        it('Navigation between different Readiness Level keeps the active Rank', () => {
 
             cy.get(`.apexcharts-series > :nth-child(5)`).filter(':visible').click();
 
@@ -71,7 +72,7 @@ describe("Readiness Level page tests", () => {
             cy.get('.short > h2').should('have.text', 'Rang ' + database.readiness_levels[1].levels[4].level);
         });
 
-        it('Every short & long description of every Level of every Readiness Level are accessible', () => {
+        it('Every short & long description of every Rank of every Readiness Level are accessible', () => {
 
             for (let i = 0; i < database.readiness_levels.length; i++) {
 

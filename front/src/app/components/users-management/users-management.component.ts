@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UserModel } from 'src/app/core/data/models/user.model';
 import { ApiUserService } from 'src/app/core/services/api-user.service';
@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
 import { UserFormDialogComponent } from '../dialogs/user-form-dialog/user-form-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
+import { ApiTeamService } from 'src/app/core/services/api-team.service';
 
 @Component({
   selector: 'app-users-management',
@@ -16,6 +17,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class UsersManagementComponent implements OnInit {
   displayedColumns: string[] = ['firstName', 'lastName', "actions"];
 
+  @Output() userManagementChange = new EventEmitter<any>();
 
   users: UserModel[] = [];
   currentUsers: UserModel[] = [];
@@ -23,6 +25,7 @@ export class UsersManagementComponent implements OnInit {
 
   constructor(
     private apiUserService: ApiUserService,
+    private apiTeamService: ApiTeamService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private translateService: TranslateService
@@ -37,6 +40,7 @@ export class UsersManagementComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.userControl = new FormControl();
     this.userControl.valueChanges.subscribe((value) => {
       if (value != null && value != '') {
         this._updateCurrentUsers(value);
@@ -54,7 +58,6 @@ export class UsersManagementComponent implements OnInit {
     this.currentUsers = this.users.filter(user =>
       (this._filterCleanString(user.firstName) + " " + this._filterCleanString(user.lastName)).includes(this._filterCleanString(value!))
       || (this._filterCleanString(user.lastName) + " " + this._filterCleanString(user.firstName)).includes(this._filterCleanString(value!)));
-      console.log(this.currentUsers);
   }
 
   private _filterCleanString(value: string): string {
@@ -65,33 +68,45 @@ export class UsersManagementComponent implements OnInit {
   }
 
   openDeleteUserDialog(user: UserModel) {
-    const dialogRef = this.dialog.open(DeleteObjectDialogComponent, {
-      data: {
-        title: 'USERS.DELETE_USER',
-        content: user.firstName + ' ' + user.lastName
-      },
-      autoFocus: false
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.apiUserService.deleteUser(user.id).subscribe({
-          next: (v) => {
-            this.snackBar.open(this.translateService.instant('USERS.USER_DELETED'), this.translateService.instant('CLOSE'), {
-              duration: 3000,
-            });
-            this.users = this.users.filter(u => u.id !== v.id);
-            this._updateCurrentUsers(this.userControl?.value);
+    let warning = "";
+    this.apiTeamService.getTeamsByUserId(user.id).subscribe({
+      next: (v) => {
+        if (v.length > 0) {
+          warning = this.translateService.instant('USER.DELETE_WARNING');
+        }
+      
+        const dialogRef = this.dialog.open(DeleteObjectDialogComponent, {
+          data: {
+            title: 'USER.DELETE_CONFIRM',
+            content: user.firstName + ' ' + user.lastName,
+            warning: warning
           },
-          error: (e) => console.error(e)
+          autoFocus: false
         });
-      }
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            this.apiUserService.deleteUser(user.id).subscribe({
+              next: (v) => {
+                this.snackBar.open(this.translateService.instant('USER.DELETE_SUCCESS'), this.translateService.instant('ACTION.CLOSE'), {
+                  duration: 3000,
+                });
+                this.users = this.users.filter(u => u.id !== v.id);
+                this._updateCurrentUsers(this.userControl?.value);
+                this.userManagementChange.emit();
+              },
+              error: (e) => console.error(e)
+            });
+          }
+        });
+      },
+      error: (e) => console.error(e)
     });
   }
 
   openEditUserDialog(user: UserModel) {
     const data = {
       user: user,
-      title: 'USERS.EDIT_USER',
+      title: 'USER.EDIT_TITLE',
       save: 'SAVE'
     }
     const dialogRef = this.dialog.open(UserFormDialogComponent, {
@@ -102,7 +117,7 @@ export class UsersManagementComponent implements OnInit {
       if (result) {
         this.apiUserService.updateUser(result).subscribe({
           next: (v) => {
-            this.snackBar.open(this.translateService.instant('USERS.USER_UPDATED'), this.translateService.instant('CLOSE'), {
+            this.snackBar.open(this.translateService.instant('USER.UPDATE_SUCCESS'), this.translateService.instant('ACTION.CLOSE'), {
               duration: 3000,
             });
             this.users = this.users.map(u => u.id === user.id ? result : u);
@@ -131,7 +146,7 @@ export class UsersManagementComponent implements OnInit {
 
   openAddUserDialog() {
     const data = {
-      title: 'USERS.CREATE_USER',
+      title: 'USER.CREATE_TITLE',
       save: 'CREATE'
     }
     const dialogRef = this.dialog.open(UserFormDialogComponent, {
@@ -142,11 +157,12 @@ export class UsersManagementComponent implements OnInit {
       if (result) {
         this.apiUserService.createUser(result).subscribe({
           next: (v) => {
-            this.snackBar.open(this.translateService.instant('USERS.USER_CREATED'), this.translateService.instant('CLOSE'), {
+            this.snackBar.open(this.translateService.instant('USER.CREATE_SUCCESS'), this.translateService.instant('ACTION.CLOSE'), {
               duration: 3000,
             });
+            result.id = v.id;
             this.users.push(result);
-            this._updateCurrentUsers(this.userControl.value!);
+            this._updateCurrentUsers(this.userControl.value! ? this.userControl.value! : '');
             dialogRef.close();
           },
           error: (e) => {

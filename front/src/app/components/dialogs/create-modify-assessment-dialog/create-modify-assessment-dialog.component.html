@@ -6,16 +6,16 @@
   <mat-stepper linear headerPosition="bottom" #stepper>
     <!-- Readiness Levels Choice -->
     <mat-step class="readiness-level-container" [editable]="true" [completed]="selectedReadinessLevels.length >= 3 && selectedReadinessLevels.length <= 10">
-      <ng-template matStepLabel>{{"ASSESSMENT_DIALOG.SELECT_RL_STEP" | translate}}</ng-template>
+      <ng-template matStepLabel>{{"ASSESSMENT.SELECT_RL_STEP" | translate}}</ng-template>
       <ng-template matStepContent>
         <div class="dialog-title">
-          <h1>{{"ASSESSMENT_DIALOG.SELECT_RL_TITLE" | translate}}</h1>
-          <mat-error id="readiness-level-mat-error" *ngIf="selectedReadinessLevels.length > 10">{{"ASSESSMENT_DIALOG.SELECT_RL_MAX" | translate}}</mat-error>
-          <mat-error id="readiness-level-mat-error" *ngIf="selectedReadinessLevels.length < 3">{{"ASSESSMENT_DIALOG.SELECT_RL_MIN" | translate}}</mat-error>
+          <h1>{{"ASSESSMENT.SELECT_RL_TITLE" | translate}}</h1>
+          <mat-error id="readiness-level-mat-error" *ngIf="selectedReadinessLevels.length > 10">{{"ASSESSMENT.SELECT_RL_MAX" | translate}}</mat-error>
+          <mat-error id="readiness-level-mat-error" *ngIf="selectedReadinessLevels.length < 3">{{"ASSESSMENT.SELECT_RL_MIN" | translate}}</mat-error>
         </div>
         <div class="edit-readiness-level-container">
           <div class="readiness-level-list-container">
-            <h2>{{"ASSESSMENT_DIALOG.AVAILABLE_RL" | translate}}</h2>        
+            <h2>{{"ASSESSMENT.AVAILABLE_RL" | translate}}</h2>        
               <div class="readiness-level-list">
                 <table mat-table [dataSource]="readinessLevels" #matTableReadinessLevel>
                   <caption hidden>Available Readiness Levels</caption>
@@ -59,7 +59,7 @@
               </div>
           </div>
           <div class="readiness-level-list-container">
-            <h2>{{"ASSESSMENT_DIALOG.SELECTED_RL" | translate}}</h2>
+            <h2>{{"ASSESSMENT.SELECTED_RL" | translate}}</h2>
             <div class="readiness-level-list">
               <table mat-table [dataSource]="selectedReadinessLevels" #matTableSelectReadinessLevel>
                 <caption hidden>Enabled Readiness Levels</caption>
@@ -124,7 +124,20 @@
 
         <div class="dialog-head">
           <h2>{{readinessLevelRank.readinessLevel.name}}</h2>
-          <p>{{readinessLevelRank.readinessLevel.description}}</p>
+          <div>
+            <p *ngIf="!showMoreDescription">
+              {{readinessLevelRank.readinessLevel.description.slice(0, 235)}}
+              <span class="showMore" *ngIf="readinessLevelRank.readinessLevel.description.length > 235" (click)="toggleShowMoreDescription()">
+                {{'ACTION.SHOW_MORE' | translate}}
+              </span>
+            </p>
+            <p *ngIf="showMoreDescription">
+              {{readinessLevelRank.readinessLevel.description}}
+              <span class="showLess" *ngIf="readinessLevelRank.readinessLevel.description.length > 235" (click)="toggleShowMoreDescription()">
+                {{'ACTION.SHOW_LESS' | translate}}
+              </span>
+            </p>
+          </div>
         </div>
 
         <div class="dialog-content">
@@ -132,7 +145,7 @@
           <app-xrl-graph-gauge [readinessLevelRank]="readinessLevelRank" (changeRankEvent)="updateReadinessLevelRank($event)" #gauge></app-xrl-graph-gauge>
         
           <div class="description-container no-level" *ngIf="readinessLevelRank.rank == 0">
-            <p>{{"ASSESSMENT_DIALOG.NO_RANK_SELECTED" | translate}}</p>
+            <p>{{"ASSESSMENT.NO_RANK_SELECTED" | translate}}</p>
           </div>
 
           <div class="description-container" *ngIf="readinessLevelRank.rank > 0">
@@ -141,7 +154,7 @@
 
               <div class="col">
 
-                <h2>{{"ASSESSMENT_DIALOG.RANK" | translate}} {{readinessLevelRank.rank}}</h2>
+                <h2>{{"OBJECT.RANK" | translate}} {{readinessLevelRank.rank}}</h2>
 
                 <div class="shortDescription">
                   <p>{{readinessLevelRank.readinessLevel.levels[readinessLevelRank.rank - 1].shortDescription}}</p>
@@ -176,8 +189,8 @@
         </div>
 
         <div class="button-container">
-          <button id="{{'previous-button-'+index}}" mat-raised-button matStepperPrevious>{{"ACTION.BACK" | translate}}</button>
-          <button id="{{'next-button-'+index}}" mat-raised-button matStepperNext [disabled]="!rankCommentFormControls[index].valid" color="primary">{{"ACTION.NEXT" | translate}}</button>
+          <button id="{{'previous-button-'+index}}" (click)="resetShowMoreDescription()" mat-raised-button matStepperPrevious>{{"ACTION.BACK" | translate}}</button>
+          <button id="{{'next-button-'+index}}" (click)="resetShowMoreDescription()" mat-raised-button matStepperNext [disabled]="!rankCommentFormControls[index].valid" color="primary">{{"ACTION.NEXT" | translate}}</button>
         </div>
 
       </form></ng-template>
@@ -202,15 +215,16 @@
                   cdkAutosizeMinRows="3"
                   cdkAutosizeMaxRows="8">
                 </textarea>
-                <mat-error id="comment-mat-error">{{"ASSESSMENT_DIALOG.ENTER_COMMENT" | translate}}</mat-error>
+                <mat-error id="comment-mat-error">{{"ASSESSMENT.ENTER_COMMENT" | translate}}</mat-error>
               </mat-form-field>
               
               <mat-radio-group formControlName="tagControl">
                 <mat-radio-button id="select-initial" value="INITIAL" [disabled]="this.lastAssessment != null">Initial</mat-radio-button>
                 <mat-radio-button id="select-intermediate" value="INTERMEDIATE">Intermediate</mat-radio-button>
                 <mat-radio-button id="select-final" value="FINAL">Final</mat-radio-button>
-                <mat-radio-button id="select-draft" value="DRAFT">Draft</mat-radio-button>
               </mat-radio-group>
+
+              <mat-checkbox [checked]="isDraft" (change)="isDraft = $event.checked">Draft</mat-checkbox>
 
             </div>
 
@@ -230,10 +244,10 @@
       <ng-template matStepLabel>{{"ACTION.CONFIRM" | translate}}</ng-template>
       <ng-template matStepContent>
         <div class="dialog-head">
-          <h2>{{"ASSESSMENT_DIALOG.CONFIRM_ASSESSMENT" | translate}}</h2>
+          <h2>{{"ASSESSMENT.CREATE_CONFIRM" | translate}}</h2>
         </div>
         <div class="center">
-          <app-xrl-graph style="width: 100%;" [assesment]="newAssessment" [compareAssesment]="lastAssessment" [options]="graphOptions"></app-xrl-graph>
+          <app-xrl-graph style="width: 100%;" [assessment]="newAssessment" [compareAssessment]="lastAssessment" [options]="graphOptions"></app-xrl-graph>
           <!-- <app-xrl-graph-radar *ngIf="lastAssessment != null" [actualXrl]="lastAssessment" [newXrl]="newAssessment" [scale]="2"></app-xrl-graph-radar>
           <app-xrl-graph-radar *ngIf="lastAssessment == null" [actualXrl]="newAssessment" [scale]="2"></app-xrl-graph-radar> -->
         </div>

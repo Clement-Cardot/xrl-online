@@ -17,8 +17,8 @@ export class AdminTeamPageComponent implements OnInit {
   displayOptions: any = {filterValue: '', searchType: 'name'};
 
   searchTypes: { typeValue: string; typeTranslation: string }[] = [
-    { typeValue: 'name', typeTranslation: 'TEAM.SEARCH_NAME' },
-    { typeValue: 'user', typeTranslation: 'TEAM.SEARCH_USER' }
+    { typeValue: 'name', typeTranslation: 'OBJECT.NAME' },
+    { typeValue: 'user', typeTranslation: 'OBJECT.USER' }
   ];
 
   constructor(
@@ -32,7 +32,7 @@ export class AdminTeamPageComponent implements OnInit {
         this.teams = v;
         this.teamsToDisplay = v;
       },
-      error: (err) => console.log(err),
+      error: (err) => console.error(err),
     });
   }
 
@@ -92,6 +92,16 @@ export class AdminTeamPageComponent implements OnInit {
     value = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
     return value;
+  }
+
+  updateTeams() {
+    this.apiTeamService.getAllTeams().subscribe({
+      next: (v) => {
+        this.teams = v;
+        this.updateTeamsToDisplay(this.displayOptions);
+      },
+      error: (err) => console.error(err),
+    });
   }
 
 }

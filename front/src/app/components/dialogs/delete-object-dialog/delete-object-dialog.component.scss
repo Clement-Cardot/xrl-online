@@ -24,3 +24,12 @@ mat-dialog-actions {
     gap: 2rem;
     margin-bottom: 1rem;
 }
+
+.warning-message {
+    color: orange;
+    white-space: pre-wrap;
+    text-align: center;
+    font-size: 12px;
+    line-height: 16px;
+    padding-top: 8px;
+}

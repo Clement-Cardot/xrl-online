@@ -1,9 +1,6 @@
 <!-- Standard navbar Menu -->
 <mat-toolbar>
   <mat-toolbar-row>
-    <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm>
-      <mat-icon>menu</mat-icon>
-    </button>
 
     <!-- Navigation Buttons of the Navbar -->
     <div id="barMenu">
@@ -11,18 +8,18 @@
         <a href="#" mat-button id="mainButton">xRL Online</a>
 
         <!-- The following menu items will be hidden on both SM and XS screen sizes -->
-        <div fxShow="true" fxHide.lt-md="true">
+        <div>
             <button mat-button class="menuButton" (click)="switchPage('/')">{{ 'MENU.HOME' | translate }}</button>
 
             <button mat-button class="menuButton" (click)="switchPage('/projects')">{{ 'MENU.PROJECTS' | translate }}</button>
 
             <button mat-button class="menuButton" (click)="switchPage('/readiness-levels')">{{ 'MENU.READINESS_LEVELS' | translate }}</button>
           
-            <button mat-button  class="menuButton" [matMenuTriggerFor]="menu" *ngIf="currentUser?.login==='admin'">
-                <mat-icon>keyboard_arrow_down</mat-icon>
+            <button mat-button  class="menuButton" [matMenuTriggerFor]="menu" *ngIf="currentUser?.login==='admin'" (click)="rotate = true">
+                <mat-icon class="rotate-transition" [style.transform]="rotate ? '':'rotate(180deg)'">keyboard_arrow_down</mat-icon>
                 {{ 'MENU.MANAGEMENT' | translate }}
             </button>
-            <mat-menu #menu="matMenu">
+            <mat-menu #menu="matMenu" (closed)="rotate = false">
                 <button mat-menu-item (click)="switchPage('/admin/readiness-levels')">{{ 'MENU.READINESS_LEVELS' | translate }}</button>
                 <button mat-menu-item (click)="switchPage('/admin/teams')">{{ 'MENU.TEAMS' | translate }}</button>
                 <button mat-menu-item (click)="switchPage('/admin/business-lines')">{{ 'MENU.BUSINESS_LINES' | translate }}</button>
@@ -49,39 +46,10 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<!-- Sidenav for tablet / smartphone -->
-<mat-sidenav-container>
-  <mat-sidenav #sidenav>
-
-    <mat-nav-list>
-        <button mat-list-item class="menuButton" (click)="switchPage('/')">{{ 'MENU.HOME' | translate }}</button>
-
-        <button mat-list-item class="menuButton" (click)="switchPage('/projects')">{{ 'MENU.PROJECTS' | translate }}</button>
-
-        <button mat-list-item class="menuButton" (click)="switchPage('/readiness-levels')">{{ 'MENU.READINESS_LEVELS' | translate }}</button>
-      
-        <button mat-list-item  class="menuButton" [matMenuTriggerFor]="menu" onclick="reverseArrow()">
-            <mat-icon>keyboard_arrow_down</mat-icon>
-            {{ 'MENU.MANAGEMENT' | translate }}
-        </button>
-        <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="switchPage('/admin/readiness-levels')">{{ 'MENU.READINESS_LEVELS' | translate }}</button>
-            <button mat-menu-item (click)="switchPage('/admin/teams')">{{ 'MENU.TEAMS' | translate }}</button>
-            <button mat-menu-item (click)="switchPage('/admin/business-lins')">{{ 'MENU.BUSINESS_LINES' | translate }}</button>
-        </mat-menu>
-      <button (click)="sidenav.toggle()" mat-list-item>
-        <mat-icon>close</mat-icon> {{ 'MENU.CLOSE' | translate }}
-      </button>
-    </mat-nav-list>
-
-  </mat-sidenav>
-
   <!-- Router Outlet -->
-  <mat-sidenav-content fxLayout="column" fxFlexFill>
-    <div class="content" fxFlex>
-      <router-outlet></router-outlet>
-    </div>
-    <app-footer></app-footer>
-  </mat-sidenav-content>
-
-</mat-sidenav-container>
+<div>
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+  <app-footer></app-footer>
+</div>

@@ -1,22 +1,54 @@
 site_name: xRL Online
 theme:
-  name: readthedocs
+  name: material
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
 nav:
   - Home: index.md
-  - Getting Started: getting-started.md
-  - Project Environment: project-environnment.md
-  - Frontend:
-    - Snippets:
-      - API Services: front-end/snippets/api-service.md
-  - Backend:
-    - Snippets:
-      - Controller: back-end/snippets/controller.md
-  - Misc:
-    - Docker: misc/docker.md
-    - Gitlab CI/CD: misc/gitlab-ci-cd.md
-    - MongoDB: misc/mongodb.md
-    - Scripts: misc/scripts.md
+
+  - About Us: about-us.md
+
   - User Documentation:
-    - Navigation: user-documentation/navigation.md
-    - Language: user-documentation/language.md
-    - Login/Logout: user-documentation/login-logout.md
+    - Navigation & Login/Logout: user-doc/navigation.md
+    - Readiness Levels Page: user-doc/readiness-levels-page.md
+    - Projects Page: user-doc/projects-page.md
+    - Project Page: user-doc/project-page.md
+
+  - Admin Documentation:
+    - Teams & Users management: admin-doc/teams-users-management.md
+    - Business Lines management: admin-doc/business-lines-management.md
+    - Readiness Levels management: admin-doc/readiness-levels-management.md
+
+  - Developer Documentation:
+    - Getting Started: dev-doc/getting-started.md
+    - Project Environment: dev-doc/project-environnment.md
+
+    - Frontend:
+      - General: dev-doc/frontend/general.md
+      - Components: dev-doc/frontend/components.md
+      - Services: dev-doc/frontend/services.md
+      - Models: dev-doc/frontend/models.md
+      - Charts: dev-doc/frontend/charts.md
+      - Translation: dev-doc/frontend/translation.md
+
+    - Backend:
+      - General: dev-doc/backend/general.md
+      - Profiles : dev-doc/backend/profiles.md
+      - Spring Security: dev-doc/backend/spring-security.md
+      - Logger : dev-doc/backend/logger.md
+      - Exception : dev-doc/backend/exception.md
+      - Translation: dev-doc/backend/translation.md
+
+    - Misc:
+      - Docker: dev-doc/misc/docker.md
+      - CI/CD: dev-doc/misc/gitlab-ci-cd.md
+      - Unit Testing: dev-doc/misc/unit-testing.md
+      - End-to-End Testing: dev-doc/misc/end-to-end-testing.md
+      - MongoDB: dev-doc/misc/mongodb.md
+      - Scripts: dev-doc/misc/scripts.md

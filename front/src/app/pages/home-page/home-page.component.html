@@ -1,4 +1,31 @@
-<p>home-page works!</p>
-<div class="flex">
-
+<div class="homeContainer">
+  <div class="homeLeftContainer">
+    <div class="homeTextContainer">
+      <div class="BigText">{{ "HOME.TITLE" | translate }}</div>
+      <div class="KthText">KTH INNOVATION READINESS LEVEL</div>
+      <div class="homeButtonContainer">
+        <button
+          mat-flat-button
+          id="seeRlBtn"
+          color="primary"
+          (click)="switchPage('/readiness-levels')"
+        >
+          {{ "HOME.READINESS_LEVEL" | translate }}
+        </button>
+        <a
+          mat-flat-button
+          id="visitKthBtn"
+          color="secondary"
+          href ='https://kthinnovationreadinesslevel.com/'
+          target="_blank"
+          rel="noopener"
+        >
+          {{ "HOME.KTH_WEBSITE" | translate }}
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="homeRightContainer">
+    <app-xrl-graph [assessment]="assessment"></app-xrl-graph>
+  </div>
 </div>

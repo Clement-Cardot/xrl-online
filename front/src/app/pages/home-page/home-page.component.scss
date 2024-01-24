@@ -1,4 +1,81 @@
-.flex {
-    display: flex;
-    gap: 100px;
+.homeContainer {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 110px);
+  width: 100%;
+  justify-content: space-evenly;
+  background-color: white;
+}
+
+.homeLeftContainer {
+  width: 65%;
+  padding-left: 6em;
+  padding-top: 2em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 1em;
+}
+
+.homeRightContainer {
+  width: 35%;
+  display: flex;
+  padding-right: 5em;
+  align-items: center;
+}
+app-xrl-graph {
+  width: 100%;
+  height: 100%;
+}
+
+@media screen and (max-width: 1920px) {
+  .BigText {
+    color: black;
+    font-size: 72px;
+    font-weight: 600;
+    line-height: 80px;
+    word-wrap: break-word;
+    padding-bottom: 0.7em;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .BigText {
+    color: black;
+    font-size: 45px;
+    font-weight: 600;
+    line-height: 55px;
+    word-wrap: break-word;
+    padding-bottom: 0.7em;
+  }
+}
+
+
+.KthText {
+  color: black;
+  font-size: 24px;
+  font-weight: 500;
+  word-wrap: break-word;
+  padding-bottom: 2em;
+}
+
+#visitKthBtn {
+  border: 2px solid black;
+}
+
+.homeButtonContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 1em;
+  
+  button {
+    min-width: max-content;
+  }
+}
+
+.radarImg {
+  min-width: 25rem;
+  max-width: 40rem;
+  width: max-content;
 }

@@ -1,8 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslateService } from '@ngx-translate/core';
-import { ReadinessLevelDialogComponent } from 'src/app/components/dialogs/readiness-level-dialog/readiness-level-dialog.component';
 import { ReadinessLevelRankModel } from 'src/app/core/data/models/readiness-level-rank.model';
 import { ReadinessLevelModel } from 'src/app/core/data/models/readiness-level.model';
 import { ApiReadinessLevelService } from 'src/app/core/services/api-readiness-level.service';
@@ -23,7 +20,6 @@ export class ReadinessLevelPageComponent implements OnInit {
     private apiReadinessLevelService: ApiReadinessLevelService,
     public dialog: MatDialog,
     private changeDetectorRef: ChangeDetectorRef,
-    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -32,7 +28,7 @@ export class ReadinessLevelPageComponent implements OnInit {
         this.readinessLevels = v;
         this.readinessLevelRank = new ReadinessLevelRankModel(this.readinessLevels[0], 1, '');
       },
-      error: (err) => console.log(err),
+      error: (err) => console.error(err),
     });
   }
 
@@ -42,7 +38,6 @@ export class ReadinessLevelPageComponent implements OnInit {
   }
 
   setReadinessLevel(id: string) {
-    console.log(id);
     const readinessLevel = this.readinessLevels.find((rl: ReadinessLevelModel) => rl.id === id);
     if (readinessLevel) {
       this.readinessLevelRank = new ReadinessLevelRankModel(readinessLevel, this.readinessLevelRank.rank, '');

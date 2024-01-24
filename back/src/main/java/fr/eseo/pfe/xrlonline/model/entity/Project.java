@@ -28,6 +28,10 @@ public class Project {
         .orElse(null);
   }
 
+  public Assessment getInitialAssessment() {
+    return assessments.stream().filter(a -> a.getTag() == Assessment.Tag.INITIAL).findFirst().orElse(null);
+  }
+
   @Override
   public String toString() {
     return "Project{" +

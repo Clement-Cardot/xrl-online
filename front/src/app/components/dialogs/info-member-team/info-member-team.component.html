@@ -1,0 +1,33 @@
+<div class="info-member-team-component">
+
+    <div class="title-close-component">
+        <h2>{{ "PROJECT.MEMBER_OF_TEAM" | translate }}</h2>
+
+        <button mat-icon-button class="close-button-login" [mat-dialog-close]="true">
+            <mat-icon class="close-icon" color="warn">close</mat-icon>
+        </button>
+    </div>
+
+    <table mat-table [dataSource]="this.members">
+        <caption hidden>Members of team</caption>
+
+        <!-- FirstName Column -->
+        <ng-container matColumnDef="firstName">
+            <th mat-header-cell *matHeaderCellDef id="firstName">Firstname</th>
+            <td class="firstNameCell" mat-cell *matCellDef="let element">
+                {{ element.firstName }}
+            </td>
+        </ng-container>
+
+        <!-- FirstName Column -->
+        <ng-container matColumnDef="lastName">
+            <th mat-header-cell *matHeaderCellDef id="lastName">LastName</th>
+            <td class="lastNameCell" mat-cell *matCellDef="let element">
+                {{ element.lastName }}
+            </td>
+        </ng-container>
+
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+</div>

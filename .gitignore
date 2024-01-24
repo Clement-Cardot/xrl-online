@@ -8,3 +8,4 @@ db/mongo-init.js
 logs
 target
 back/src/main/resources/application-locals.properties
+mongo_backup

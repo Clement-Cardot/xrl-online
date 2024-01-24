@@ -3,14 +3,14 @@
   word-wrap: break-word;
 
   #readinessLevelContainer {
-    height: calc(100vh - 150px - 4rem);
+    height: calc(100vh - 110px - 4rem);
     padding: 1rem 2rem;
     margin: 1rem 2rem;
     background-color: white;
   }
 
   #specificReadinessLevelContainer {
-    height: calc(100vh - 150px - 4rem);
+    height: calc(100vh - 110px - 4rem);
     width: 100%;
     padding: 1rem 2rem;
     margin: 1rem 2rem;
@@ -20,7 +20,7 @@
 
   .spinner {
     width: 100%;
-    height: calc(100vh - 150px - 4rem);
+    height: calc(100vh - 110px - 4rem);
     display: flex;
     justify-content: center;
     align-items: center;

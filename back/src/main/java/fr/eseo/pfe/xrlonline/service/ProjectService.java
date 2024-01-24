@@ -11,7 +11,6 @@ import fr.eseo.pfe.xrlonline.model.entity.BusinessLine;
 import fr.eseo.pfe.xrlonline.model.entity.Project;
 import fr.eseo.pfe.xrlonline.model.entity.Team;
 import fr.eseo.pfe.xrlonline.model.entity.User;
-import fr.eseo.pfe.xrlonline.model.entity.Assessment.Tag;
 import fr.eseo.pfe.xrlonline.repository.BusinessLineRepository;
 import fr.eseo.pfe.xrlonline.repository.ProjectRepository;
 import fr.eseo.pfe.xrlonline.repository.TeamRepository;
@@ -134,37 +133,42 @@ public class ProjectService {
     return modelMapper.map(projectUpdated, ProjectDTO.class);
   }
 
-  public ProjectDTO modifyLastAssessment(String projectId, AssessmentDTO assessmentDTO) throws CustomRuntimeException {
+  public ProjectDTO modifyAssessment(String projectId, AssessmentDTO assessmentDTO) throws CustomRuntimeException {
     Project existingProject = projectRepository.findById(projectId)
       .orElseThrow(() -> new CustomRuntimeException(CustomRuntimeException.PROJECT_NOT_FOUND));
 
+    
+    Assessment assessmentToModify = existingProject.getAssessments().stream().filter((Assessment assessment) -> assessment.getDate().equals(assessmentDTO.getDate()))
+        .findFirst()
+        .orElseThrow(() -> new CustomRuntimeException(CustomRuntimeException.ASSESSMENT_NOT_FOUND));
+
     // Check if last assessment is draft
-    Assessment assessmentToModify = existingProject.getLastAssessment();
-    if (!assessmentToModify.getTag().equals(Tag.DRAFT)) {
+    if (Boolean.FALSE.equals(assessmentToModify.getDraft())) {
       throw new CustomRuntimeException(CustomRuntimeException.ASSESSMENT_MUST_BE_DRAFT_TO_BE_MODIFIED);
     }
 
     // Map modifications
-    modelMapper.map(assessmentDTO, assessmentToModify);
-
+    int assessmentIndex = existingProject.getAssessments().indexOf(assessmentToModify);
+    existingProject.getAssessments().set(assessmentIndex, modelMapper.map(assessmentDTO, Assessment.class));
+    
     // Save modifications
     projectRepository.save(existingProject);
 
     return modelMapper.map(existingProject, ProjectDTO.class);
   }
 
-  public ProjectDTO modifyLastAssessmentComment(String projectId, String comment) throws CustomRuntimeException {
+  public ProjectDTO modifyAssessmentComment(String projectId, String[] data) throws CustomRuntimeException {
     Project existingProject = projectRepository.findById(projectId)
             .orElseThrow(() -> new CustomRuntimeException(CustomRuntimeException.PROJECT_NOT_FOUND));
 
-    if (comment == null) {
+    if (data[1] == null) {
       throw new CustomRuntimeException(CustomRuntimeException.PROJECT_LAST_ASSESSMENT_COMMENT_NULL);
     }
     else if (existingProject.getAssessments().isEmpty()) {
       throw new CustomRuntimeException(CustomRuntimeException.PROJECT_ASSESSMENT_LIST_IS_EMPTY);
     }
 
-    existingProject.getAssessments().get(existingProject.getAssessments().size() - 1).setComment(comment);
+    existingProject.getAssessments().get(Integer.parseInt(data[0])).setComment(data[1]);
 
     Project projectUpdated = projectRepository.save(existingProject);
     return modelMapper.map(projectUpdated, ProjectDTO.class);
@@ -192,6 +196,14 @@ public class ProjectService {
       return ResponseEntity.ok(projectsDTO);
   }
 
+  public ProjectDTO deleteAssessment(String projectId, AssessmentDTO assessmentDTO) throws CustomRuntimeException {
+    Project existingProject = projectRepository.findById(projectId)
+            .orElseThrow(() -> new CustomRuntimeException(CustomRuntimeException.PROJECT_NOT_FOUND));
+      existingProject.getAssessments().remove(modelMapper.map(assessmentDTO, Assessment.class));
+      Project projectUpdated = projectRepository.save(existingProject);
+      return modelMapper.map(projectUpdated, ProjectDTO.class);
+  }
+
   public boolean isMemberOfProjectTeam(String projectId) throws CustomRuntimeException {
     boolean isMember = false;
 
@@ -205,5 +217,15 @@ public class ProjectService {
     }
 
     return isMember;
+  }
+
+  public boolean isAdmin() {
+    boolean isAdmin = false;
+
+    if (logger.getUsername().equals("admin")) {
+      isAdmin = true;
+    }
+
+    return isAdmin;
   }
 }

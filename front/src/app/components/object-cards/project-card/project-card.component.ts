@@ -43,24 +43,24 @@ export class ProjectCardComponent implements OnInit {
 
   getDescription() : string {
     if (this.project.description.length == 0) {
-      return this.translateService.instant('PROJECTS.NO_DESCRIPTION');
+      return this.translateService.instant('PROJECT.NO_DESCRIPTION');
     }
     return this.project.description;
   }
 
   getDateTextField() : string {
-    const lastAssesment = this.project.getLastAssesment();
-    if (lastAssesment == null) {
-      return this.translateService.instant('PROJECTS.NO_ASSESSMENT');
+    const lastAssessment = this.project.getLastAssessment();
+    if (lastAssessment == null) {
+      return this.translateService.instant('ASSESSMENT.NO_ASSESSMENT');
     }
     
-    return this.project.formatDate(lastAssesment.date);
+    return this.project.formatDate(lastAssessment.date);
   }
 
   openUpdateDialog() {
     const dialogRef = this.dialog.open(ProjectFormDialogComponent, {
       data: {
-        title: 'PROJECTS.UPDATE',
+        title: 'PROJECT.UPDATE_TITLE',
         save: 'ACTION.SAVE',
         project: this.project,
         currentUser: this.currentUser,
@@ -77,7 +77,7 @@ export class ProjectCardComponent implements OnInit {
   openDeleteDialog() {
     const dialogRef = this.dialog.open(DeleteObjectDialogComponent, {
       data: {
-        title: 'PROJECTS.DELETE',
+        title: 'PROJECT.DELETE_CONFIRM',
         content: this.project.name
       },
       autoFocus: false
@@ -87,7 +87,7 @@ export class ProjectCardComponent implements OnInit {
         this.projectService.deleteProject(this.project).subscribe({
           next: (v) => {
             this.deleteProjectEvent.emit(v);
-            this.snackBar.open(this.translateService.instant('PROJECTS.DELETE_SUCCESS'), 'OK', {
+            this.snackBar.open(this.translateService.instant('PROJECT.DELETE_SUCCESS'), this.translateService.instant('ACTION.CLOSE'), {
               duration: 3000,
             });
           },

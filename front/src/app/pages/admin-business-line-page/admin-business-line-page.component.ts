@@ -15,7 +15,7 @@ export class AdminBusinessLinePageComponent {
   businessLinesToDisplay: BusinessLineModel[] = [];
 
   searchTypes: { typeValue: string; typeTranslation: string }[] = [
-    { typeValue: 'name', typeTranslation: 'BUSINESSLINE.SEARCH_NAME' }
+    { typeValue: 'name', typeTranslation: 'OBJECT.NAME' }
   ];
 
   constructor(
@@ -29,7 +29,7 @@ export class AdminBusinessLinePageComponent {
         this.businessLines = v;
         this.businessLinesToDisplay = v;
       },
-      error: (err) => console.log(err),
+      error: (err) => console.error(err),
     });
   }
 
@@ -38,7 +38,9 @@ export class AdminBusinessLinePageComponent {
   }
 
   deleteBusinessLine(businessLine: BusinessLineModel) {
-    this.businessLines = this.businessLines.filter((bl) => bl.id != businessLine.id);
+    this.businessLinesToDisplay = this.businessLinesToDisplay.filter(
+      (bl) => bl.id != businessLine.id
+    );
   }
 
   updateBusinessLinesToDisplay(options: any) {

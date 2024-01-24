@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AssessmentModel } from 'src/app/core/data/models/assessment.model';
-import { XrlGraphOptions } from '../../graphs/xrl-graph/xrl-graph.component';
+import { XrlGraphOptions } from '../../graphs/xrl-graph-options';
 
 @Component({
   selector: 'app-compare-dialog',
